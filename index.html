@@ -256,6 +256,16 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
   </section>
 
   <section>
+    <h2>Urges</h2>
+    <p class="lbl">Felt an urge and didn't act on it? Log the win.</p>
+    <div class="row">
+      <button class="clean" id="btnUrge" type="button">I rode out an urge</button>
+      <button class="ghost" id="btnUrgeUndo" type="button" hidden>Undo last</button>
+    </div>
+    <div id="urgeMsg" class="lbl" role="status" style="margin:12px 0 0;min-height:1.5em"></div>
+  </section>
+
+  <section>
     <h2>Log a range of days</h2>
     <p class="lbl">Fill in many days at once, like a week you forgot to log.</p>
     <div class="row range">
@@ -322,6 +332,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
           <div class="big" id="l30" style="font-size:3rem">-</div>
           <div class="lbl" id="l30t" style="margin:8px 0 12px"></div>
           <div class="bar"><i id="l30bar"></i></div>
+          <p class="lbl" id="l30u" style="margin:12px 0 0"></p>
         </section>
         <section>
           <h2>By weekday</h2>
@@ -416,6 +427,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
             <button id="tStart">Start 10 minutes</button>
             <button class="ghost" id="tStop">Stop</button>
           </div>
+          <p class="lbl" id="rodeHint" hidden style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
         </section>
       </div>
       <div class="col">
@@ -436,7 +448,10 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
         </section>
       </div>
     </div>
-    <button id="closePanic" class="clean" style="margin-top:20px">I'm okay, back to the tracker</button>
+    <div class="row" style="margin-top:20px">
+      <button id="btnRode" class="clean" type="button">I rode it out</button>
+      <button id="closePanic" class="ghost" type="button">I'm okay, back to the tracker</button>
+    </div>
   </div>
 </div>
 
@@ -476,10 +491,15 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 
   /* ---------- Analysis, achievements, stats ---------- */
   var announce=false,toastT=null;
-  function freshState(){return{log:{},reasons:"",mode:"system",accent:"indigo",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},ach:{},helped:0,rode:0,themed:false,v:3};}
+  function freshState(){return{log:{},reasons:"",mode:"system",accent:"indigo",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},urges:{},ach:{},helped:0,rode:0,themed:false,v:3};}
   function normalize(){
     var hexOk=/^#[0-9a-f]{6}$/i;
     if(!Array.isArray(state.picked))state.picked=[];
+    if(!state.urges||typeof state.urges!=="object"||Array.isArray(state.urges))state.urges={};
+    Object.keys(state.urges).forEach(function(k){
+      var n=Math.floor(+state.urges[k]);
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(k)||!(n>0))delete state.urges[k];else state.urges[k]=Math.min(n,999);
+    });
     if(!state.slips||typeof state.slips!=="object"||Array.isArray(state.slips))state.slips={};
     Object.keys(state.slips).forEach(function(k){
       var r=state.slips[k];
@@ -488,7 +508,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
       if(!r.t.length&&!r.c.length&&!r.w)delete state.slips[k];
     });
     if(!state.ach||typeof state.ach!=="object")state.ach={};
-    Object.keys(state.ach).forEach(function(k){if(["reasons","helped","rode","themed"].indexOf(k)<0)delete state.ach[k];});
+    Object.keys(state.ach).forEach(function(k){if(["reasons","helped","rode","themed","urge1","urge10","urge50"].indexOf(k)<0)delete state.ach[k];});
     if(!state.custom||!hexOk.test(state.custom.accent||"")||!hexOk.test(state.custom.slip||""))state.custom={accent:"#e0592a",slip:"#2c6e91"};
   }
   function analyze(){
@@ -548,6 +568,10 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
   ACH.push({id:"reasons",group:"m",ev:true,title:"Know your why",badge:"\u2605",desc:"Pick or write your reasons.",test:function(){return (state.reasons||"").trim().length>0||(state.picked||[]).length>0;}});
   ACH.push({id:"helped",group:"m",ev:true,title:"Asked for help",badge:"\u2605",desc:"Open the help panel when an urge hits.",test:function(){return (state.helped||0)>0;}});
   ACH.push({id:"rode",group:"m",ev:true,title:"Rode it out",badge:"\u2605",desc:"Finish the full 10-minute timer.",test:function(){return (state.rode||0)>0;}});
+  [[1,"urge1","Urge beaten","Ride out an urge and log it."],[10,"urge10","Urge surfer","Ride out 10 urges."],[50,"urge50","Wave rider","Ride out 50 urges."]].forEach(function(u){
+    ACH.push({id:u[1],group:"m",ev:true,title:u[2],badge:"\u2605",desc:u[3],
+      test:function(){return totalUrges()>=u[0];},prog:function(){return[totalUrges(),u[0]];}});
+  });
   ACH.push({id:"themed",group:"m",ev:true,title:"Made it yours",badge:"\u2605",desc:"Pick a different theme.",test:function(){return !!state.themed;}});
 
   function toast(t){var el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove("show");},4500);}
@@ -613,7 +637,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
   function renderStats(A){
     var i,t=$("tiles");
     var tiles=[[A.clean,"clean days"],[A.slip,"slipped days"],[A.logged,"days logged"],[A.logged?Math.round(A.clean/A.logged*100)+"%":"-","clean rate"],
-      [A.cur,"current streak"],[A.best,"best streak"],[A.runs.length?Math.round(A.avg*10)/10:"-","average streak"],[A.runs.length,"streaks so far"]];
+      [A.cur,"current streak"],[A.best,"best streak"],[A.runs.length?Math.round(A.avg*10)/10:"-","average streak"],[A.runs.length,"streaks so far"],[totalUrges(),"urges ridden out"]];
     t.innerHTML="";
     tiles.forEach(function(x){var d=document.createElement("div");d.className="tile";d.innerHTML="<b></b><span></span>";d.firstChild.textContent=x[0];d.lastChild.textContent=x[1];t.appendChild(d);});
 
@@ -623,6 +647,9 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
     $("l30").textContent=l30?Math.round(c30/l30*100)+"%":"-";
     $("l30t").textContent=l30?c30+" clean and "+s30+" slipped, out of "+l30+" days logged in the last 30.":"No days logged in the last 30 days yet.";
     $("l30bar").style.width=(l30?c30/l30*100:0)+"%";
+    var u30=0,du=new Date();
+    for(i=0;i<30;i++){u30+=state.urges[key(du)]||0;du.setDate(du.getDate()-1);}
+    $("l30u").textContent=u30?"Urges ridden out in the last 30 days: "+u30+".":"No urges logged in the last 30 days yet.";
 
     var names=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],full=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],max=1,worst=-1,wv=0,wk=$("wk");
     A.byDow.forEach(function(x,j){var tt=x.c+x.s;if(tt>max)max=tt;if(x.s>wv){wv=x.s;worst=j;}});
@@ -662,6 +689,23 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
         ht.appendChild(cell);
       }
     }
+  }
+
+  /* ---------- Urges ridden out ---------- */
+  function nowKey(){return key(new Date());}
+  function urgesOn(k){return state.urges[k]||0;}
+  function totalUrges(){var n=0;Object.keys(state.urges).forEach(function(k){n+=state.urges[k];});return n;}
+  function renderUrges(){
+    var n=urgesOn(nowKey());
+    $("urgeMsg").textContent=n?n+(n===1?" urge":" urges")+" ridden out today.":"None logged today yet.";
+    $("btnUrgeUndo").hidden=!n;
+  }
+  function logUrge(){
+    var k=nowKey();
+    state.urges[k]=Math.min(urgesOn(k)+1,999);save();render();
+    var n=urgesOn(k);
+    $("urgeMsg").textContent="Logged. That's "+n+" today. You felt it and didn't act on it.";
+    return n;
   }
 
   /* ---------- Slip survey + trigger insights ---------- */
@@ -739,7 +783,18 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
     {id:"goals",name:"Goals and focus",msg:"I have goals worth my time and attention. Don't trade them for ten minutes."},
     {id:"family",name:"Family",msg:"The people who love me deserve the best version of me."},
     {id:"confidence",name:"Confidence",msg:"I build real confidence by keeping promises to myself."},
-    {id:"freedom",name:"Freedom",msg:"I want to make my own choices instead of being run by an urge."}
+    {id:"freedom",name:"Freedom",msg:"I want to make my own choices instead of being run by an urge."},
+    {id:"sleep",name:"Better sleep",msg:"Late nights cost me tomorrow. Choosing sleep now means a better morning."},
+    {id:"time",name:"My time",msg:"That time is better spent on things I'll be proud of. Ten minutes from now I'll be glad I waited."},
+    {id:"respect",name:"Respect for others",msg:"I want to see people as people, not as images. Respect starts with what I choose to feed my mind."},
+    {id:"presence",name:"Being present",msg:"I want to be fully here for my life, not escaping from it."},
+    {id:"integrity",name:"Integrity",msg:"I want my private choices to match the person I say I am."},
+    {id:"mood",name:"Mood and motivation",msg:"I feel lighter and more driven when I stay clear. Don't trade tomorrow's mood for a short rush."},
+    {id:"discipline",name:"Discipline",msg:"Self-control is a muscle. Every urge I ride out makes the next one weaker."},
+    {id:"future",name:"My future",msg:"The person I'm becoming will thank me for what I do in the next ten minutes."},
+    {id:"purpose",name:"Purpose",msg:"I want a life with direction. This urge has none."},
+    {id:"intimacy",name:"Real intimacy",msg:"I want real closeness with someone, not a substitute that leaves me emptier."},
+    {id:"strength",name:"Strength and fitness",msg:"I'm building my body and my habits. This urge is just noise next to that."}
   ];
   function pickedReasons(){return PRESETS.filter(function(p){return (state.picked||[]).indexOf(p.id)>=0;});}
   function mkReason(title,text,cls){
@@ -794,7 +849,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
       (function(kk){c.onclick=function(){sel=kk;$("msg").textContent="";render();};})(k);
       cal.appendChild(c);
     }
-    $("reasons").value=state.reasons||"";renderChips();renderSurvey();refresh();
+    $("reasons").value=state.reasons||"";renderChips();renderSurvey();renderUrges();refresh();
   }
 
   var dows=$("dows");["S","M","T","W","T","F","S"].forEach(function(l){var d=document.createElement("div");d.className="dow";d.textContent=l;dows.appendChild(d);});
@@ -803,6 +858,17 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
   $("btnSlip").onclick=function(){state.log[sel]="slip";save();surveyKey=sel;render();$("msg").textContent=sel!==todayKey?"Day updated.":"It happens. Your best streak is still saved. Tomorrow is a fresh day, start it clean.";};
   $("btnDetails").onclick=function(){surveyKey=sel;renderSurvey();};
   $("svDone").onclick=function(){surveyKey=null;renderSurvey();toast(state.slips[sel]?"Saved. Patterns show up in the Stats tab.":"No problem. You can add details any time.");};
+  $("btnUrge").onclick=function(){logUrge();};
+  $("btnUrgeUndo").onclick=function(){
+    var k=nowKey(),n=urgesOn(k);
+    if(n<=1)delete state.urges[k];else state.urges[k]=n-1;
+    save();render();
+  };
+  $("btnRode").onclick=function(){
+    closePanic();
+    var n=logUrge();
+    if(!$("toast").classList.contains("show"))toast("Urge ridden out. That's "+n+" today. Well done.");
+  };
   $("btnClear").onclick=function(){delete state.log[sel];save();render();$("msg").textContent="";};
   var rt=new Date();rt.setDate(rt.getDate()-6);
   $("rFrom").max=$("rTo").max=todayKey;$("rTo").value=todayKey;$("rFrom").value=key(rt);
@@ -969,10 +1035,11 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
     fillReasons();
     $("overlay").classList.add("open");breathe();$("closePanic").focus({preventScroll:true});$("overlay").scrollTop=0;
   };
-  function stopTimer(){clearInterval(tInt);tInt=null;left=600;$("timer").textContent=fmt(left);}
+  function stopTimer(){clearInterval(tInt);tInt=null;left=600;$("timer").textContent=fmt(left);$("rodeHint").hidden=true;}
   $("tStart").onclick=function(){
     if(tInt)return;
-    tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";left=600;state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
+    $("rodeHint").hidden=true;
+    tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";$("rodeHint").hidden=false;left=600;state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
   };
   $("tStop").onclick=stopTimer;
   function closePanic(){$("overlay").classList.remove("open");clearInterval(breathTimer);stopTimer();$("panic").focus();}
