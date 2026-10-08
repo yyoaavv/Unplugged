@@ -46,7 +46,8 @@ then visit `http://localhost:8000`.
 | `index.html` | The whole app |
 | `manifest.json` | PWA name, colors and icons |
 | `sw.js` | Service worker for offline use |
-| `icon.svg`, `icon-maskable.svg` | App icons (SVG) for the favicon and install |
+| `favicon.svg` | Browser tab icon (adapts to light and dark mode) |
+| `icon.svg`, `icon-maskable.svg` | App icons (SVG) used when installing the app |
 | `apple-touch-icon.png` | iPhone and iPad home screen icon (iOS needs PNG) |
 
 ## Updating
