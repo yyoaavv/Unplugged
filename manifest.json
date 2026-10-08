@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Unplugged",
+  "short_name": "Unplugged",
+  "description": "One honest check-in a day. Everything stays on your device.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e9eaf5",
+  "theme_color": "#4a4fb0",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
