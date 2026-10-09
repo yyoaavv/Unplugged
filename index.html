@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unplugged</title>
-<meta name="theme-color" content="#e9eaf5">
+<meta name="theme-color" content="#ebebe8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
@@ -15,8 +15,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e9eaf5;--card:#f7f8fd;--ink:#1c2033;--mute:#5a6080;--accent:#4a4fb0;--clean:#4a4fb0;--slip:#9b3f8f;--line:#d0d3e8;--panic:#c2412d;--on:#fff}
-:root[data-theme=dark]{--on:#10112a;--bg:#14162a;--card:#1d2040;--ink:#e8eaf8;--mute:#9a9fc4;--accent:#9ea3ff;--clean:#9ea3ff;--slip:#e08ad0;--line:#2e3260;--panic:#e2664f}
+:root{--bg:#ebebe8;--card:#f8f8f6;--ink:#1f2124;--mute:#62666b;--accent:#3e444c;--clean:#3e444c;--slip:#3578a6;--line:#d8d8d4;--panic:#c2412d;--on:#fff}
+:root[data-theme=dark]{--on:#17181a;--bg:#17181a;--card:#212326;--ink:#ececec;--mute:#9a9ea4;--accent:#c4c9d0;--clean:#c4c9d0;--slip:#8cc4ea;--line:#34373b;--panic:#e2664f}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
@@ -65,11 +65,23 @@ textarea{width:100%;min-height:96px;font:inherit;padding:12px;border-radius:12px
 .pw{width:100%;max-width:980px;background:var(--bg);border-radius:14px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.35);margin:auto 0}
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px}
 .phead .sub{margin:6px 0 0;max-width:62ch}
-.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.pgrid section{margin-bottom:20px}.pgrid .col>section:last-child{margin-bottom:0}
-@media (max-width:820px){.pgrid{grid-template-columns:1fr}.pw{padding:20px}}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.pgrid>section{margin:0;display:flex;flex-direction:column;min-width:0}
+.pgrid>section.wide{grid-column:1/-1}
+.pgrid .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pgrid ul.acts{columns:2;column-gap:36px}
+.pgrid ul.acts li{break-inside:avoid}
+#myReasons{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;white-space:normal}
+#myReasons .rsn{margin:0;background:var(--bg);border-radius:10px;padding:12px 14px}
+#myReasons .rsn.own{grid-column:1/-1}
+#myReasons.empty{display:block;color:var(--mute)}
+@media (max-width:820px){.pgrid{grid-template-columns:1fr}.pw{padding:20px}.pgrid ul.acts{columns:1}}
 .breath{width:160px;height:160px;border-radius:50%;background:var(--accent);margin:24px auto 12px;display:flex;align-items:center;justify-content:center;color:var(--on);font-weight:600;font-size:1.2rem;transform:scale(.6);transition:transform 4s ease-in-out}
 .breath.in{transform:scale(1)}
+.breath{flex-direction:column;gap:2px;line-height:1.15;text-align:center}
+.breath small{font-size:.95rem;font-weight:500;opacity:.8}
+.bmodes{justify-content:center;margin:0 0 4px}
+.bmodes .chip{padding:6px 12px;font-size:.85rem}
 .timer{font-size:2.6rem;font-weight:800;text-align:center;letter-spacing:-.02em}
 ul.acts{padding-left:20px;margin:0}ul.acts li{margin-bottom:8px}
 .reasons-box{background:transparent;border-radius:14px;padding:0;white-space:pre-wrap;min-height:48px}
@@ -338,7 +350,10 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   </div>
   <section style="margin-top:20px">
     <h2>Why I'm doing this</h2>
-    <p class="lbl">Pick the reasons that fit you. They'll pop up when you tap "I need help now".</p>
+    <p class="lbl" style="margin-bottom:8px">What are you working on? This sets the suggested reasons and tips in the help panel.</p>
+    <div class="chips" id="focusChips" role="group" aria-label="What you're quitting" style="margin-bottom:8px"></div>
+    <p class="note" id="focusNote" hidden style="margin:0 0 14px"></p>
+    <p class="lbl" style="margin:14px 0 8px">Pick the reasons that fit you. They'll pop up when you tap "I need help now".</p>
     <div class="chips" id="reasonChips" role="group" aria-label="Built-in reasons"></div>
     <div id="pickedList"></div>
     <p class="lbl" style="margin:18px 0 8px">Anything else, in your own words:</p>
@@ -494,39 +509,33 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       <div class="chips rate" id="rateBefore" role="group" aria-label="Urge strength right now" style="margin-bottom:0"></div>
     </section>
     <div class="pgrid">
-      <div class="col">
-        <section>
-          <h2>Breathe</h2>
+      <section>
+        <h2>Breathe</h2>
+        <div class="chips bmodes" id="breathModes" role="group" aria-label="Breathing style"></div>
+        <div class="mid">
           <div class="breath" id="breath">Breathe in</div>
-          <p class="lbl" style="text-align:center;margin:0">In for 4, out for 4. Repeat.</p>
-        </section>
-        <section>
-          <h2>Ride it out</h2>
+          <p class="lbl" id="breathDesc" style="text-align:center;margin:0">In for 4, out for 4. Repeat.</p>
+        </div>
+      </section>
+      <section>
+        <h2>Ride it out</h2>
+        <div class="mid">
           <div class="timer" id="timer">10:00</div>
           <div class="row" style="justify-content:center;margin-top:10px">
             <button id="tStart">Start 10 minutes</button>
             <button class="ghost" id="tStop">Stop</button>
           </div>
           <p class="lbl" id="rodeHint" hidden style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
-        </section>
-      </div>
-      <div class="col">
-        <section>
-          <h2>Change the scene now</h2>
-          <ul class="acts">
-            <li>Stand up and leave the room you're in.</li>
-            <li>Go outside or take a walk around the block.</li>
-            <li>Do 20 pushups or squats.</li>
-            <li>Take a shower or wash your face.</li>
-            <li>Message or call a friend. Say hi, you don't have to explain.</li>
-            <li>Put your phone in another room.</li>
-          </ul>
-        </section>
-        <section>
-          <h2>Your reasons</h2>
-          <div class="reasons-box" id="myReasons"></div>
-        </section>
-      </div>
+        </div>
+      </section>
+      <section class="wide">
+        <h2>Change the scene now</h2>
+        <ul class="acts" id="actsList"></ul>
+      </section>
+      <section class="wide">
+        <h2>Your reasons</h2>
+        <div class="reasons-box" id="myReasons"></div>
+      </section>
     </div>
     <section id="afterBox" hidden style="margin-top:20px">
       <h2>Nice. How strong is the urge now?</h2>
@@ -557,11 +566,11 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   var state=freshState();
   try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&p.log)state=Object.assign(state,p);}}catch(e){}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
-  var TRIG=[["stress","Stress"],["boredom","Boredom"],["fatigue","Fatigue"],["lonely","Loneliness"],["screen","Late night screen time"]];
-  var CTX=[["alone","Home alone"],["bedroom","Bedroom"],["inbed","In bed"]];
+  var TRIG=[["stress","Stress"],["boredom","Boredom"],["fatigue","Fatigue"],["lonely","Loneliness"],["screen","Late at night"],["pressure","Peer pressure"],["lowmood","Low mood"]];
+  var CTX=[["alone","Home alone"],["bedroom","Bedroom"],["inbed","In bed"],["out","Out with others"],["work","Work or school"]];
   var WHEN=[["morning","Morning"],["afternoon","Afternoon"],["evening","Evening"],["late","After 11 PM"]];
   function ids(a,list){var ok=list.map(function(x){return x[0];});return Array.isArray(a)?a.filter(function(x,i){return ok.indexOf(x)>=0&&a.indexOf(x)===i;}):[];}
-  if(state.v!==3){if(state.accent==="teal")state.accent="indigo";state.v=3;save();}
+  if(state.v!==3){if(state.accent==="teal")state.accent="neutral";state.v=3;save();}
   normalize();
   function $(id){return document.getElementById(id);}
   function pad(n){return n<10?"0"+n:""+n;}
@@ -587,8 +596,12 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 
   /* ---------- Analysis, achievements, stats ---------- */
   var announce=false,toastT=null;
-  function freshState(){return{log:{},reasons:"",mode:"system",accent:"indigo",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
+  function freshState(){return{log:{},reasons:"",mode:"system",accent:"neutral",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
   function normalize(){
+    if((!state.themed&&state.accent==="indigo")||state.accent==="calm"||state.accent==="slate")state.accent="neutral";
+    if(!state.focus||typeof state.focus!=="string"){state.focus=(Array.isArray(state.picked)&&(state.picked.indexOf("respect")>=0||state.picked.indexOf("intimacy")>=0))?"porn":"general";}
+    if(["general","porn","nicotine","alcohol","gambling","social","gaming"].indexOf(state.focus)<0)state.focus="general";
+    if(["calm","box","478","long","sigh"].indexOf(state.breathMode)<0)delete state.breathMode;
     var hexOk=/^#[0-9a-f]{6}$/i;
     if(!Array.isArray(state.picked))state.picked=[];
     if(!state.urges||typeof state.urges!=="object"||Array.isArray(state.urges))state.urges={};
@@ -991,7 +1004,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   }
 
   /* ---------- Built-in reasons ---------- */
-  var PRESETS=[
+  var COMMON=[
     {id:"faith",name:"Faith",msg:"I want to live in line with my faith and values. I can choose that right now."},
     {id:"relationships",name:"Healthy relationships",msg:"I want real, healthy, honest relationships. This urge is not what I want for the people I love."},
     {id:"selfrespect",name:"Self-respect",msg:"Every time I wait it out, I trust and respect myself more."},
@@ -1003,16 +1016,53 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     {id:"freedom",name:"Freedom",msg:"I want to make my own choices instead of being run by an urge."},
     {id:"sleep",name:"Better sleep",msg:"Late nights cost me tomorrow. Choosing sleep now means a better morning."},
     {id:"time",name:"My time",msg:"That time is better spent on things I'll be proud of. Ten minutes from now I'll be glad I waited."},
-    {id:"respect",name:"Respect for others",msg:"I want to see people as people, not as images. Respect starts with what I choose to feed my mind."},
     {id:"presence",name:"Being present",msg:"I want to be fully here for my life, not escaping from it."},
     {id:"integrity",name:"Integrity",msg:"I want my private choices to match the person I say I am."},
     {id:"mood",name:"Mood and motivation",msg:"I feel lighter and more driven when I stay clear. Don't trade tomorrow's mood for a short rush."},
     {id:"discipline",name:"Discipline",msg:"Self-control is a muscle. Every urge I ride out makes the next one weaker."},
     {id:"future",name:"My future",msg:"The person I'm becoming will thank me for what I do in the next ten minutes."},
     {id:"purpose",name:"Purpose",msg:"I want a life with direction. This urge has none."},
-    {id:"intimacy",name:"Real intimacy",msg:"I want real closeness with someone, not a substitute that leaves me emptier."},
     {id:"strength",name:"Strength and fitness",msg:"I'm building my body and my habits. This urge is just noise next to that."}
   ];
+  var TIPS_BASE=["Stand up and leave the room you're in.","Go outside or take a walk around the block.","Do 20 pushups or squats.","Take a shower or wash your face.","Message or call a friend. Say hi, you don't have to explain.","Put your phone in another room."];
+  var FOCUS=[
+    {id:"general",name:"Anything",tips:TIPS_BASE,extra:[]},
+    {id:"porn",name:"Porn",tips:TIPS_BASE.concat(["Leave your bedroom and sit somewhere other people are."]),extra:[
+      {id:"respect",name:"Respect for others",msg:"I want to see people as people, not as images. Respect starts with what I choose to feed my mind."},
+      {id:"intimacy",name:"Real intimacy",msg:"I want real closeness with someone, not a substitute that leaves me emptier."}]},
+    {id:"nicotine",name:"Smoking / vaping",tips:["Drink a glass of cold water slowly. A craving passes in a few minutes.","Brush your teeth or chew gum.","Step outside, but away from where you usually smoke or vape.","Do 20 pushups or squats to burn off the restless energy.","Message or call a friend. You don't have to explain.","Put your pack or vape out of reach, or throw it away."],extra:[
+      {id:"n_lungs",name:"My lungs",msg:"Every breath gets easier. I'm giving my body time to heal."},
+      {id:"n_money",name:"My money",msg:"That money adds up fast. I'd rather spend it on something I actually enjoy."},
+      {id:"n_craving",name:"Cravings pass",msg:"A craving lasts a few minutes. I've outlasted harder ones."},
+      {id:"n_people",name:"The people around me",msg:"I want to be around the people I love without the smell, the cough and the guilt."}]},
+    {id:"alcohol",name:"Alcohol",tips:["Pour a drink you like without alcohol: sparkling water, tea or juice.","Eat something and drink water. Hunger and thirst can feel like a craving.","Leave the place where you'd usually drink.","Go for a walk or a quick workout.","Call or message someone who supports you.","Keep alcohol out of the house tonight, or pour it out."],
+      note:"If you drink heavily every day, talk to a doctor before stopping suddenly. Quitting cold turkey can be dangerous.",extra:[
+      {id:"a_morning",name:"Better mornings",msg:"I want to wake up clear-headed and proud of last night."},
+      {id:"a_control",name:"Staying in control",msg:"I decide what I do. A drink doesn't get to decide for me."},
+      {id:"a_body",name:"My body is healing",msg:"Every sober day gives my body, my sleep and my skin a chance to recover."},
+      {id:"a_people",name:"Being there for people",msg:"I want to be present and reliable for the people who count on me."}]},
+    {id:"gambling",name:"Gambling",tips:["Close the betting app or site and put your phone in another room.","Move money out of reach: transfer it to savings or hand your card to someone you trust.","Go outside or take a walk around the block.","Call or message someone who knows. You don't have to explain.","Write down what your last bet cost you, then read it out loud.","Do something with your hands: a shower, 20 pushups or the dishes."],
+      note:"Many betting sites and apps offer self-exclusion that blocks you for good. It's worth setting up while you're feeling calm.",extra:[
+      {id:"g_money",name:"My money",msg:"Money lost never comes back. Every dollar I keep is a dollar I can use on something real."},
+      {id:"g_chase",name:"No chasing",msg:"The next bet won't fix the last one. The odds don't care how I feel."},
+      {id:"g_trust",name:"Trust",msg:"I'm rebuilding trust with the people I care about, one day at a time."},
+      {id:"g_stress",name:"Less stress",msg:"I want a life without the constant stress of owing, hiding and hoping."}]},
+    {id:"social",name:"Social media",tips:["Put your phone in another room, or hand it to someone.","Log out of the app, or turn on a screen time limit.","Stand up, stretch and get some fresh air.","Pick up a book, a pen or an instrument for ten minutes.","Message or call someone instead of scrolling.","Take a shower or wash your face."],extra:[
+      {id:"s_hours",name:"Getting my hours back",msg:"Those hours add up to days. I want them back for things I care about."},
+      {id:"s_focus",name:"My attention",msg:"I want to be able to focus deeply again."},
+      {id:"s_compare",name:"Less comparison",msg:"Scrolling makes me compare and feel worse. I'd rather feel okay about my own life."},
+      {id:"s_real",name:"Real life",msg:"The best moments are in front of me, not on a screen."}]},
+    {id:"gaming",name:"Gaming",tips:["Turn off the console or PC and walk away from the screen.","Go outside or take a walk around the block.","Do 20 pushups or squats.","Message or call a friend. In person is even better.","Start one small real-world task: tidy a shelf or make a snack.","Put your controller or phone in another room."],extra:[
+      {id:"gm_goals",name:"Real-life goals",msg:"I have things I want to build outside the game. Today counts toward them."},
+      {id:"gm_people",name:"Time with people",msg:"I'd rather be with people I care about than one more match."},
+      {id:"gm_sleep",name:"Sleep and energy",msg:"One more round costs me tomorrow. I want to feel rested and sharp."},
+      {id:"gm_control",name:"My choice",msg:"I play when I choose to, not because I can't stop."}]}
+  ];
+  var ALLP=COMMON.concat.apply(COMMON,FOCUS.map(function(f){return f.extra;}));
+  function focusObj(){return FOCUS.filter(function(f){return f.id===state.focus;})[0]||FOCUS[0];}
+  var PRESETS=[];
+  function setPresets(){PRESETS=focusObj().extra.concat(COMMON);}
+  setPresets();
   function pickedReasons(){return PRESETS.filter(function(p){return (state.picked||[]).indexOf(p.id)>=0;});}
   function mkReason(title,text,cls){
     var d=document.createElement("div"),b=document.createElement("b"),sp=document.createElement("span");
@@ -1026,22 +1076,40 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   }
   function fillReasons(){
     var box=$("myReasons"),rm=$("remind"),list=pickedReasons(),txt=(state.reasons||"").trim(),opts=[];
-    box.innerHTML="";rm.innerHTML="";rm.hidden=true;
+    box.innerHTML="";box.classList.remove("empty");rm.innerHTML="";rm.hidden=true;
     list.forEach(function(p){box.appendChild(mkReason(p.name,p.msg));opts.push({h:p.name,t:p.msg});});
     if(txt){box.appendChild(mkReason("In my own words",txt,"own"));opts.push({h:"In my own words",t:txt.length>220?txt.slice(0,220)+"...":txt});}
-    if(!opts.length){box.textContent="You haven't picked or written any reasons yet. Add them on the Tracker tab while you're feeling calm.";return;}
+    if(!opts.length){box.classList.add("empty");box.textContent="You haven't picked or written any reasons yet. Add them on the Tracker tab while you're feeling calm.";return;}
     var o=opts[Math.floor(Math.random()*opts.length)],h=document.createElement("b"),p=document.createElement("p");
     h.textContent="Remember: "+o.h;p.textContent=o.t;rm.appendChild(h);rm.appendChild(p);rm.hidden=false;
   }
-  PRESETS.forEach(function(p){
-    var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.id=p.id;b.textContent=p.name;
-    b.onclick=function(){
-      var i=state.picked.indexOf(p.id);
-      if(i>=0)state.picked.splice(i,1);else state.picked.push(p.id);
-      save();renderChips();afterEvent();
-    };
-    $("reasonChips").appendChild(b);
-  });
+  function buildChips(){
+    var box=$("reasonChips");box.innerHTML="";
+    PRESETS.forEach(function(p){
+      var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.id=p.id;b.textContent=p.name;
+      b.onclick=function(){
+        var i=state.picked.indexOf(p.id);
+        if(i>=0)state.picked.splice(i,1);else state.picked.push(p.id);
+        save();renderChips();afterEvent();
+      };
+      box.appendChild(b);
+    });
+  }
+  function buildFocus(){
+    var box=$("focusChips");box.innerHTML="";
+    FOCUS.forEach(function(f){
+      var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.id=f.id;b.textContent=f.name;
+      b.setAttribute("aria-pressed",f.id===state.focus);
+      b.onclick=function(){state.focus=f.id;save();setPresets();buildFocus();buildChips();renderChips();};
+      box.appendChild(b);
+    });
+    var n=$("focusNote"),fo=focusObj();n.textContent=fo.note||"";n.hidden=!fo.note;
+  }
+  function fillTips(){
+    var ul=$("actsList");ul.innerHTML="";
+    focusObj().tips.forEach(function(t){var li=document.createElement("li");li.textContent=t;ul.appendChild(li);});
+  }
+  buildFocus();buildChips();
 
   function render(){
     var pr=false;
@@ -1143,9 +1211,9 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     plum:{name:"Plum",
       light:{accent:"#7a3fa8",slip:"#8f6a0c",bg:"#eee9f3",card:"#faf8fc",ink:"#261d30",mute:"#6a5d7a",line:"#d9cfe3",on:"#ffffff"},
       dark:{accent:"#c9a0ee",slip:"#e6c35c",bg:"#1b1522",card:"#271e30",ink:"#efe8f6",mute:"#a898ba",line:"#3d2f4b",on:"#1c0f29"}},
-    slate:{name:"Slate",
-      light:{accent:"#3f5566",slip:"#a0505a",bg:"#e8edf1",card:"#f6f8fa",ink:"#1d2830",mute:"#5d6e7a",line:"#cdd7de",on:"#ffffff"},
-      dark:{accent:"#9db5c6",slip:"#e09aa2",bg:"#161e24",card:"#1e2a32",ink:"#e6edf1",mute:"#93a5b2",line:"#2f4350",on:"#101c24"}},
+    neutral:{name:"Neutral",
+      light:{accent:"#3e444c",slip:"#3578a6",bg:"#ebebe8",card:"#f8f8f6",ink:"#1f2124",mute:"#62666b",line:"#d8d8d4",on:"#ffffff"},
+      dark:{accent:"#c4c9d0",slip:"#8cc4ea",bg:"#17181a",card:"#212326",ink:"#ececec",mute:"#9a9ea4",line:"#34373b",on:"#17181a"}},
     mint:{name:"Mint",
       light:{accent:"#0f7f61",slip:"#2f4a7a",bg:"#e6f3ee",card:"#f6fbf9",ink:"#14302a",mute:"#55736a",line:"#c8e0d6",on:"#ffffff"},
       dark:{accent:"#7fe0bf",slip:"#8fb0f0",bg:"#0f1f1d",card:"#172a27",ink:"#e4f5ef",mute:"#8fb5aa",line:"#274540",on:"#0b2a21"}},
@@ -1156,7 +1224,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       light:{accent:"#000000",slip:"#5c5c5c",bg:"#ffffff",card:"#f3f3f3",ink:"#000000",mute:"#5f5f5f",line:"#d9d9d9",on:"#ffffff"},
       dark:{accent:"#ffffff",slip:"#a0a0a0",bg:"#000000",card:"#141414",ink:"#ffffff",mute:"#a0a0a0",line:"#2e2e2e",on:"#000000"}}
   };
-  var ORDER=["indigo","forest","amber","rose","plum","slate","mint","midnight","mono","custom"];
+  var ORDER=["neutral","indigo","forest","amber","rose","plum","mint","midnight","mono","custom"];
 
   /* Custom theme: build a full palette from two picked colors */
   function hex2hsl(hx){
@@ -1195,7 +1263,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   var mq=window.matchMedia("(prefers-color-scheme:dark)");
   function applyTheme(){
     var mode=state.mode||"system",dark=mode==="dark"||(mode==="system"&&mq.matches);
-    if(state.accent!=="custom"&&!THEMES[state.accent])state.accent="indigo";
+    if(state.accent!=="custom"&&!THEMES[state.accent])state.accent="neutral";
     var th=getTheme(state.accent),p=dark?th.dark:th.light,root=document.documentElement;
     root.setAttribute("data-theme",dark?"dark":"light");
     root.style.setProperty("--accent",p.accent);
@@ -1245,16 +1313,43 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   applyTheme();
 
   /* Panic */
-  var breathTimer=null,tInt=null,left=600;
+  var tInt=null,left=600;
   function fmt(s){return pad(Math.floor(s/60))+":"+pad(s%60);}
+  var BREATHS=[
+    {id:"calm",name:"Calm",desc:"In for 4, out for 4. Repeat.",ph:[["Breathe in",4,1],["Breathe out",4,.6]]},
+    {id:"box",name:"Box",desc:"In 4, hold 4, out 4, hold 4. Steady and grounding.",ph:[["Breathe in",4,1],["Hold",4,1],["Breathe out",4,.6],["Hold",4,.6]]},
+    {id:"478",name:"4-7-8",desc:"In 4, hold 7, out 8. Slows a racing mind.",ph:[["Breathe in",4,1],["Hold",7,1],["Breathe out",8,.6]]},
+    {id:"long",name:"Long exhale",desc:"In for 4, out for 6. A longer exhale calms the body.",ph:[["Breathe in",4,1],["Breathe out",6,.6]]},
+    {id:"sigh",name:"Double inhale",desc:"Two quick breaths in through the nose, then a slow breath out. Fastest way to release tension.",ph:[["Breathe in",2,.85],["Sip in more",1,1],["Breathe out",6,.6]]}
+  ];
+  var breathTO=null,breathIV=null;
+  function breathStop(){clearTimeout(breathTO);clearInterval(breathIV);}
+  function breathMode(){var id=state.breathMode;return BREATHS.filter(function(x){return x.id===id;})[0]||BREATHS[0];}
   function breathe(){
-    var b=$("breath"),inhale=true;
-    function step(){b.classList.toggle("in",inhale);b.textContent=inhale?"Breathe in":"Breathe out";inhale=!inhale;}
-    step();breathTimer=setInterval(step,4000);
+    breathStop();
+    var m=breathMode(),b=$("breath"),i=0;
+    $("breathDesc").textContent=m.desc;
+    document.querySelectorAll("#breathModes button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.id===m.id);});
+    function phase(){
+      var p=m.ph[i%m.ph.length],left=p[1];
+      b.style.transitionDuration=p[1]+"s";b.style.transform="scale("+p[2]+")";
+      function paint(){b.innerHTML="";b.appendChild(document.createTextNode(p[0]));var c=document.createElement("small");c.textContent=left;b.appendChild(c);}
+      paint();
+      clearInterval(breathIV);
+      breathIV=setInterval(function(){if(left>1){left--;paint();}},1000);
+      i++;breathTO=setTimeout(phase,p[1]*1000);
+    }
+    b.style.transform="scale(.6)";
+    phase();
   }
+  BREATHS.forEach(function(m){
+    var bt=document.createElement("button");bt.type="button";bt.className="chip";bt.dataset.id=m.id;bt.textContent=m.name;
+    bt.onclick=function(){state.breathMode=m.id;save();breathe();};
+    $("breathModes").appendChild(bt);
+  });
   $("panic").onclick=function(){
     state.helped=(state.helped||0)+1;save();var wasA=announce;announce=false;afterEvent();announce=wasA;
-    fillReasons();resetRate();
+    fillReasons();fillTips();resetRate();
     $("overlay").classList.add("open");breathe();$("closePanic").focus({preventScroll:true});$("overlay").scrollTop=0;
   };
   function stopTimer(){clearInterval(tInt);tInt=null;left=600;$("timer").textContent=fmt(left);$("rodeHint").hidden=true;}
@@ -1264,7 +1359,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";$("rodeHint").hidden=false;left=600;state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
   };
   $("tStop").onclick=stopTimer;
-  function closePanic(){$("overlay").classList.remove("open");clearInterval(breathTimer);stopTimer();resetRate();$("panic").focus();}
+  function closePanic(){$("overlay").classList.remove("open");breathStop();stopTimer();resetRate();$("panic").focus();}
   $("closePanic").onclick=closePanic;$("closeX").onclick=closePanic;
   $("overlay").addEventListener("click",function(e){if(e.target===$("overlay"))closePanic();});
   document.addEventListener("keydown",function(e){
@@ -1469,13 +1564,13 @@ var QR=(function(){
     if(typeof state.accent!=="string")state.accent="indigo";
     ["helped","rode"].forEach(function(k){state[k]=Math.max(0,Math.floor(+state[k])||0);});
     state.themed=!!state.themed;
-    state.picked=state.picked.filter(function(id){return PRESETS.some(function(p){return p.id===id;});});
+    state.picked=state.picked.filter(function(id){return ALLP.some(function(p){return p.id===id;});});setPresets();buildFocus();buildChips();
     Object.keys(state.ach).forEach(function(k){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(state.ach[k])))delete state.ach[k];});
     state.v=3;
   }
   function applyTransfer(o){
     var p={log:unpackLog(o.ls,o.ll)};
-    ["reasons","mode","accent","custom","picked","slips","urges","urgeLog","recovery","ach","helped","rode","themed"].forEach(function(k){if(k in o)p[k]=o[k];});
+    ["reasons","mode","accent","custom","picked","focus","breathMode","slips","urges","urgeLog","recovery","ach","helped","rode","themed"].forEach(function(k){if(k in o)p[k]=o[k];});
     announce=false;state=Object.assign(freshState(),p);normalize();cleanImported();save();render();applyTheme();announce=true;
     closeX();toast("Imported. Welcome to your new device.");
   }
