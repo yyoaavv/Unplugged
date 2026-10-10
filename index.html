@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script>try{var _s=JSON.parse(localStorage.getItem("reset-tracker-v1"));if(_s&&_s.lock&&_s.lock.h)document.documentElement.classList.add("locked");}catch(e){}</script>
 <style>
 :root{--bg:#ebebe8;--card:#f8f8f6;--ink:#1f2124;--mute:#62666b;--accent:#3e444c;--clean:#3e444c;--slip:#3578a6;--line:#d8d8d4;--panic:#c2412d;--on:#fff}
 :root[data-theme=dark]{--on:#17181a;--bg:#17181a;--card:#212326;--ink:#ececec;--mute:#9a9ea4;--accent:#c4c9d0;--clean:#c4c9d0;--slip:#8cc4ea;--line:#34373b;--panic:#e2664f}
@@ -114,6 +115,28 @@ input[type=date]:focus-visible{outline:3px solid var(--accent);outline-offset:2p
 @media (prefers-reduced-motion:reduce){.breath{transition:none}}
 
 .tabs{overflow-x:auto}.tabs button{white-space:nowrap;flex:none}
+input[type=time],input[type=number],input[type=password]{font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+input[type=time]:focus-visible,input[type=number]:focus-visible,input[type=password]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tlen{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:14px}
+.tlen .chip{padding:6px 12px;font-size:.85rem}
+.tlen label{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:.85rem}
+.tlen input[type=number]{width:70px;padding:6px 8px}
+#lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:24px}
+html.locked #lock{display:flex}
+html.locked main,html.locked #overlay,html.locked #xover,html.locked #cele{visibility:hidden}
+.lockbox{width:100%;max-width:320px;text-align:center}
+.lockbox input{width:100%;text-align:center;font-size:1.6rem;letter-spacing:.5em;margin-bottom:12px}
+.lockbox button{width:100%;margin-bottom:10px}
+#pinForm{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+#pinForm label{display:flex;flex-direction:column;gap:4px;color:var(--mute);font-size:.9rem}
+#cele{position:fixed;inset:0;z-index:90;background:rgba(10,12,30,.55);display:flex;align-items:center;justify-content:center;padding:24px}
+#cele[hidden]{display:none}
+#confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cele-card{position:relative;background:var(--card);border-radius:18px;padding:32px 28px;text-align:center;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:celepop .35s ease-out}
+.cele-num{font-size:4.5rem;font-weight:800;line-height:1;color:var(--accent);letter-spacing:-.04em}
+.cele-card h2{font-size:1.5rem;margin:6px 0 8px}
+@keyframes celepop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.cele-card{animation:none}}
 input[type=color]{width:64px;height:42px;padding:2px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer}
 input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .bar{height:10px;background:var(--bg);border-radius:6px;overflow:hidden}
@@ -252,6 +275,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   </nav>
   <div id="view-tracker">
   <div class="remind" id="planCard" hidden></div>
+  <div class="remind" id="remBanner" hidden><b>Daily check-in</b><p>You haven't logged today yet. How did it go?</p></div>
   <div class="layout">
   <div class="col">
 
@@ -452,6 +476,26 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       </div>
     </section>
     <section>
+      <h2>Daily reminder</h2>
+      <p class="lbl">A nudge at the same time every day to check in.</p>
+      <div class="seg" id="remSeg">
+        <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+        <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+      </div>
+      <div class="row range" style="margin-top:14px"><label>Time<input type="time" id="remTime"></label></div>
+      <div class="foot" style="margin-top:14px"><button class="ghost" id="remTest" type="button">Send a test</button></div>
+      <p class="lbl" id="remNote" style="margin:12px 0 0"></p>
+    </section>
+    <section>
+      <h2>Celebrations</h2>
+      <p class="lbl">A short celebration when you reach a streak milestone.</p>
+      <div class="seg" id="celeSeg">
+        <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+        <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+      </div>
+      <div class="foot" style="margin-top:14px"><button class="ghost" id="celePrev" type="button">Preview</button></div>
+    </section>
+    <section>
       <h2>Move to a new phone</h2>
       <p class="lbl">Move your log, reasons and settings to another device. Show the QR code, scan it with the new phone's camera, open the link, then tap Import.</p>
       <div class="foot">
@@ -462,6 +506,31 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     </section>
     </div>
     <div class="col">
+    <section>
+      <h2>App lock</h2>
+      <p class="lbl" id="lockStatus">Protect Unplugged with a PIN. It asks for the PIN every time you open the app.</p>
+      <div class="foot" id="lockBtns">
+        <button class="ghost" id="lockSet" type="button">Set a PIN</button>
+        <button class="ghost" id="lockChange" type="button" hidden>Change PIN</button>
+        <button class="ghost" id="lockOff" type="button" hidden>Turn off</button>
+      </div>
+      <div id="pinForm" hidden>
+        <label id="pinCurW">Current PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinCur"></label>
+        <label id="pinNewW">New PIN (4 to 8 digits)<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew"></label>
+        <label id="pinNew2W">Repeat new PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew2"></label>
+        <div class="foot"><button class="clean" id="pinSave" type="button">Save</button><button class="ghost" id="pinCancel" type="button">Cancel</button></div>
+      </div>
+      <p class="lbl" id="pinMsg" role="status" style="margin:12px 0 0;min-height:1.5em"></p>
+      <div id="lockAfterBox" hidden>
+        <p class="lbl" style="margin-top:8px">Lock the app</p>
+        <div class="seg" id="lockAfter">
+          <button type="button" class="ghost" data-a="0" aria-pressed="false">Right away</button>
+          <button type="button" class="ghost" data-a="60" aria-pressed="false">After 1 minute</button>
+          <button type="button" class="ghost" data-a="300" aria-pressed="false">After 5 minutes</button>
+        </div>
+      </div>
+      <p class="lbl" style="margin:12px 0 0">This is a privacy screen to keep casual snoopers out. Your log isn't encrypted. If you forget your PIN, the only way back in is to erase everything.</p>
+    </section>
     <section>
       <h2>Your data</h2>
       <p class="lbl">Your log lives only in this browser. Export a backup before clearing your browser data or switching devices.</p>
@@ -493,6 +562,28 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 
 <div id="toast" role="status" aria-live="polite"></div>
 
+<div id="lock" role="dialog" aria-modal="true" aria-label="Unplugged is locked">
+  <div class="lockbox">
+    <h1>Unplugged</h1>
+    <p class="sub" style="margin:6px 0 20px">Enter your PIN to open.</p>
+    <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">
+    <button id="lockGo" class="clean" type="button">Unlock</button>
+    <p class="lbl" id="lockMsg" role="alert" style="min-height:1.5em;margin:0 0 8px"></p>
+    <button id="lockForgot" class="ghost" type="button">Forgot PIN?</button>
+  </div>
+</div>
+
+<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="cele-card">
+    <div class="cele-num" id="celeNum">7</div>
+    <div class="lbl" id="celeUnit">days in a row</div>
+    <h2 id="celeTitle">One week</h2>
+    <p id="celeMsg"></p>
+    <button id="celeOk" class="clean" type="button">Thanks</button>
+  </div>
+</div>
+
 <div id="overlay" role="dialog" aria-modal="true" aria-label="Urge support">
   <div class="pw">
     <div class="phead">
@@ -512,6 +603,10 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       <section>
         <h2>Breathe</h2>
         <div class="chips bmodes" id="breathModes" role="group" aria-label="Breathing style"></div>
+        <div class="chips bmodes" id="breathFx" role="group" aria-label="Breathing feedback" style="margin-bottom:0">
+          <button type="button" class="chip" id="fxVib" aria-pressed="false">Vibrate</button>
+          <button type="button" class="chip" id="fxSnd" aria-pressed="false">Sound</button>
+        </div>
         <div class="mid">
           <div class="breath" id="breath">Breathe in</div>
           <p class="lbl" id="breathDesc" style="text-align:center;margin:0">In for 4, out for 4. Repeat.</p>
@@ -525,6 +620,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
             <button id="tStart">Start 10 minutes</button>
             <button class="ghost" id="tStop">Stop</button>
           </div>
+          <div class="tlen" id="tlenBox"><span class="chips" id="timerLen" role="group" aria-label="Timer length" style="margin:0;justify-content:center"></span><label>Custom <input type="number" id="tCustom" min="1" max="120" inputmode="numeric" aria-label="Custom minutes"> min</label></div>
           <p class="lbl" id="rodeHint" hidden style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
         </div>
       </section>
@@ -598,6 +694,13 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   var announce=false,toastT=null;
   function freshState(){return{log:{},reasons:"",mode:"system",accent:"neutral",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
   function normalize(){
+    var tm=Math.floor(+state.timerMin);state.timerMin=(tm>=1&&tm<=120)?tm:10;
+    state.breathVib=!!state.breathVib;state.breathSnd=!!state.breathSnd;state.celebrate=state.celebrate!==false;
+    if(!state.remind||typeof state.remind!=="object")state.remind={on:false,t:"20:00"};
+    state.remind={on:!!state.remind.on,t:/^([01]\d|2[0-3]):[0-5]\d$/.test(state.remind.t||"")?state.remind.t:"20:00"};
+    if(typeof state.remLast!=="string")state.remLast="";
+    var L=state.lock;
+    if(L&&typeof L==="object"&&typeof L.h==="string"&&L.h&&typeof L.s==="string"&&L.n>=4&&L.n<=8){state.lock={h:L.h,s:L.s,n:L.n|0,a:[0,60,300].indexOf(L.a)>=0?L.a:0,f:Math.max(0,L.f|0),u:+L.u>0?+L.u:0};}else delete state.lock;
     if((!state.themed&&state.accent==="indigo")||state.accent==="calm"||state.accent==="slate")state.accent="neutral";
     if(!state.focus||typeof state.focus!=="string"){state.focus=(Array.isArray(state.picked)&&(state.picked.indexOf("respect")>=0||state.picked.indexOf("intimacy")>=0))?"porn":"general";}
     if(["general","porn","nicotine","alcohol","gambling","social","gaming"].indexOf(state.focus)<0)state.focus="general";
@@ -720,6 +823,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       for(i=fresh.length-1;i>=0;i--){if(fresh[i].group==="s"){pick=fresh[i];break;}}   /* highest streak milestone */
       if(!pick){pick=fresh[0];fresh.forEach(function(a){if(U[a.id]>=U[pick.id])pick=a;});}
       toast("Achievement unlocked: "+pick.title+(fresh.length>1?" (+"+(fresh.length-1)+" more)":""));
+      if(pick.group==="s")try{celebrateFor(pick.title);}catch(e){}
     }
     prevU=U;
     return{U:U,changed:diff};
@@ -1112,6 +1216,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   buildFocus();buildChips();
 
   function render(){
+    try{remBanner();}catch(e){}
     var pr=false;
     Object.keys(state.slips).forEach(function(k){if(state.log[k]!=="slip"){delete state.slips[k];pr=true;}});
     Object.keys(state.recovery).forEach(function(k){if(state.log[k]!=="slip"){delete state.recovery[k];pr=true;}});
@@ -1185,12 +1290,12 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   $("reasons").oninput=function(e){state.reasons=e.target.value;save();afterEvent();};
 
   $("export").onclick=function(){
-    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state)],{type:"application/json"}));a.download="reset-backup.json";a.click();
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify((function(){var o=JSON.parse(JSON.stringify(state));delete o.lock;return o;})())],{type:"application/json"}));a.download="reset-backup.json";a.click();
   };
   $("import").onclick=function(){$("file").click();};
   $("file").onchange=function(e){
     var f=e.target.files[0];if(!f)return;var r=new FileReader();
-    r.onload=function(){try{var p=JSON.parse(r.result);if(p&&p.log){announce=false;state=Object.assign(freshState(),p);normalize();save();render();applyTheme();announce=true;$("msg").textContent="Backup imported.";}}catch(x){$("msg").textContent="That file couldn't be read.";}};
+    r.onload=function(){try{var p=JSON.parse(r.result);if(p&&p.log){announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();save();render();applyTheme();announce=true;$("msg").textContent="Backup imported.";}}catch(x){$("msg").textContent="That file couldn't be read.";}};
     r.readAsText(f);
   };
   $("reset").onclick=function(){if(confirm("Erase all your data? This can't be undone.")){state=freshState();save();render();applyTheme();}};
@@ -1313,7 +1418,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   applyTheme();
 
   /* Panic */
-  var tInt=null,left=600;
+  var tInt=null,left=tSecs();
   function fmt(s){return pad(Math.floor(s/60))+":"+pad(s%60);}
   var BREATHS=[
     {id:"calm",name:"Calm",desc:"In for 4, out for 4. Repeat.",ph:[["Breathe in",4,1],["Breathe out",4,.6]]},
@@ -1322,8 +1427,27 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     {id:"long",name:"Long exhale",desc:"In for 4, out for 6. A longer exhale calms the body.",ph:[["Breathe in",4,1],["Breathe out",6,.6]]},
     {id:"sigh",name:"Double inhale",desc:"Two quick breaths in through the nose, then a slow breath out. Fastest way to release tension.",ph:[["Breathe in",2,.85],["Sip in more",1,1],["Breathe out",6,.6]]}
   ];
-  var breathTO=null,breathIV=null;
-  function breathStop(){clearTimeout(breathTO);clearInterval(breathIV);}
+  var breathTO=null,breathIV=null,curOsc=null,actx=null;
+  /* Feedback: vibration + soft tones */
+  function canVib(){return !!navigator.vibrate;}
+  function buzz(pat){if(!state.breathVib)return;try{if(navigator.vibrate)navigator.vibrate(pat);else{var H=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.Haptics;if(H&&H.vibrate)H.vibrate({duration:Array.isArray(pat)?pat[0]:pat});}}catch(e){}}
+  function audio(){try{if(!actx){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;actx=new C();}if(actx.state==="suspended")actx.resume();return actx;}catch(e){return null;}}
+  function tone(f1,f2,dur,vol){
+    if(!state.breathSnd)return;var c=audio();if(!c)return;
+    try{
+      var o=c.createOscillator(),g=c.createGain(),t=c.currentTime,v=vol||.12;
+      o.type="sine";o.frequency.setValueAtTime(f1,t);o.frequency.linearRampToValueAtTime(f2,t+dur);
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+Math.min(.3,dur/3));g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+.05);curOsc=o;
+    }catch(e){}
+  }
+  function fx(label,secs){
+    if(label.indexOf("out")>=0){buzz([160]);tone(390,260,secs);}
+    else if(label==="Hold"){buzz([25,90,25]);tone(440,440,.35,.05);}
+    else{buzz([30,40,50,40,70]);tone(260,390,secs);}
+  }
+  function doneCue(){buzz([200,80,200,80,300]);tone(523,523,1.2,.15);}
+  function breathStop(){clearTimeout(breathTO);clearInterval(breathIV);try{if(curOsc)curOsc.stop();}catch(e){}curOsc=null;try{if(navigator.vibrate)navigator.vibrate(0);}catch(e){}}
   function breathMode(){var id=state.breathMode;return BREATHS.filter(function(x){return x.id===id;})[0]||BREATHS[0];}
   function breathe(){
     breathStop();
@@ -1332,6 +1456,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     document.querySelectorAll("#breathModes button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.id===m.id);});
     function phase(){
       var p=m.ph[i%m.ph.length],left=p[1];
+      fx(p[0],p[1]);
       b.style.transitionDuration=p[1]+"s";b.style.transform="scale("+p[2]+")";
       function paint(){b.innerHTML="";b.appendChild(document.createTextNode(p[0]));var c=document.createElement("small");c.textContent=left;b.appendChild(c);}
       paint();
@@ -1352,11 +1477,11 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     fillReasons();fillTips();resetRate();
     $("overlay").classList.add("open");breathe();$("closePanic").focus({preventScroll:true});$("overlay").scrollTop=0;
   };
-  function stopTimer(){clearInterval(tInt);tInt=null;left=600;$("timer").textContent=fmt(left);$("rodeHint").hidden=true;}
+  function stopTimer(){clearInterval(tInt);tInt=null;left=tSecs();$("timer").textContent=fmt(left);$("rodeHint").hidden=true;}
   $("tStart").onclick=function(){
     if(tInt)return;
     $("rodeHint").hidden=true;
-    tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";$("rodeHint").hidden=false;left=600;state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
+    tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";$("rodeHint").hidden=false;try{doneCue();}catch(e){}left=tSecs();state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
   };
   $("tStop").onclick=stopTimer;
   function closePanic(){$("overlay").classList.remove("open");breathStop();stopTimer();resetRate();$("panic").focus();}
@@ -1506,7 +1631,7 @@ var QR=(function(){
   function buildLink(kind,obj){return pack(obj).then(function(p){return baseUrl()+"#"+kind+"="+p;});}
   function transferObj(){
     var o=JSON.parse(JSON.stringify(state)),pl=packLog(state.log);
-    delete o.log;o.ls=pl.s;o.ll=pl.l;o.k="t";o.pv=1;return o;
+    delete o.log;delete o.lock;o.ls=pl.s;o.ll=pl.l;o.k="t";o.pv=1;return o;
   }
   function shareObj(){var pl=packLog(state.log);return{k:"s",pv:1,t:nowKey(),ls:pl.s,ll:pl.l,u:totalUrges()};}
   function copyText(t){
@@ -1570,8 +1695,8 @@ var QR=(function(){
   }
   function applyTransfer(o){
     var p={log:unpackLog(o.ls,o.ll)};
-    ["reasons","mode","accent","custom","picked","focus","breathMode","slips","urges","urgeLog","recovery","ach","helped","rode","themed"].forEach(function(k){if(k in o)p[k]=o[k];});
-    announce=false;state=Object.assign(freshState(),p);normalize();cleanImported();save();render();applyTheme();announce=true;
+    ["reasons","mode","accent","custom","picked","focus","breathMode","timerMin","breathVib","breathSnd","celebrate","remind","slips","urges","urgeLog","recovery","ach","helped","rode","themed"].forEach(function(k){if(k in o)p[k]=o[k];});
+    announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();cleanImported();save();render();applyTheme();announce=true;
     closeX();toast("Imported. Welcome to your new device.");
   }
   function offerImport(o){
@@ -1646,6 +1771,249 @@ var QR=(function(){
     deferred.userChoice.then(function(){deferred=null;$("install").hidden=true;$("installHint").hidden=false;});
   };
   window.addEventListener("appinstalled",function(){$("installBox").hidden=true;toast("Installed. Find Unplugged on your home screen.");});
+
+
+  /* ---------- Timer length ---------- */
+  var TLEN=[5,10,15,20];
+  function tSecs(){var m=Math.floor(+state.timerMin);return (m>=1&&m<=120?m:10)*60;}
+  function refreshTimerUI(){
+    var m=tSecs()/60;
+    if(!tInt)$("timer").textContent=fmt(left);
+    $("tStart").textContent="Start "+m+(m===1?" minute":" minutes");
+    document.querySelectorAll("#timerLen .chip").forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.m===m);});
+    if(document.activeElement!==$("tCustom"))$("tCustom").value=TLEN.indexOf(m)<0?m:"";
+  }
+  function setTimerMin(m){
+    m=Math.floor(+m);if(!(m>=1&&m<=120)){refreshTimerUI();return;}
+    if(tInt){toast("Stop the timer first to change its length.");refreshTimerUI();return;}
+    state.timerMin=m;save();stopTimer();refreshTimerUI();
+  }
+  TLEN.forEach(function(m){
+    var b=document.createElement("button");b.type="button";b.className="chip";b.dataset.m=m;b.textContent=m+" min";
+    b.onclick=function(){setTimerMin(m);};$("timerLen").appendChild(b);
+  });
+  $("tCustom").onchange=function(e){setTimerMin(e.target.value);};
+  $("tStart").addEventListener("click",function(){refreshTimerUI();});
+  refreshTimerUI();
+
+  /* ---------- Breathing feedback toggles ---------- */
+  function refreshFx(){$("fxVib").setAttribute("aria-pressed",!!state.breathVib);$("fxSnd").setAttribute("aria-pressed",!!state.breathSnd);}
+  if(!canVib())$("fxVib").hidden=true;
+  $("fxVib").onclick=function(){state.breathVib=!state.breathVib;save();refreshFx();if(state.breathVib)buzz([60]);else try{navigator.vibrate(0);}catch(e){}};
+  $("fxSnd").onclick=function(){state.breathSnd=!state.breathSnd;save();refreshFx();if(state.breathSnd)tone(330,330,.5,.1);};
+  refreshFx();
+
+  /* ---------- Celebrations ---------- */
+  var CM={1:"Day one is done. Every streak starts here.",3:"Three days in. You're proving you can do this.",7:"A full week. That's real momentum.",14:"Two weeks. You're building a new normal.",30:"A whole month. Be proud of that.",60:"Two months of choosing yourself.",90:"Three months. This is who you are now.",180:"Half a year. Look how far you've come.",365:"One full year. Incredible."};
+  var confAnim=0;
+  function confetti(){
+    var cv=$("confetti"),cx=cv.getContext("2d");
+    cancelAnimationFrame(confAnim);
+    if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){cx.clearRect(0,0,cv.width,cv.height);return;}
+    var W=cv.width=window.innerWidth,H=cv.height=window.innerHeight,cs=getComputedStyle(document.documentElement),
+        cols=[cs.getPropertyValue("--accent"),cs.getPropertyValue("--slip"),cs.getPropertyValue("--on"),"#e8c24a","#ffffff"].map(function(c){return c.trim()||"#888";}),
+        P=[],i;
+    for(i=0;i<140;i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6-10,vx:Math.random()*4-2,vy:Math.random()*3+2,s:Math.random()*7+5,r:Math.random()*6,vr:Math.random()*.3-.15,c:cols[i%cols.length]});
+    var t0=performance.now();
+    function frame(t){
+      cx.clearRect(0,0,W,H);var alive=false;
+      P.forEach(function(q){
+        q.x+=q.vx;q.y+=q.vy;q.vy+=.04;q.r+=q.vr;
+        if(q.y<H+20){alive=true;cx.save();cx.translate(q.x,q.y);cx.rotate(q.r);cx.fillStyle=q.c;cx.fillRect(-q.s/2,-q.s/4,q.s,q.s/2);cx.restore();}
+      });
+      if(alive&&t-t0<6000)confAnim=requestAnimationFrame(frame);else cx.clearRect(0,0,W,H);
+    }
+    confAnim=requestAnimationFrame(frame);
+  }
+  function celebrate(days,title){
+    $("celeNum").textContent=days;$("celeUnit").textContent=days===1?"day in a row":"days in a row";
+    $("celeTitle").textContent=title;$("celeMsg").textContent=CM[days]||"Keep going. You're doing it.";
+    $("cele").hidden=false;buzz([100,60,100,60,200]);confetti();
+    try{$("celeOk").focus({preventScroll:true});}catch(e){}
+  }
+  function celebrateFor(title){
+    if(state.celebrate===false)return;
+    var m=MS.filter(function(x){return x[1]===title;})[0];if(!m)return;
+    celebrate(m[0],title);
+  }
+  function closeCele(){cancelAnimationFrame(confAnim);$("cele").hidden=true;}
+  $("celeOk").onclick=closeCele;
+  $("cele").addEventListener("click",function(e){if(e.target===$("cele"))closeCele();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("cele").hidden)closeCele();});
+  $("celePrev").onclick=function(){celebrate(7,"One week");};
+  function renderCeleSeg(){document.querySelectorAll("#celeSeg button").forEach(function(b){b.setAttribute("aria-pressed",(b.dataset.on==="1")===(state.celebrate!==false));});}
+  document.querySelectorAll("#celeSeg button").forEach(function(b){b.onclick=function(){state.celebrate=b.dataset.on==="1";save();renderCeleSeg();};});
+  renderCeleSeg();
+
+  /* ---------- Daily reminder ---------- */
+  var NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+  function LN(){return (window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications)||null;}
+  function remTime(){var p=((state.remind&&state.remind.t)||"20:00").split(":");return[+p[0],+p[1]];}
+  function nativeSchedule(){
+    var n=LN();if(!n||!NATIVE)return Promise.resolve(false);
+    return Promise.resolve(n.cancel({notifications:[{id:1}]})).catch(function(){}).then(function(){
+      if(!state.remind.on)return false;
+      var t=remTime();
+      return n.schedule({notifications:[{id:1,title:"Unplugged",body:"Time for today's check-in. How did it go?",schedule:{on:{hour:t[0],minute:t[1]},allowWhileIdle:true}}]}).then(function(){return true;});
+    }).catch(function(){return false;});
+  }
+  function askPerm(){
+    var n=LN();
+    if(n&&NATIVE)return Promise.resolve(n.requestPermissions()).then(function(r){return !!(r&&r.display==="granted");}).catch(function(){return false;});
+    if(!("Notification" in window))return Promise.resolve(false);
+    if(Notification.permission==="granted")return Promise.resolve(true);
+    if(Notification.permission==="denied")return Promise.resolve(false);
+    try{return Promise.resolve(Notification.requestPermission()).then(function(r){return r==="granted";});}catch(e){return Promise.resolve(false);}
+  }
+  function notify(t,b){
+    try{
+      if(!("Notification" in window)||Notification.permission!=="granted")return;
+      var fb=function(){try{new Notification(t,{body:b});}catch(e){}};
+      if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){
+        navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.showNotification)r.showNotification(t,{body:b,icon:"favicon.svg",tag:"unplugged-remind"});else fb();}).catch(fb);
+      }else fb();
+    }catch(e){}
+  }
+  function dueNow(){var R=state.remind;if(!R||!R.on)return false;var t=remTime(),d=new Date();return d.getHours()*60+d.getMinutes()>=t[0]*60+t[1];}
+  function loggedToday(){var v=state.log[nowKey()];return v==="clean"||v==="slip";}
+  function remBanner(){var el=$("remBanner");if(el)el.hidden=!(dueNow()&&!loggedToday());}
+  function checkReminder(){
+    remBanner();
+    if(document.documentElement.classList.contains("locked"))return;
+    if(dueNow()&&!loggedToday()&&state.remLast!==nowKey()){
+      state.remLast=nowKey();save();
+      if(!NATIVE)notify("Unplugged","Time for today's check-in. How did it go?");
+      toast("Time for today's check-in.");
+    }
+  }
+  function renderRemind(){
+    document.querySelectorAll("#remSeg button").forEach(function(b){b.setAttribute("aria-pressed",(b.dataset.on==="1")===!!state.remind.on);});
+    if($("remTime").value!==state.remind.t)$("remTime").value=state.remind.t;
+    $("remNote").textContent=NATIVE?"Reminders arrive even when the app is closed.":"In the browser, reminders only show while Unplugged is open. The Android app can remind you in the background.";
+    remBanner();
+  }
+  document.querySelectorAll("#remSeg button").forEach(function(b){
+    b.onclick=function(){
+      if(b.dataset.on!=="1"){state.remind.on=false;state.remLast="";save();nativeSchedule();renderRemind();return;}
+      askPerm().then(function(ok){
+        state.remind.on=true;save();nativeSchedule();renderRemind();
+        toast(ok?"Daily reminder is on.":"Notifications are blocked, so you'll see the reminder inside the app only.");
+      });
+    };
+  });
+  $("remTime").onchange=function(e){if(/^\d\d:\d\d$/.test(e.target.value)){state.remind.t=e.target.value;state.remLast="";save();nativeSchedule();renderRemind();}};
+  $("remTest").onclick=function(){askPerm().then(function(ok){notify("Unplugged","This is how your daily reminder will look.");toast(ok?"Test sent.":"Notifications are blocked. Allow them in your browser or phone settings.");});};
+  renderRemind();
+  setInterval(checkReminder,30000);
+
+  /* ---------- App lock ---------- */
+  var lockT=null,hiddenAt=0,pinMode="",lockBusy=false;
+  function lockOn(){return !!(state.lock&&state.lock.h);}
+  function kdf(pin,salt){
+    try{
+      if(window.crypto&&crypto.subtle&&window.TextEncoder){
+        var enc=new TextEncoder();
+        return crypto.subtle.importKey("raw",enc.encode(pin),"PBKDF2",false,["deriveBits"]).then(function(k){
+          return crypto.subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:100000,hash:"SHA-256"},k,256);
+        }).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return ("0"+x.toString(16)).slice(-2);}).join("");});
+      }
+    }catch(e){}
+    var h=5381,t=salt+":"+pin;for(var i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;
+    return Promise.resolve("w"+h);
+  }
+  function newSalt(){var a=new Uint8Array(16);try{crypto.getRandomValues(a);}catch(e){for(var i=0;i<16;i++)a[i]=Math.floor(Math.random()*256);}return Array.from(a).map(function(x){return ("0"+x.toString(16)).slice(-2);}).join("");}
+  function lockTick(){
+    clearInterval(lockT);var L=state.lock,pin=$("lockPin"),go=$("lockGo");
+    function free(){pin.disabled=false;go.disabled=false;}
+    if(!L||!L.u||Date.now()>=L.u){free();return;}
+    function up(){
+      var sec=Math.ceil((L.u-Date.now())/1000);
+      if(sec<=0){clearInterval(lockT);free();$("lockMsg").textContent="";try{pin.focus();}catch(e){}return;}
+      pin.disabled=true;go.disabled=true;$("lockMsg").textContent="Too many tries. Try again in "+sec+" seconds.";
+    }
+    up();lockT=setInterval(up,1000);
+  }
+  function showLock(){
+    document.documentElement.classList.add("locked");
+    $("lockPin").value="";$("lockMsg").textContent="";lockTick();
+    setTimeout(function(){try{$("lockPin").focus();}catch(e){}},60);
+  }
+  function hideLock(){document.documentElement.classList.remove("locked");}
+  function tryUnlock(){
+    var L=state.lock;if(!L)return;
+    if(L.u&&Date.now()<L.u){lockTick();return;}
+    var pin=$("lockPin").value;if(!pin||lockBusy)return;
+    lockBusy=true;
+    kdf(pin,L.s).then(function(h){
+      lockBusy=false;
+      if(h===L.h){L.f=0;L.u=0;save();$("lockPin").value="";$("lockMsg").textContent="";hideLock();checkReminder();}
+      else{
+        L.f=(L.f||0)+1;$("lockPin").value="";
+        if(L.f>=5)L.u=Date.now()+Math.min(30*Math.pow(2,L.f-5),300)*1000;
+        save();$("lockMsg").textContent="That PIN isn't right.";lockTick();
+      }
+    });
+  }
+  $("lockPin").oninput=function(e){
+    e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);
+    if(state.lock&&e.target.value.length===state.lock.n)tryUnlock();
+  };
+  $("lockPin").onkeydown=function(e){if(e.key==="Enter")tryUnlock();};
+  $("lockGo").onclick=tryUnlock;
+  $("lockForgot").onclick=function(){
+    if(confirm("The only way back in without your PIN is to erase everything in this app: your log, reasons and settings. Erase everything and start over?")){
+      try{localStorage.removeItem(KEY);}catch(e){}
+      location.reload();
+    }
+  };
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden){hiddenAt=Date.now();if(lockOn()&&(state.lock.a|0)===0)showLock();}
+    else{
+      if(lockOn()&&hiddenAt&&Date.now()-hiddenAt>=(state.lock.a|0)*1000&&!document.documentElement.classList.contains("locked"))showLock();
+      checkReminder();
+    }
+  });
+  /* settings UI */
+  function renderLock(){
+    var on=lockOn();
+    $("lockSet").hidden=on||!!pinMode;$("lockChange").hidden=!on||!!pinMode;$("lockOff").hidden=!on||!!pinMode;
+    $("lockAfterBox").hidden=!on;
+    $("lockStatus").textContent=on?"App lock is on. Unplugged asks for your PIN when you open it.":"Protect Unplugged with a PIN. It asks for the PIN every time you open the app.";
+    document.querySelectorAll("#lockAfter button").forEach(function(b){b.setAttribute("aria-pressed",on&&+b.dataset.a===(state.lock.a|0));});
+    $("pinForm").hidden=!pinMode;
+    $("pinCurW").hidden=!(pinMode==="change"||pinMode==="off");
+    $("pinNewW").hidden=!(pinMode==="set"||pinMode==="change");
+    $("pinNew2W").hidden=!(pinMode==="set"||pinMode==="change");
+  }
+  function openPin(m){pinMode=m;["pinCur","pinNew","pinNew2"].forEach(function(i){$(i).value="";});$("pinMsg").textContent="";renderLock();}
+  function pinClose(){pinMode="";renderLock();}
+  ["pinCur","pinNew","pinNew2"].forEach(function(i){$(i).oninput=function(e){e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);};});
+  $("lockSet").onclick=function(){openPin("set");};
+  $("lockChange").onclick=function(){openPin("change");};
+  $("lockOff").onclick=function(){openPin("off");};
+  $("pinCancel").onclick=pinClose;
+  $("pinSave").onclick=function(){
+    var msg=$("pinMsg");msg.textContent="";
+    function saveNew(){
+      var a=$("pinNew").value,b=$("pinNew2").value;
+      if(!/^\d{4,8}$/.test(a)){msg.textContent="Use 4 to 8 digits.";return;}
+      if(a!==b){msg.textContent="The two PINs don't match.";return;}
+      var salt=newSalt(),keep=state.lock?state.lock.a:0;
+      kdf(a,salt).then(function(h){state.lock={h:h,s:salt,n:a.length,a:keep,f:0,u:0};save();pinClose();msg.textContent="";toast("App lock is on.");});
+    }
+    if(pinMode==="set"){saveNew();return;}
+    var cur=$("pinCur").value;
+    if(!cur){msg.textContent="Enter your current PIN.";return;}
+    kdf(cur,state.lock.s).then(function(h){
+      if(h!==state.lock.h){msg.textContent="That's not your current PIN.";return;}
+      if(pinMode==="off"){delete state.lock;save();hideLock();pinClose();toast("App lock is off.");}
+      else saveNew();
+    });
+  };
+  document.querySelectorAll("#lockAfter button").forEach(function(b){b.onclick=function(){if(!lockOn())return;state.lock.a=+b.dataset.a;save();renderLock();};});
+  renderLock();
+  if(lockOn())showLock();else hideLock();
+  checkReminder();
 
   render();announce=true;
   handleHash();window.addEventListener("hashchange",handleHash);
