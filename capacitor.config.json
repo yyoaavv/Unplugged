@@ -1,0 +1,11 @@
+{
+  "appId": "com.unplugged.app",
+  "appName": "Unplugged",
+  "webDir": "www",
+  "backgroundColor": "#ebebe8",
+  "plugins": {
+    "LocalNotifications": {
+      "iconColor": "#4a4fb0"
+    }
+  }
+}
