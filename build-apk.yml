@@ -22,13 +22,31 @@ jobs:
           java-version: 17
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          sudo apt-get update
+          sudo apt-get install -y librsvg2-bin
 
       - name: Collect the web files
         run: |
           mkdir www
           cp index.html manifest.json favicon.svg icon.svg icon-maskable.svg apple-touch-icon.png www/
           # sw.js is left out on purpose: the app files are already inside the APK
+
+      - name: Make the app icon sources
+        run: |
+          mkdir assets
+          ROBOT='<g transform="translate(512 512) scale(17.6) translate(-32 -25)" fill="#fff"><rect x="23" y="9" width="4" height="10" rx="2"/><rect x="37" y="9" width="4" height="10" rx="2"/><rect x="18" y="19" width="28" height="15" rx="5"/><rect x="29" y="34" width="6" height="7" rx="2"/><circle cx="25.5" cy="26.5" r="3" fill="#4a4fb0"/><circle cx="38.5" cy="26.5" r="3" fill="#4a4fb0"/></g>'
+          ROBOT_BIG="${ROBOT/scale(17.6)/scale(20.8)}"
+          HEAD='<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">'
+          echo "$HEAD<rect width=\"1024\" height=\"1024\" rx=\"226\" fill=\"#4a4fb0\"/>$ROBOT_BIG</svg>" > icon-only.svg
+          echo "$HEAD$ROBOT</svg>" > icon-foreground.svg
+          echo "$HEAD<rect width=\"1024\" height=\"1024\" fill=\"#4a4fb0\"/></svg>" > icon-background.svg
+          for n in icon-only icon-foreground icon-background; do
+            rsvg-convert -w 1024 -h 1024 $n.svg -o assets/$n.png
+          done
+          rm icon-only.svg icon-foreground.svg icon-background.svg
+          ls -l assets
 
       - name: Create the Android project
         run: npx cap add android

@@ -64,14 +64,13 @@ then visit `http://localhost:8000`.
 | `icon.svg`, `icon-maskable.svg` | App icons (SVG) used when installing the app |
 | `apple-touch-icon.png` | iPhone and iPad home screen icon (iOS needs PNG) |
 | `package.json`, `capacitor.config.json` | Settings for building the Android app |
-| `assets/` | PNG icon sources used to make the Android app icons |
-| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions |
+| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions (also makes the app icons from your robot icon) |
 
 ## Build the Android app (APK)
 
 The repository includes a GitHub Actions workflow that builds an APK for you, with no tools to install.
 
-1. Push the files to GitHub (including `.github/`, `package.json`, `capacitor.config.json` and `assets/`).
+1. Push the files to GitHub (including `.github/workflows/build-apk.yml`, `package.json` and `capacitor.config.json`).
 2. Open the **Actions** tab. **Build Android APK** runs on every push, or press **Run workflow**. It takes about 5 minutes.
 3. Open the finished run and download **Unplugged-APK** at the bottom. Unzip it to get `app-debug.apk`.
 4. Send the APK to your phone, open it, and allow installing from unknown sources.
