@@ -16,8 +16,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <script>try{var _s=JSON.parse(localStorage.getItem("reset-tracker-v1"));if(_s&&_s.lock&&_s.lock.h)document.documentElement.classList.add("locked");}catch(e){}</script>
 <style>
-:root{--bg:#eceee9;--card:#f8f9f6;--ink:#1f2622;--mute:#5a665e;--accent:#4f7f5c;--clean:#4f7f5c;--slip:#3578a6;--line:#d7dcd4;--panic:#c2412d;--on:#fff}
-:root[data-theme=dark]{--on:#112017;--bg:#161a17;--card:#1f2421;--ink:#e9eeea;--mute:#98a39b;--accent:#a9d2b3;--clean:#a9d2b3;--slip:#8cc4ea;--line:#333b36;--panic:#e2664f}
+:root{--bg:#eceee9;--card:#f8f9f6;--ink:#1f2622;--mute:#5a665e;--accent:#7DA487;--atext:#4a7a59;--clean:#7DA487;--slip:#CF8A99;--line:#d7dcd4;--panic:#c2412d;--on:#1f2622}
+:root[data-theme=dark]{--on:#112017;--bg:#161a17;--card:#1f2421;--ink:#e9eeea;--mute:#98a39b;--accent:#8FB89A;--atext:#8FB89A;--clean:#8FB89A;--slip:#E3A3B0;--line:#333b36;--panic:#e2664f}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
@@ -36,7 +36,7 @@ p{margin:0 0 12px}
 section{background:var(--card);border-radius:14px;padding:22px;margin-bottom:20px}
 .col>section:last-child{margin-bottom:0}
 .streak{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}
-.big{font-size:4.5rem;font-weight:800;line-height:.9;letter-spacing:-.04em;color:var(--accent)}
+.big{font-size:4.5rem;font-weight:800;line-height:.9;letter-spacing:-.04em;color:var(--atext)}
 .lbl{color:var(--mute);font-size:.95rem}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;color:var(--on);background:var(--accent)}
@@ -133,7 +133,7 @@ html.locked main,html.locked #overlay,html.locked #xover,html.locked #cele{visib
 #cele[hidden]{display:none}
 #confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .cele-card{position:relative;background:var(--card);border-radius:18px;padding:32px 28px;text-align:center;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:celepop .35s ease-out}
-.cele-num{font-size:4.5rem;font-weight:800;line-height:1;color:var(--accent);letter-spacing:-.04em}
+.cele-num{font-size:4.5rem;font-weight:800;line-height:1;color:var(--atext);letter-spacing:-.04em}
 .cele-card h2{font-size:1.5rem;margin:6px 0 8px}
 @keyframes celepop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.cele-card{animation:none}}
@@ -195,11 +195,11 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 #pickedList:empty{display:none}
 #pickedList{background:var(--bg);border-radius:12px;padding:12px 14px}
 .rsn{margin-bottom:10px}.rsn:last-child{margin-bottom:0}
-.rsn b{display:block;color:var(--accent)}
+.rsn b{display:block;color:var(--atext)}
 .rsn span,.rsn.own{white-space:pre-wrap}
 #pickedList .rsn span{font-size:.92rem;color:var(--mute)}
 .remind{background:var(--card);border-left:6px solid var(--accent);border-radius:12px;padding:16px 18px;margin-bottom:20px}
-.remind b{display:block;color:var(--accent);margin-bottom:4px}
+.remind b{display:block;color:var(--atext);margin-bottom:4px}
 .remind p{margin:0;font-size:1.15rem;font-weight:600;white-space:pre-wrap}
 .mob{display:none}
 @media (max-width:600px){
@@ -1317,8 +1317,8 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       light:{accent:"#7a3fa8",slip:"#8f6a0c",bg:"#eee9f3",card:"#faf8fc",ink:"#261d30",mute:"#6a5d7a",line:"#d9cfe3",on:"#ffffff"},
       dark:{accent:"#c9a0ee",slip:"#e6c35c",bg:"#1b1522",card:"#271e30",ink:"#efe8f6",mute:"#a898ba",line:"#3d2f4b",on:"#1c0f29"}},
     neutral:{name:"Neutral",
-      light:{accent:"#4f7f5c",slip:"#3578a6",bg:"#eceee9",card:"#f8f9f6",ink:"#1f2622",mute:"#5a665e",line:"#d7dcd4",on:"#ffffff"},
-      dark:{accent:"#a9d2b3",slip:"#8cc4ea",bg:"#161a17",card:"#1f2421",ink:"#e9eeea",mute:"#98a39b",line:"#333b36",on:"#112017"}},
+      light:{accent:"#7DA487",atext:"#4a7a59",slip:"#CF8A99",bg:"#eceee9",card:"#f8f9f6",ink:"#1f2622",mute:"#5a665e",line:"#d7dcd4",on:"#1f2622"},
+      dark:{accent:"#8FB89A",slip:"#E3A3B0",bg:"#161a17",card:"#1f2421",ink:"#e9eeea",mute:"#98a39b",line:"#333b36",on:"#112017"}},
     mint:{name:"Mint",
       light:{accent:"#0f7f61",slip:"#2f4a7a",bg:"#e6f3ee",card:"#f6fbf9",ink:"#14302a",mute:"#55736a",line:"#c8e0d6",on:"#ffffff"},
       dark:{accent:"#7fe0bf",slip:"#8fb0f0",bg:"#0f1f1d",card:"#172a27",ink:"#e4f5ef",mute:"#8fb5aa",line:"#274540",on:"#0b2a21"}},
@@ -1372,6 +1372,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     var th=getTheme(state.accent),p=dark?th.dark:th.light,root=document.documentElement;
     root.setAttribute("data-theme",dark?"dark":"light");
     root.style.setProperty("--accent",p.accent);
+    root.style.setProperty("--atext",p.atext||p.accent);
     root.style.setProperty("--clean",p.accent);
     root.style.setProperty("--slip",p.slip);
     root.style.setProperty("--bg",p.bg);
