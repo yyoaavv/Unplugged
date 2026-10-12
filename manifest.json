@@ -2,13 +2,13 @@
   "id": "./",
   "name": "Unplugged",
   "short_name": "Unplugged",
-  "description": "One honest check-in a day. Everything stays on your device.",
+  "description": "A private habit tracker.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#eceee9",
-  "theme_color": "#eceee9",
+  "background_color": "#f4f4f2",
+  "theme_color": "#f4f4f2",
   "icons": [
     {
       "src": "icon.svg",

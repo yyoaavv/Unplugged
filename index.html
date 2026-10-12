@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unplugged</title>
-<meta name="theme-color" content="#eceee9">
+<meta name="theme-color" content="#f4f4f2">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
@@ -16,8 +16,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <script>try{var _s=JSON.parse(localStorage.getItem("reset-tracker-v1"));if(_s&&_s.lock&&_s.lock.h)document.documentElement.classList.add("locked");}catch(e){}</script>
 <style>
-:root{--bg:#eceee9;--card:#f8f9f6;--ink:#1f2622;--mute:#5a665e;--accent:#7DA487;--atext:#4a7a59;--clean:#7DA487;--slip:#CF8A99;--line:#d7dcd4;--panic:#c2412d;--on:#1f2622}
-:root[data-theme=dark]{--on:#112017;--bg:#161a17;--card:#1f2421;--ink:#e9eeea;--mute:#98a39b;--accent:#8FB89A;--atext:#8FB89A;--clean:#8FB89A;--slip:#E3A3B0;--line:#333b36;--panic:#e2664f}
+:root{--bg:#f4f4f2;--card:#ffffff;--ink:#121413;--mute:#6b706d;--accent:#7DA487;--atext:#4a7a59;--clean:#7DA487;--slip:#121413;--onslip:#ffffff;--line:#e3e4e1;--panic:#c2412d;--on:#111111}
+:root[data-theme=dark]{--on:#111111;--bg:#0c0d0c;--card:#171918;--ink:#f3f4f2;--mute:#9ca09d;--accent:#7DA487;--atext:#7DA487;--clean:#7DA487;--slip:#f3f4f2;--onslip:#0c0d0c;--line:#2b2d2c;--panic:#e2664f}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
@@ -40,7 +40,7 @@ section{background:var(--card);border-radius:14px;padding:22px;margin-bottom:20p
 .lbl{color:var(--mute);font-size:.95rem}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;color:var(--on);background:var(--accent)}
-button.clean{background:var(--clean)}button.slip{background:var(--slip)}
+button.clean{background:var(--clean)}button.slip{background:var(--slip);color:var(--onslip)}
 button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .today{color:var(--mute);margin-bottom:12px}
@@ -53,13 +53,13 @@ button.d:not(:disabled):hover{filter:brightness(.93)}
 .d:disabled{opacity:.35;cursor:default}
 .d.sel{box-shadow:0 0 0 3px var(--ink)}
 div.d{background:transparent}
-.d.clean{background:var(--clean);color:var(--on)}.d.slip{background:var(--slip);color:var(--on)}
+.d.clean{background:var(--clean);color:var(--on)}.d.slip{background:var(--slip);color:var(--onslip)}
 .d.now{font-weight:800;text-decoration:underline}
 .legend{display:flex;gap:16px;margin-top:12px;font-size:.85rem;color:var(--mute)}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:6px;vertical-align:-1px}
 textarea{width:100%;min-height:96px;font:inherit;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
 #msg{min-height:1.5em;color:var(--mute);margin-top:12px}
-.panic-btn{background:var(--slip);font-size:.95rem;padding:10px 18px;border-radius:8px;white-space:nowrap}
+.panic-btn{background:var(--accent);font-size:.95rem;padding:10px 18px;border-radius:8px;white-space:nowrap}
 .panic-btn:hover{filter:brightness(1.08)}
 #overlay,#xover{position:fixed;inset:0;background:rgba(10,12,30,.55);z-index:10;display:none;overflow-y:auto;padding:calc(40px + env(safe-area-inset-top,0px)) 24px 40px}
 #overlay.open,#xover.open{display:flex;justify-content:center;align-items:flex-start}
@@ -96,7 +96,7 @@ ul.acts{padding-left:20px;margin:0}ul.acts li{margin-bottom:8px}
 .theme{display:flex;align-items:center;gap:10px;text-align:left;background:var(--bg);color:var(--ink);border:2px solid var(--line);padding:10px 12px}
 .theme[aria-pressed=true]{border-color:var(--accent)}
 .theme .dots{display:flex;flex:none}
-.theme .dots i{width:22px;height:22px;border-radius:50%;border:2px solid var(--card);margin-right:-8px}
+.theme .dots i{width:22px;height:22px;border-radius:50%;border:2px solid var(--card)}
 .theme .nm{margin-left:8px}
 .set section{margin-bottom:0}
 .set .col>section{margin-bottom:20px}
@@ -147,7 +147,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 .badge{display:flex;gap:14px;align-items:center;background:var(--bg);border-radius:12px;padding:12px 14px}
 .badge.locked{opacity:.6}
 .medal{flex:none;width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--on);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.05rem}
-.badge:not(.locked) .medal{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--slip)}
+.badge:not(.locked) .medal{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
 .badge.locked .medal{background:var(--line);color:var(--mute)}
 .badge b{display:block;line-height:1.25}
 .badge small{display:block;color:var(--mute);font-size:.85rem;line-height:1.35}
@@ -166,7 +166,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 .w7{display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:0;background:transparent;border:0;color:var(--mute);font-weight:400;font-size:.8rem;text-align:center;border-radius:10px;cursor:pointer}
 .w7 b{height:46px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:600;color:var(--mute)}
 .w7.ok b{background:var(--clean);color:var(--on)}
-.w7.sl b{background:var(--slip);color:var(--on)}
+.w7.sl b{background:var(--slip);color:var(--onslip)}
 .w7.now b{box-shadow:0 0 0 2px var(--ink)}
 .w7.sel b{box-shadow:0 0 0 3px var(--teal)}
 .w7:disabled{cursor:default}
@@ -218,7 +218,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
   .range label{flex:1 1 130px;min-width:0}
   input[type=date]{width:100%;min-width:0}
   .theme{padding:8px 8px;gap:6px;font-size:.8rem}
-  .theme .dots i{width:16px;height:16px;margin-right:-6px}
+  .theme .dots i{width:16px;height:16px}
   .theme .nm{min-width:0;margin-left:4px;white-space:nowrap}
   .dsk{display:none}.mob{display:inline}
   .heatwrap{overflow:visible}
@@ -250,19 +250,21 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 .rate .chip{min-width:44px;padding:8px 0;text-align:center}
 canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px;image-rendering:pixelated;background:#fff;border-radius:10px}
 .xrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.note{background:var(--card);border-left:5px solid var(--slip);border-radius:10px;padding:10px 14px;margin:14px 0 0;font-size:.92rem}
+.note{background:var(--card);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin:14px 0 0;font-size:.92rem}
 #xover .pw{max-width:640px}
 #xover .tiles{margin-bottom:16px}
 .bnav{display:none}
 @media (max-width:600px){
   .tabs,#panic{display:none}
-  main{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
-  .bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:5;align-items:flex-end;justify-content:space-around;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+  body{display:flex;flex-direction:column;height:100dvh;padding-bottom:0}
+  main{flex:1 1 auto;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:none;-webkit-overflow-scrolling:touch;padding-bottom:40px}
+  .bnav{display:flex;position:relative;flex:0 0 auto;z-index:5;align-items:flex-end;justify-content:space-around;background:var(--card);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
   .bnav button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;color:var(--mute);font-size:.72rem;font-weight:600;line-height:1.2;padding:6px 2px;border-radius:12px}
   .bnav button svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .bnav button[aria-pressed=true]{color:var(--atext)}
   .bnav .help{flex:0 0 84px;color:var(--ink);padding-top:0}
-  .bnav .hb{width:64px;height:64px;margin-top:-30px;border-radius:50%;background:var(--slip);color:var(--on);display:flex;align-items:center;justify-content:center;border:4px solid var(--bg);box-shadow:0 3px 10px rgba(0,0,0,.22)}
+  .bnav .hb{width:64px;height:64px;margin-top:-30px;border-radius:50%;background:var(--accent);color:var(--on);display:flex;align-items:center;justify-content:center;border:4px solid var(--bg);box-shadow:0 3px 10px rgba(0,0,0,.22)}
   .bnav .hb svg{width:30px;height:30px}
 }
 </style>
@@ -275,13 +277,12 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
         <svg class="logo" viewBox="16 7 32 36" aria-hidden="true"><defs><mask id="eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff"/><circle cx="25.5" cy="26.5" r="3" fill="#000"/><circle cx="38.5" cy="26.5" r="3" fill="#000"/></mask></defs><g mask="url(#eyes)"><rect x="23" y="9" width="4" height="10" rx="2"/><rect x="37" y="9" width="4" height="10" rx="2"/><rect x="18" y="19" width="28" height="15" rx="5"/><rect x="29" y="34" width="6" height="7" rx="2"/></g></svg>
         <h1 id="siteName">Unplugged</h1>
       </div>
-      <p class="sub" style="margin:0">One honest check-in a day. Everything stays on your device.</p>
     </div>
     <button class="panic-btn" id="panic">I need help now</button>
   </header>
   <nav class="tabs" aria-label="Sections">
     <button type="button" data-tab="tracker" aria-pressed="true">Tracker</button>
-    <button type="button" data-tab="achievements" aria-pressed="false">Achievements</button>
+    <button type="button" data-tab="achievements" aria-pressed="false">Awards</button>
     <button type="button" data-tab="stats" aria-pressed="false">Stats</button>
     <button type="button" data-tab="settings" aria-pressed="false">Settings</button>
   </nav>
@@ -408,7 +409,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       <div class="badges" id="achStreak"></div>
     </section>
     <section>
-      <h2>More achievements</h2>
+      <h2>More awards</h2>
       <div class="badges" id="achMore"></div>
     </section>
   </div>
@@ -479,12 +480,11 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       <p class="lbl" style="margin-top:20px">Theme: <strong id="themeName"></strong></p>
       <div class="themes" id="accSeg" role="group" aria-label="Themes"></div>
       <div id="customBox" hidden style="margin-top:18px">
-        <p class="lbl">Pick your own colors. If a color is too light or too dark to read, it is nudged slightly.</p>
+        <p class="lbl">Pick your own color. If it is too light or too dark to read, it is nudged slightly.</p>
         <div class="row range">
           <label>Main color<input type="color" id="cAcc"></label>
-          <label>Secondary color<input type="color" id="cSec"></label>
         </div>
-        <div class="row" style="margin-top:14px"><button class="ghost" id="cReset" type="button">Reset custom colors</button></div>
+        <div class="row" style="margin-top:14px"><button class="ghost" id="cReset" type="button">Reset custom color</button></div>
       </div>
     </section>
     <section>
@@ -685,7 +685,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   var CTX=[["alone","Home alone"],["bedroom","Bedroom"],["inbed","In bed"],["out","Out with others"],["work","Work or school"]];
   var WHEN=[["morning","Morning"],["afternoon","Afternoon"],["evening","Evening"],["late","After 11 PM"]];
   function ids(a,list){var ok=list.map(function(x){return x[0];});return Array.isArray(a)?a.filter(function(x,i){return ok.indexOf(x)>=0&&a.indexOf(x)===i;}):[];}
-  if(state.v!==3){if(state.accent==="teal")state.accent="neutral";state.v=3;save();}
+  if(state.v!==3){if(state.accent==="teal")state.accent="sage";state.v=3;save();}
   normalize();
   function $(id){return document.getElementById(id);}
   function pad(n){return n<10?"0"+n:""+n;}
@@ -711,7 +711,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 
   /* ---------- Analysis, achievements, stats ---------- */
   var announce=false,toastT=null;
-  function freshState(){return{log:{},reasons:"",mode:"system",accent:"neutral",custom:{accent:"#e0592a",slip:"#2c6e91"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
+  function freshState(){return{log:{},reasons:"",mode:"system",accent:"sage",custom:{accent:"#7DA487"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
   function normalize(){
     var tm=Math.floor(+state.timerMin);state.timerMin=(tm>=1&&tm<=120)?tm:10;
     state.breathVib=!!state.breathVib;state.breathSnd=!!state.breathSnd;state.celebrate=state.celebrate!==false;
@@ -720,7 +720,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     if(typeof state.remLast!=="string")state.remLast="";
     var L=state.lock;
     if(L&&typeof L==="object"&&typeof L.h==="string"&&L.h&&typeof L.s==="string"&&L.n>=4&&L.n<=8){state.lock={h:L.h,s:L.s,n:L.n|0,a:[0,60,300].indexOf(L.a)>=0?L.a:0,f:Math.max(0,L.f|0),u:+L.u>0?+L.u:0};}else delete state.lock;
-    if((!state.themed&&state.accent==="indigo")||state.accent==="calm"||state.accent==="slate")state.accent="neutral";
+    if((!state.themed&&state.accent==="indigo")||state.accent==="calm"||state.accent==="slate")state.accent="sage";
     if(!state.focus||typeof state.focus!=="string"){state.focus=(Array.isArray(state.picked)&&(state.picked.indexOf("respect")>=0||state.picked.indexOf("intimacy")>=0))?"porn":"general";}
     if(["general","porn","nicotine","alcohol","gambling","social","gaming"].indexOf(state.focus)<0)state.focus="general";
     if(["calm","box","478","long","sigh"].indexOf(state.breathMode)<0)delete state.breathMode;
@@ -752,7 +752,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     });
     if(!state.ach||typeof state.ach!=="object")state.ach={};
     Object.keys(state.ach).forEach(function(k){if(["reasons","helped","rode","themed","urge1","urge10","urge50"].indexOf(k)<0)delete state.ach[k];});
-    if(!state.custom||!hexOk.test(state.custom.accent||"")||!hexOk.test(state.custom.slip||""))state.custom={accent:"#e0592a",slip:"#2c6e91"};
+    state.custom={accent:state.custom&&hexOk.test(state.custom.accent||"")?state.custom.accent:"#7DA487"};
   }
   function analyze(){
     var keys=Object.keys(state.log).sort(),A={clean:0,slip:0,logged:0,runs:[],byDow:[],months:{},dates:{}},run=0,after=false,prev=null,runStart=null,cleanKeys=[],i;
@@ -841,7 +841,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       var pick=null;
       for(i=fresh.length-1;i>=0;i--){if(fresh[i].group==="s"){pick=fresh[i];break;}}   /* highest streak milestone */
       if(!pick){pick=fresh[0];fresh.forEach(function(a){if(U[a.id]>=U[pick.id])pick=a;});}
-      toast("Achievement unlocked: "+pick.title+(fresh.length>1?" (+"+(fresh.length-1)+" more)":""));
+      toast("Award unlocked: "+pick.title+(fresh.length>1?" (+"+(fresh.length-1)+" more)":""));
       if(pick.group==="s")try{celebrateFor(pick.title);}catch(e){}
     }
     prevU=U;
@@ -1318,39 +1318,23 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     r.readAsText(f);
   };
   $("reset").onclick=function(){if(confirm("Erase all your data? This can't be undone.")){state=freshState();save();render();applyTheme();}};
-  /* Themes: every theme has a name and a full light + dark palette */
+  /* Themes: one main color each. Everything else is black or white depending on the mode. */
   var THEMES={
-    indigo:{name:"Indigo",
-      light:{accent:"#4a4fb0",slip:"#9b3f8f",bg:"#e9eaf5",card:"#f7f8fd",ink:"#1c2033",mute:"#5a6080",line:"#d0d3e8",on:"#ffffff"},
-      dark:{accent:"#9ea3ff",slip:"#e08ad0",bg:"#14162a",card:"#1d2040",ink:"#e8eaf8",mute:"#9a9fc4",line:"#2e3260",on:"#10112a"}},
-    forest:{name:"Forest",
-      light:{accent:"#2f7d3f",slip:"#8a5a3c",bg:"#e8eeea",card:"#f7faf8",ink:"#1d2a24",mute:"#5d6e66",line:"#cdd9d3",on:"#ffffff"},
-      dark:{accent:"#7fd08f",slip:"#d9a679",bg:"#16211b",card:"#1e2d25",ink:"#e6efe9",mute:"#93a89c",line:"#2f4438",on:"#10201a"}},
-    amber:{name:"Amber",
-      light:{accent:"#a8650f",slip:"#2f6f8f",bg:"#f2ece1",card:"#fbf8f2",ink:"#2e2618",mute:"#766a58",line:"#e0d6c4",on:"#ffffff"},
-      dark:{accent:"#f0b45b",slip:"#7fc0de",bg:"#221c12",card:"#2d261a",ink:"#f3ecdf",mute:"#b0a48e",line:"#463c28",on:"#231a08"}},
-    rose:{name:"Rose",
-      light:{accent:"#b0396b",slip:"#3f7f6f",bg:"#f3e8ed",card:"#fcf7f9",ink:"#301a24",mute:"#7a5d6a",line:"#e3cdd6",on:"#ffffff"},
-      dark:{accent:"#f09ac0",slip:"#7fcfb8",bg:"#241519",card:"#311d24",ink:"#f6e8ee",mute:"#b898a6",line:"#4b2c38",on:"#2a0f1c"}},
-    plum:{name:"Plum",
-      light:{accent:"#7a3fa8",slip:"#8f6a0c",bg:"#eee9f3",card:"#faf8fc",ink:"#261d30",mute:"#6a5d7a",line:"#d9cfe3",on:"#ffffff"},
-      dark:{accent:"#c9a0ee",slip:"#e6c35c",bg:"#1b1522",card:"#271e30",ink:"#efe8f6",mute:"#a898ba",line:"#3d2f4b",on:"#1c0f29"}},
-    neutral:{name:"Neutral",
-      light:{accent:"#7DA487",atext:"#4a7a59",slip:"#CF8A99",bg:"#eceee9",card:"#f8f9f6",ink:"#1f2622",mute:"#5a665e",line:"#d7dcd4",on:"#1f2622"},
-      dark:{accent:"#8FB89A",slip:"#E3A3B0",bg:"#161a17",card:"#1f2421",ink:"#e9eeea",mute:"#98a39b",line:"#333b36",on:"#112017"}},
-    mint:{name:"Mint",
-      light:{accent:"#0f7f61",slip:"#2f4a7a",bg:"#e6f3ee",card:"#f6fbf9",ink:"#14302a",mute:"#55736a",line:"#c8e0d6",on:"#ffffff"},
-      dark:{accent:"#7fe0bf",slip:"#8fb0f0",bg:"#0f1f1d",card:"#172a27",ink:"#e4f5ef",mute:"#8fb5aa",line:"#274540",on:"#0b2a21"}},
-    midnight:{name:"Midnight",
-      light:{accent:"#1d3a8a",slip:"#9a6b00",bg:"#e4e8f1",card:"#f5f7fb",ink:"#0d1530",mute:"#566083",line:"#ccd3e6",on:"#ffffff"},
-      dark:{accent:"#6ea8ff",slip:"#f0c75e",bg:"#070b1a",card:"#0f1630",ink:"#e6ecff",mute:"#8e9bc4",line:"#1f2a52",on:"#07102a"}},
-    mono:{name:"Monochrome",
-      light:{accent:"#000000",slip:"#5c5c5c",bg:"#ffffff",card:"#f3f3f3",ink:"#000000",mute:"#5f5f5f",line:"#d9d9d9",on:"#ffffff"},
-      dark:{accent:"#ffffff",slip:"#a0a0a0",bg:"#000000",card:"#141414",ink:"#ffffff",mute:"#a0a0a0",line:"#2e2e2e",on:"#000000"}}
+    sage:{name:"Sage",c:"#7DA487"},
+    ocean:{name:"Ocean",c:"#6AA6D6"},
+    lavender:{name:"Lavender",c:"#A596DA"},
+    rose:{name:"Rose",c:"#D98A9B"},
+    peach:{name:"Peach",c:"#EE9F7F"},
+    sand:{name:"Sand",c:"#D2AE62"},
+    teal:{name:"Teal",c:"#58B3AE"},
+    stone:{name:"Stone",c:"#9AA09C"}
   };
-  var ORDER=["neutral","indigo","forest","amber","rose","plum","mint","midnight","mono","custom"];
+  var ORDER=["sage","ocean","lavender","rose","peach","sand","teal","stone","custom"];
+  var BASE={
+    light:{bg:"#f4f4f2",card:"#ffffff",ink:"#121413",mute:"#6b706d",line:"#e3e4e1",onslip:"#ffffff"},
+    dark:{bg:"#0c0d0c",card:"#171918",ink:"#f3f4f2",mute:"#9ca09d",line:"#2b2d2c",onslip:"#0c0d0c"}
+  };
 
-  /* Custom theme: build a full palette from two picked colors */
   function hex2hsl(hx){
     var n=parseInt(hx.slice(1),16),r=((n>>16)&255)/255,g=((n>>8)&255)/255,b=(n&255)/255,
         mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0,s=0,l=(mx+mn)/2;
@@ -1368,47 +1352,37 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     return sum;
   }
   function ratio(a,b){var x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
-  function onFor(a,b){
-    var w=Math.min(ratio(a,"#ffffff"),ratio(b,"#ffffff")),k=Math.min(ratio(a,"#111111"),ratio(b,"#111111"));
-    return w>=k?"#ffffff":"#111111";
+  function onFor(a){return ratio(a,"#ffffff")>=ratio(a,"#111111")?"#ffffff":"#111111";}
+  /* nudge a color lighter (dir 1) or darker (dir -1) until it stands out enough against a background */
+  function fit(hx,against,min,dir){
+    var x=hex2hsl(hx),l=x[2],out=hx;
+    while(ratio(out,against)<min&&l>4&&l<96){l+=dir*2;out=hsl2hex(x[0],x[1],l);}
+    return out;
   }
-  function buildCustom(){
-    var c=state.custom,a=hex2hsl(c.accent),s=hex2hsl(c.slip),h=a[0],f=Math.min(a[1],30)/30;
-    function tone(sat,l){return hsl2hex(h,sat*f,l);}
-    var cardL=tone(30,97.5),cardD=tone(24,15);
-    function fit(hx,against,min,dir){var x=hex2hsl(hx),l=x[2],out=hx;while(ratio(out,against)<min&&l>4&&l<96){l+=dir*2;out=hsl2hex(x[0],x[1],l);}return out;}
-    var la=fit(c.accent,cardL,3.5,-1),ls=fit(c.slip,cardL,3.5,-1),da=fit(c.accent,cardD,4.5,1),ds=fit(c.slip,cardD,4.5,1);
-    return{name:"Custom",
-      light:{accent:la,slip:ls,bg:tone(22,92),card:tone(30,97.5),ink:tone(28,13),mute:tone(14,42),line:tone(20,82),on:onFor(la,ls)},
-      dark:{accent:da,slip:ds,bg:tone(28,10),card:tone(24,15),ink:tone(30,93),mute:tone(14,68),line:tone(20,25),on:onFor(da,ds)}};
+  function buildTheme(name,c){
+    var L=BASE.light,D=BASE.dark,lf=fit(c,L.card,1.9,-1),lt=fit(c,L.card,4.5,-1),df=fit(c,D.card,4.5,1);
+    return{name:name,
+      light:{accent:lf,atext:lt,slip:L.ink,bg:L.bg,card:L.card,ink:L.ink,mute:L.mute,line:L.line,on:onFor(lf),onslip:L.onslip},
+      dark:{accent:df,atext:df,slip:D.ink,bg:D.bg,card:D.card,ink:D.ink,mute:D.mute,line:D.line,on:onFor(df),onslip:D.onslip}};
   }
-  function getTheme(k){return k==="custom"?buildCustom():THEMES[k];}
+  function getTheme(k){return k==="custom"?buildTheme("Custom",state.custom.accent):buildTheme(THEMES[k].name,THEMES[k].c);}
 
   var mq=window.matchMedia("(prefers-color-scheme:dark)");
   function applyTheme(){
     var mode=state.mode||"system",dark=mode==="dark"||(mode==="system"&&mq.matches);
-    if(state.accent!=="custom"&&!THEMES[state.accent])state.accent="neutral";
+    if(state.accent!=="custom"&&!THEMES[state.accent])state.accent="sage";
     var th=getTheme(state.accent),p=dark?th.dark:th.light,root=document.documentElement;
     root.setAttribute("data-theme",dark?"dark":"light");
-    root.style.setProperty("--accent",p.accent);
-    root.style.setProperty("--atext",p.atext||p.accent);
+    ["accent","atext","slip","bg","card","ink","mute","line","on","onslip"].forEach(function(k){root.style.setProperty("--"+k,p[k]);});
     root.style.setProperty("--clean",p.accent);
-    root.style.setProperty("--slip",p.slip);
-    root.style.setProperty("--bg",p.bg);
-    root.style.setProperty("--card",p.card);
-    root.style.setProperty("--ink",p.ink);
-    root.style.setProperty("--mute",p.mute);
-    root.style.setProperty("--line",p.line);
-    root.style.setProperty("--on",p.on);
     var tc=document.querySelector('meta[name=theme-color]');if(tc)tc.setAttribute("content",p.bg);
     $("themeName").textContent=th.name;
     $("customBox").hidden=state.accent!=="custom";
-    if($("cAcc").value!==state.custom.accent)$("cAcc").value=state.custom.accent;
-    if($("cSec").value!==state.custom.slip)$("cSec").value=state.custom.slip;
+    if($("cAcc").value.toLowerCase()!==state.custom.accent.toLowerCase())$("cAcc").value=state.custom.accent;
     document.querySelectorAll("#modeSeg button").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.mode===mode);});
     document.querySelectorAll("#accSeg button").forEach(function(b){
       var t=getTheme(b.dataset.acc),q=dark?t.dark:t.light;
-      b.querySelector(".dots").innerHTML='<i style="background:'+q.accent+'"></i><i style="background:'+q.slip+'"></i>';
+      b.querySelector(".dots").innerHTML='<i style="background:'+q.accent+'"></i>';
       b.setAttribute("aria-pressed",b.dataset.acc===state.accent);
     });
   }
@@ -1420,8 +1394,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     $("accSeg").appendChild(b);
   });
   $("cAcc").oninput=function(e){state.custom.accent=e.target.value;state.themed=true;save();applyTheme();};
-  $("cSec").oninput=function(e){state.custom.slip=e.target.value;state.themed=true;save();applyTheme();};
-  $("cReset").onclick=function(){state.custom={accent:"#e0592a",slip:"#2c6e91"};save();applyTheme();};
+  $("cReset").onclick=function(){state.custom={accent:"#7DA487"};save();applyTheme();};
   document.querySelectorAll("#modeSeg button").forEach(function(b){
     b.onclick=function(){state.mode=b.dataset.mode;save();applyTheme();};
   });
@@ -1430,7 +1403,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     b.onclick=function(){
       var t=b.dataset.tab;
       document.querySelectorAll("[data-tab]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.tab===t);});
-      if(b.closest(".bnav"))window.scrollTo(0,0);
+      if(b.closest(".bnav")){var mn=document.querySelector("main");mn.scrollTop=0;window.scrollTo(0,0);}
       ["tracker","achievements","stats","settings"].forEach(function(n){$("view-"+n).hidden=n!==t;});
       var v=$("view-"+t);v.classList.remove("fade");void v.offsetWidth;v.classList.add("fade");
       if(t==="stats"){var hw=$("heatwrap");hw.scrollLeft=hw.scrollWidth;}
@@ -1708,7 +1681,7 @@ var QR=(function(){
   function cleanImported(){
     if(typeof state.reasons!=="string")state.reasons="";state.reasons=state.reasons.slice(0,5000);
     if(["system","light","dark"].indexOf(state.mode)<0)state.mode="system";
-    if(typeof state.accent!=="string")state.accent="indigo";
+    if(typeof state.accent!=="string")state.accent="sage";
     ["helped","rode"].forEach(function(k){state[k]=Math.max(0,Math.floor(+state[k])||0);});
     state.themed=!!state.themed;
     state.picked=state.picked.filter(function(id){return ALLP.some(function(p){return p.id===id;});});setPresets();buildFocus();buildChips();

@@ -9,7 +9,7 @@ A private, offline-first tracker for breaking a habit. One honest check-in a day
 - **Daily check-in:** log each day as clean or slipped, fix past days from the calendar, or fill in a whole range at once.
 - **Slip journal:** when you log a slip, an optional 2-second survey asks about the trigger (Stress, Boredom, Fatigue, Loneliness, Late at night, Peer pressure, Low mood), where you were, and when. Skip it any time, or add details later.
 - **Pattern insights:** the Stats tab turns your tags into plain-language insights, such as your most common trigger, setting and time of day.
-- **Urge wins:** tap "I rode out an urge" (on the Tracker tab or from the help panel) to log urges you felt and didn't act on. Wins show up in Stats and unlock achievements.
+- **Urge wins:** tap "I rode out an urge" (on the Tracker tab or from the help panel) to log urges you felt and didn't act on. Wins show up in Stats and unlock awards.
 - **Urge strength:** optionally rate an urge from 1 to 10 when it hits and again after you ride it out. Stats shows how much your urges fade on average.
 - **Recovery plan:** after a slip, a short kind check-in asks what you'll do differently and what your plan is for tomorrow. The plan is shown to you the next day.
 - **Move to a new phone:** show a QR code (or copy a link) that carries your whole backup. Scan it on the new phone, open the link and tap Import.
@@ -19,11 +19,11 @@ A private, offline-first tracker for breaking a habit. One honest check-in a day
 - **Your own timer:** pick 5, 10, 15 or 20 minutes, or any length from 1 to 120.
 - **Works for any habit:** choose what you're working on (anything, porn, smoking or vaping, alcohol, gambling, social media or gaming) and the suggested reasons and tips match it.
 - **Your reasons:** pick built-in reasons or write your own; one is shown back to you when an urge hits.
-- **Streaks and achievements:** current and best streak, milestones from day one to a full year, and extra badges, with a short celebration at each streak milestone.
+- **Streaks and awards:** current and best streak, milestones from day one to a full year, and extra badges, with a short celebration at each streak milestone.
 - **Daily reminder:** pick a time and get a nudge to check in. In the browser it shows while the app is open; the Android app can remind you in the background.
 - **App lock:** protect the app with a 4 to 8 digit PIN, locking right away or after 1 or 5 minutes. It's a privacy screen, not encryption.
 - **Stats:** last 30 days, weekday breakdown, six-month trend and a year heatmap.
-- **Themes:** nine themes plus a custom one, each with light and dark mode.
+- **Themes:** eight one-color themes plus a custom color, each with light and dark mode. Everything else is black or white.
 - **Backup:** export and import your data as a JSON file.
 - **Installable PWA and Android app:** add it to your home screen for a full-screen app that works offline, or build an APK (see below).
 
