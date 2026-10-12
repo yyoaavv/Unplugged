@@ -23,7 +23,7 @@ A private, offline-first tracker for breaking a habit. One honest check-in a day
 - **Daily reminder:** pick a time and get a nudge to check in. In the browser it shows while the app is open; the Android app can remind you in the background.
 - **App lock:** protect the app with a 4 to 8 digit PIN, locking right away or after 1 or 5 minutes. It's a privacy screen, not encryption.
 - **Stats:** last 30 days, weekday breakdown, six-month trend and a year heatmap.
-- **Themes:** eight one-color themes plus a custom color, each with light and dark mode. Everything else is black or white.
+- **Themes:** eight one-color themes, a black-and-white Monochrome theme, and a custom color, each with light and dark mode. Everything else is black or white.
 - **Backup:** export and import your data as a JSON file.
 - **Installable PWA and Android app:** add it to your home screen for a full-screen app that works offline, or build an APK (see below).
 

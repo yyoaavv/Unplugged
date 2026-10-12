@@ -16,8 +16,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <script>try{var _s=JSON.parse(localStorage.getItem("reset-tracker-v1"));if(_s&&_s.lock&&_s.lock.h)document.documentElement.classList.add("locked");}catch(e){}</script>
 <style>
-:root{--bg:#f4f4f2;--card:#ffffff;--ink:#121413;--mute:#6b706d;--accent:#7DA487;--atext:#4a7a59;--clean:#7DA487;--slip:#121413;--onslip:#ffffff;--line:#e3e4e1;--panic:#c2412d;--on:#111111}
-:root[data-theme=dark]{--on:#111111;--bg:#0c0d0c;--card:#171918;--ink:#f3f4f2;--mute:#9ca09d;--accent:#7DA487;--atext:#7DA487;--clean:#7DA487;--slip:#f3f4f2;--onslip:#0c0d0c;--line:#2b2d2c;--panic:#e2664f}
+:root{--bg:#f4f4f2;--card:#ffffff;--ink:#121413;--mute:#6b706d;--accent:#7DA487;--atext:#4a7a59;--logo:#7DA487;--clean:#7DA487;--slip:#121413;--onslip:#ffffff;--line:#e3e4e1;--panic:#c2412d;--on:#111111}
+:root[data-theme=dark]{--on:#111111;--bg:#0c0d0c;--card:#171918;--ink:#f3f4f2;--mute:#9ca09d;--accent:#7DA487;--atext:#7DA487;--logo:#7DA487;--clean:#7DA487;--slip:#f3f4f2;--onslip:#0c0d0c;--line:#2b2d2c;--panic:#e2664f}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
@@ -29,7 +29,7 @@ main{max-width:1080px;margin:0 auto;padding:32px 24px 60px}
 @media (max-width:820px){.layout{grid-template-columns:1fr}}
 h1{font-size:2rem;font-weight:800;margin:0;letter-spacing:-.02em}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.logo{width:44px;height:auto;flex:none;fill:var(--accent)}
+.logo{width:44px;height:auto;flex:none;fill:var(--logo,var(--accent))}
 h2{font-size:1.15rem;font-weight:600;margin:0 0 12px}
 p{margin:0 0 12px}
 .sub{color:var(--mute);margin-bottom:24px}
@@ -1327,9 +1327,10 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     peach:{name:"Peach",c:"#EE9F7F"},
     sand:{name:"Sand",c:"#D2AE62"},
     teal:{name:"Teal",c:"#58B3AE"},
-    stone:{name:"Stone",c:"#9AA09C"}
+    stone:{name:"Stone",c:"#9AA09C"},
+    mono:{name:"Monochrome",c:"#121413",cd:"#f3f4f2"}
   };
-  var ORDER=["sage","ocean","lavender","rose","peach","sand","teal","stone","custom"];
+  var ORDER=["sage","ocean","lavender","rose","peach","sand","teal","stone","mono","custom"];
   var BASE={
     light:{bg:"#f4f4f2",card:"#ffffff",ink:"#121413",mute:"#6b706d",line:"#e3e4e1",onslip:"#ffffff"},
     dark:{bg:"#0c0d0c",card:"#171918",ink:"#f3f4f2",mute:"#9ca09d",line:"#2b2d2c",onslip:"#0c0d0c"}
@@ -1356,16 +1357,30 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   /* nudge a color lighter (dir 1) or darker (dir -1) until it stands out enough against a background */
   function fit(hx,against,min,dir){
     var x=hex2hsl(hx),l=x[2],out=hx;
-    while(ratio(out,against)<min&&l>4&&l<96){l+=dir*2;out=hsl2hex(x[0],x[1],l);}
+    while(ratio(out,against)<min&&(dir>0?l<96:l>4)){l+=dir*2;out=hsl2hex(x[0],x[1],l);}
     return out;
   }
-  function buildTheme(name,c){
-    var L=BASE.light,D=BASE.dark,lf=fit(c,L.card,1.9,-1),lt=fit(c,L.card,4.5,-1),df=fit(c,D.card,4.5,1);
-    return{name:name,
-      light:{accent:lf,atext:lt,slip:L.ink,bg:L.bg,card:L.card,ink:L.ink,mute:L.mute,line:L.line,on:onFor(lf),onslip:L.onslip},
-      dark:{accent:df,atext:df,slip:D.ink,bg:D.bg,card:D.card,ink:D.ink,mute:D.mute,line:D.line,on:onFor(df),onslip:D.onslip}};
+  /* mid-tone colors can't carry readable text in either black or white: shift them until one of the two works */
+  function legible(hx,card,minCard){
+    var x=hex2hsl(hx),i,j,c,l,dirs=[-1,1];
+    function ok(v){return Math.max(ratio(v,"#ffffff"),ratio(v,"#111111"))>=4.5&&ratio(v,card)>=minCard;}
+    if(ok(hx))return hx;
+    for(i=1;i<=48;i++)for(j=0;j<2;j++){l=x[2]+dirs[j]*i*2;if(l<2||l>98)continue;c=hsl2hex(x[0],x[1],l);if(ok(c))return c;}
+    return hx;
   }
-  function getTheme(k){return k==="custom"?buildTheme("Custom",state.custom.accent):buildTheme(THEMES[k].name,THEMES[k].c);}
+  /* c = the color in light mode, cd = the color in dark mode (defaults to c) */
+  function buildTheme(name,c,cd){
+    var L=BASE.light,D=BASE.dark,
+        lf=legible(fit(c,L.card,1.9,-1),L.card,1.9),lt=fit(c,L.card,4.5,-1),ll=fit(lf,L.bg,2.4,-1),
+        df=legible(fit(cd||c,D.card,4.5,1),D.card,4.5);
+    /* slips are black/white, unless the main color is itself near black/white: then they are gray so the two never look alike */
+    function slipFor(fill,B,gray,ongray){return ratio(fill,B.ink)<2.2?{s:gray,o:ongray}:{s:B.ink,o:B.onslip};}
+    var ls=slipFor(lf,L,"#9a9f9c","#111111"),ds=slipFor(df,D,"#6f7471","#ffffff");
+    return{name:name,
+      light:{accent:lf,atext:lt,logo:ll,slip:ls.s,bg:L.bg,card:L.card,ink:L.ink,mute:L.mute,line:L.line,on:onFor(lf),onslip:ls.o},
+      dark:{accent:df,atext:df,logo:df,slip:ds.s,bg:D.bg,card:D.card,ink:D.ink,mute:D.mute,line:D.line,on:onFor(df),onslip:ds.o}};
+  }
+  function getTheme(k){return k==="custom"?buildTheme("Custom",state.custom.accent):buildTheme(THEMES[k].name,THEMES[k].c,THEMES[k].cd);}
 
   var mq=window.matchMedia("(prefers-color-scheme:dark)");
   function applyTheme(){
@@ -1373,7 +1388,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     if(state.accent!=="custom"&&!THEMES[state.accent])state.accent="sage";
     var th=getTheme(state.accent),p=dark?th.dark:th.light,root=document.documentElement;
     root.setAttribute("data-theme",dark?"dark":"light");
-    ["accent","atext","slip","bg","card","ink","mute","line","on","onslip"].forEach(function(k){root.style.setProperty("--"+k,p[k]);});
+    ["accent","atext","logo","slip","bg","card","ink","mute","line","on","onslip"].forEach(function(k){root.style.setProperty("--"+k,p[k]);});
     root.style.setProperty("--clean",p.accent);
     var tc=document.querySelector('meta[name=theme-color]');if(tc)tc.setAttribute("content",p.bg);
     $("themeName").textContent=th.name;
