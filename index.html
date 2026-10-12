@@ -21,9 +21,9 @@
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-main{max-width:1080px;margin:0 auto;padding:32px 24px 60px}
+main{max-width:720px;margin:0 auto;padding:32px 24px 60px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:stretch}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:stretch}
 .layout>.col{display:flex;flex-direction:column;min-width:0}
 .layout>.col>section:last-child{flex:1 1 auto}
 @media (max-width:820px){.layout{grid-template-columns:1fr}}
@@ -186,7 +186,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 .heat i{border-radius:3px;background:var(--line);opacity:.55}
 .heat i.clean{background:var(--clean);opacity:1}.heat i.slip{background:var(--slip);opacity:1}
 .heat i.x{visibility:hidden}
-#toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translate(-50%,-20px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:30;max-width:calc(100% - 32px);text-align:center}
+#toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translate(-50%,-20px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:30;width:max-content;max-width:min(calc(100% - 32px),420px);text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -267,6 +267,22 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   .bnav .hb{width:64px;height:64px;margin-top:-30px;border-radius:50%;background:var(--accent);color:var(--on);display:flex;align-items:center;justify-content:center;border:4px solid var(--bg);box-shadow:0 3px 10px rgba(0,0,0,.22)}
   .bnav .hb svg{width:30px;height:30px}
 }
+#sheet{position:fixed;inset:0;z-index:8;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,12,10,.5);visibility:hidden;opacity:0;transition:opacity .2s ease,visibility 0s linear .25s}
+#sheet.open{visibility:visible;opacity:1;transition:opacity .2s ease}
+.sheet-panel{width:100%;max-width:560px;max-height:88vh;max-height:88dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--card);border-radius:20px 20px 0 0;padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);outline:none}
+#sheet.open .sheet-panel{transform:none}
+.sheet-grip{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet-panel .survey{background:transparent;border-radius:0;padding:0;margin:0}
+#urgeMsg{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.urge-line{display:flex;align-items:center;gap:12px;margin-top:12px;min-height:40px}
+.urge-line #urgeMsg{flex:1 1 auto;min-width:0;margin:0}
+.urge-line .ghost{flex:none;padding:6px 14px;font-size:.88rem}
+@media (min-width:601px){
+  #sheet{align-items:center}
+  .sheet-panel{border-radius:20px;padding:24px 28px;transform:translateY(24px)}
+  .sheet-grip{display:none}
+}
+@media (prefers-reduced-motion:reduce){#sheet,.sheet-panel{transition:none}}
 </style>
 </head>
 <body>
@@ -310,33 +326,11 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     <div class="row">
       <button class="clean" id="btnClean">I stayed clean</button>
       <button class="slip" id="btnSlip">I slipped</button>
-      <button class="ghost" id="btnDetails" hidden>Add slip details</button>
-      <button class="ghost" id="btnPlan" hidden>Recovery plan</button>
       <button class="ghost" id="btnClear">Clear this day</button>
+      <button class="ghost" id="btnDetails" style="visibility:hidden">Details</button>
       <button class="ghost" id="btnToday" hidden>Back to today</button>
     </div>
     <p class="lbl" style="margin:12px 0 0">Tip: pick any past day on the calendar to fix or fill in your log.</p>
-    <div id="msg" role="status"></div>
-    <div class="survey fade" id="survey" hidden>
-      <h3>What was going on?</h3>
-      <p class="lbl" style="margin:0">Optional. Tap anything that fits, it saves as you go.</p>
-      <p class="sg">Trigger</p>
-      <div class="chips" id="svTrig" role="group" aria-label="Triggers"></div>
-      <p class="sg">Where</p>
-      <div class="chips" id="svCtx" role="group" aria-label="Location or context"></div>
-      <p class="sg">When</p>
-      <div class="chips" id="svWhen" role="group" aria-label="Time of day"></div>
-      <div class="foot"><button type="button" class="clean" id="svDone">Done</button></div>
-    </div>
-    <div class="survey fade" id="recover" hidden>
-      <h3>Be kind to yourself</h3>
-      <p class="lbl" id="recMsg" style="margin:0"></p>
-      <p class="sg">What will I do differently next time? (optional)</p>
-      <textarea id="recDo" maxlength="200" style="min-height:64px" aria-label="What I will do differently next time"></textarea>
-      <p class="sg">My plan for tomorrow (optional)</p>
-      <textarea id="recPlan" maxlength="200" style="min-height:64px" aria-label="My plan for tomorrow"></textarea>
-      <div class="foot"><button type="button" class="clean" id="recSave">Save</button><button type="button" class="ghost" id="recSkip">Skip</button></div>
-    </div>
   </section>
 
   <section>
@@ -344,15 +338,17 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     <p class="lbl">Felt an urge and didn't act on it? Log the win.</p>
     <div class="row">
       <button class="clean" id="btnUrge" type="button">I rode out an urge</button>
-      <button class="ghost" id="btnUrgeUndo" type="button" hidden>Undo last</button>
     </div>
-    <div id="urgeMsg" class="lbl" role="status" style="margin:12px 0 0;min-height:1.5em"></div>
+    <div class="urge-line">
+      <span id="urgeMsg" class="lbl" role="status"></span>
+      <button class="ghost" id="btnUrgeUndo" type="button" style="visibility:hidden">Undo last</button>
+    </div>
   </section>
 
   <section>
     <h2>Last 7 days</h2>
     <div class="w7grid" id="weekRow"></div>
-    <p class="lbl" id="weekNote" style="margin:14px 0 0"></p>
+    <p class="lbl" id="weekNote" style="margin:14px 0 0;min-height:3.3em"></p>
   </section>
 
   </div>
@@ -380,7 +376,6 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       <button class="slip" id="rSlip">Mark all slipped</button>
       <button class="ghost" id="rClear">Clear range</button>
     </div>
-    <div id="rmsg" class="lbl" role="status" style="margin:12px 0 0;min-height:1.5em"></div>
   </section>
 
   </div>
@@ -661,6 +656,32 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     <div class="row" id="rodeRow" style="margin-top:20px">
       <button id="btnRode" class="clean" type="button">I rode it out</button>
       <button id="closePanic" class="ghost" type="button">I'm okay, back to the tracker</button>
+    </div>
+  </div>
+</div>
+
+<div id="sheet" role="dialog" aria-modal="true" aria-label="Slip follow-up">
+  <div class="sheet-panel" id="sheetPanel" tabindex="-1">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="survey" id="survey" hidden>
+      <h3>What was going on?</h3>
+      <p class="lbl" style="margin:0">Optional. Tap anything that fits, it saves as you go.</p>
+      <p class="sg">Trigger</p>
+      <div class="chips" id="svTrig" role="group" aria-label="Triggers"></div>
+      <p class="sg">Where</p>
+      <div class="chips" id="svCtx" role="group" aria-label="Location or context"></div>
+      <p class="sg">When</p>
+      <div class="chips" id="svWhen" role="group" aria-label="Time of day"></div>
+      <div class="foot"><button type="button" class="clean" id="svDone">Done</button></div>
+    </div>
+    <div class="survey" id="recover" hidden>
+      <h3>Be kind to yourself</h3>
+      <p class="lbl" id="recMsg" style="margin:0"></p>
+      <p class="sg">What will I do differently next time? (optional)</p>
+      <textarea id="recDo" maxlength="200" style="min-height:64px" aria-label="What I will do differently next time"></textarea>
+      <p class="sg">My plan for tomorrow (optional)</p>
+      <textarea id="recPlan" maxlength="200" style="min-height:64px" aria-label="My plan for tomorrow"></textarea>
+      <div class="foot"><button type="button" class="clean" id="recSave">Save</button><button type="button" class="ghost" id="recSkip">Skip</button></div>
     </div>
   </div>
 </div>
@@ -970,7 +991,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       b.firstChild.textContent=parse(k).toLocaleDateString(undefined,{weekday:"short"});
       b.lastChild.textContent=parse(k).getDate();
       b.setAttribute("aria-label",parse(k).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})+(v?", "+(v==="clean"?"clean":"slipped"):", not logged"));
-      b.onclick=function(){sel=k;$("msg").textContent="";render();};
+      b.onclick=function(){sel=k;render();};
       row.appendChild(b);
     });
     var t=c+" clean"+(sl?", "+sl+" slipped":"")+(nl?", "+nl+" not logged":"")+" this week.";
@@ -980,16 +1001,14 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   function renderUrges(){
     var n=urgesOn(nowKey());
     $("urgeMsg").textContent=n?n+(n===1?" urge":" urges")+" ridden out today.":"None logged today yet.";
-    $("btnUrgeUndo").hidden=!n;
+    $("btnUrgeUndo").style.visibility=n?"visible":"hidden";
   }
   function logUrge(b,a){
     var k=nowKey();
     state.urges[k]=Math.min(urgesOn(k)+1,999);
     state.urgeLog.push({d:k,b:b||0,a:a||0});if(state.urgeLog.length>500)state.urgeLog.shift();
     save();render();
-    var n=urgesOn(k);
-    $("urgeMsg").textContent="Logged. That's "+n+" today. You felt it and didn't act on it.";
-    return n;
+    return urgesOn(k);
   }
 
   /* ---------- Urge strength, recovery plan, fade stats ---------- */
@@ -1015,7 +1034,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   function renderRecover(){
     var ok=state.log[sel]==="slip"&&sel===nowKey(),open=recoverKey===sel&&ok;
     $("recover").hidden=!open;
-    $("btnPlan").hidden=!ok||open;
+    updateSheet();
   }
   function openRecover(){
     var r=state.recovery[sel]||{d:"",p:""},b=stats().best;
@@ -1023,7 +1042,6 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     $("recMsg").textContent="One slip doesn't erase your progress. "+(b?"Your best streak of "+b+(b===1?" day":" days")+" is still saved, and checking in honestly is what counts.":"Checking in honestly is what counts.");
     recoverKey=sel;renderRecover();
   }
-  $("btnPlan").onclick=openRecover;
   $("recSkip").onclick=function(){recoverKey=null;renderRecover();};
   $("recSave").onclick=function(){
     if(!recoverKey)return;
@@ -1082,8 +1100,8 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   function renderSurvey(){
     var isSlip=state.log[sel]==="slip",open=surveyKey===sel&&isSlip,det=$("btnDetails");
     $("survey").hidden=!open;
-    det.hidden=!isSlip||open;
-    det.textContent=state.slips[sel]?"Edit slip details":"Add slip details";
+    det.style.visibility=isSlip?"visible":"hidden";
+    updateSheet();
     if(!open)return;
     var r=state.slips[sel]||{t:[],c:[],w:""};
     document.querySelectorAll("#survey .chip").forEach(function(b){
@@ -1091,6 +1109,26 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       b.setAttribute("aria-pressed",on);
     });
   }
+  /* ---------- Bottom sheet for the slip follow-ups (survey + recovery plan) ---------- */
+  var sheetFrom=null;
+  function updateSheet(){
+    var open=!$("survey").hidden||!$("recover").hidden,was=$("sheet").classList.contains("open");
+    if(open===was)return;
+    $("sheet").classList.toggle("open",open);
+    if(open){sheetFrom=document.activeElement;setTimeout(function(){$("sheetPanel").focus({preventScroll:true});},30);}
+    else if(sheetFrom&&sheetFrom.focus){sheetFrom.focus({preventScroll:true});sheetFrom=null;}
+  }
+  function closeSheet(){surveyKey=null;recoverKey=null;renderSurvey();renderRecover();}
+  $("sheet").addEventListener("click",function(e){if(e.target===$("sheet"))closeSheet();});
+  $("sheet").addEventListener("keydown",function(e){
+    if(e.key!=="Tab")return;
+    var f=[].slice.call($("sheetPanel").querySelectorAll("button,textarea,input")).filter(function(x){return x.offsetParent!==null;});
+    if(!f.length)return;
+    var first=f[0],last=f[f.length-1],cur=document.activeElement;
+    if(e.shiftKey&&(cur===first||cur===$("sheetPanel"))){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&cur===last){e.preventDefault();first.focus();}
+  });
+
   function renderTriggers(){
     var cats=[
       {f:"t",title:"Triggers",list:TRIG,counts:{},n:0,say:function(l,p){return"Top trigger: "+l+", in "+p+"% of slips where you tagged a trigger.";}},
@@ -1256,7 +1294,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       c.className="d"+(state.log[k]?" "+state.log[k]:"")+(k===todayKey?" now":"")+(k===sel?" sel":"");
       c.textContent=n;c.disabled=k>todayKey;
       c.setAttribute("aria-label",parse(k).toLocaleDateString(undefined,{month:"long",day:"numeric"})+(state.log[k]?", "+state.log[k]:""));
-      (function(kk){c.onclick=function(){sel=kk;$("msg").textContent="";render();};})(k);
+      (function(kk){c.onclick=function(){sel=kk;render();};})(k);
       cal.appendChild(c);
     }
     $("reasons").value=state.reasons||"";renderChips();renderSurvey();renderUrges();renderWeek();renderRecover();renderPlanCard();refresh();
@@ -1264,15 +1302,15 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 
   var dows=$("dows");["S","M","T","W","T","F","S"].forEach(function(l){var d=document.createElement("div");d.className="dow";d.textContent=l;dows.appendChild(d);});
 
-  $("btnClean").onclick=function(){state.log[sel]="clean";save();render();var c=stats().cur;$("msg").textContent=sel!==todayKey?"Day updated.":(c>1?"Day "+c+". Keep going.":"Day 1 is done. That's how every streak starts.");};
-  $("btnSlip").onclick=function(){state.log[sel]="slip";save();surveyKey=sel;render();$("msg").textContent=sel!==todayKey?"Day updated.":"It happens. Your best streak is still saved. Tomorrow is a fresh day, start it clean.";};
+  $("btnClean").onclick=function(){state.log[sel]="clean";save();render();var c=stats().cur;toast(sel!==todayKey?"Day updated.":(c>1?"Day "+c+". Keep going.":"Day 1 is done. That's how every streak starts."));};
+  $("btnSlip").onclick=function(){state.log[sel]="slip";save();surveyKey=sel;render();toast(sel!==todayKey?"Day updated.":"It happens. Your best streak is still saved.");};
   $("btnDetails").onclick=function(){surveyKey=sel;renderSurvey();};
   $("svDone").onclick=function(){
-    surveyKey=null;renderSurvey();
-    if(state.log[sel]==="slip"&&sel===nowKey())openRecover();
-    else toast(state.slips[sel]?"Saved. Patterns show up in the Stats tab.":"No problem. You can add details any time.");
+    surveyKey=null;
+    if(state.log[sel]==="slip"&&sel===nowKey()){openRecover();renderSurvey();}
+    else{renderSurvey();toast(state.slips[sel]?"Saved. Patterns show up in the Stats tab.":"No problem. You can add details any time.");}
   };
-  $("btnUrge").onclick=function(){logUrge();};
+  $("btnUrge").onclick=function(){var n=logUrge();if(!$("toast").classList.contains("show"))toast("Logged. That's "+n+" today. You felt it and didn't act on it.");};
   $("btnUrgeUndo").onclick=function(){
     var k=nowKey(),n=urgesOn(k),i;
     if(n<=1)delete state.urges[k];else state.urges[k]=n-1;
@@ -1283,22 +1321,22 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     $("rodeRow").hidden=true;$("afterBox").hidden=false;
     var f=$("rateAfter").firstChild;if(f)f.focus();
   };
-  $("btnClear").onclick=function(){delete state.log[sel];save();render();$("msg").textContent="";};
+  $("btnClear").onclick=function(){delete state.log[sel];save();render();};
   var rt=new Date();rt.setDate(rt.getDate()-6);
   $("rFrom").max=$("rTo").max=todayKey;$("rTo").value=todayKey;$("rFrom").value=key(rt);
   function applyRange(val){
-    var f=$("rFrom").value,t=$("rTo").value,m=$("rmsg");
-    if(!f||!t){m.textContent="Pick both a start and an end date.";return;}
-    if(f>t){m.textContent="The start date has to come before the end date.";return;}
-    if(t>todayKey){m.textContent="You can't log days in the future.";return;}
+    var f=$("rFrom").value,t=$("rTo").value;
+    if(!f||!t){toast("Pick both a start and an end date.");return;}
+    if(f>t){toast("The start date has to come before the end date.");return;}
+    if(t>todayKey){toast("You can't log days in the future.");return;}
     var keys=[],d=parse(f),end=parse(t);
     while(d<=end&&keys.length<=1100){keys.push(key(d));d.setDate(d.getDate()+1);}
-    if(keys.length>1100){m.textContent="That range is too long. Try 3 years or less.";return;}
+    if(keys.length>1100){toast("That range is too long. Try 3 years or less.");return;}
     var changes=keys.filter(function(k){return state.log[k]&&state.log[k]!==val;}).length;
     if(val!==null&&changes>0&&!confirm("This will change "+changes+" day"+(changes>1?"s":"")+" you already logged. Continue?"))return;
     keys.forEach(function(k){if(val===null)delete state.log[k];else state.log[k]=val;});
     save();render();
-    m.textContent=(val===null?"Cleared ":"Marked ")+keys.length+" day"+(keys.length>1?"s":"")+(val===null?"":" as "+(val==="clean"?"clean":"slipped"))+".";
+    toast((val===null?"Cleared ":"Marked ")+keys.length+" day"+(keys.length>1?"s":"")+(val===null?"":" as "+(val==="clean"?"clean":"slipped"))+".");
   }
   $("rClean").onclick=function(){applyRange("clean");};
   $("rSlip").onclick=function(){applyRange("slip");};
@@ -1314,7 +1352,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   $("import").onclick=function(){$("file").click();};
   $("file").onchange=function(e){
     var f=e.target.files[0];if(!f)return;var r=new FileReader();
-    r.onload=function(){try{var p=JSON.parse(r.result);if(p&&p.log){announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();save();render();applyTheme();announce=true;$("msg").textContent="Backup imported.";}}catch(x){$("msg").textContent="That file couldn't be read.";}};
+    r.onload=function(){try{var p=JSON.parse(r.result);if(p&&p.log){announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();save();render();applyTheme();announce=true;toast("Backup imported.");}}catch(x){toast("That file couldn't be read.");}};
     r.readAsText(f);
   };
   $("reset").onclick=function(){if(confirm("Erase all your data? This can't be undone.")){state=freshState();save();render();applyTheme();}};
@@ -1501,6 +1539,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     if(e.key!=="Escape")return;
     if($("xover").classList.contains("open"))closeX();
     else if($("overlay").classList.contains("open"))closePanic();
+    else if($("sheet").classList.contains("open"))closeSheet();
   });
   $("xover").addEventListener("click",function(e){if(e.target===$("xover"))closeX();});
   $("xClose").onclick=function(){closeX();};
