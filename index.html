@@ -41,7 +41,7 @@ section{background:var(--card);border-radius:14px;padding:22px;margin-bottom:20p
 .row{display:flex;gap:10px;flex-wrap:wrap}
 button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;color:var(--on);background:var(--accent)}
 button.clean{background:var(--clean)}button.slip{background:var(--slip);color:var(--onslip)}
-button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+button.ghost{background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line))}
 button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .today{color:var(--mute);margin-bottom:12px}
 .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
@@ -93,7 +93,7 @@ ul.acts{padding-left:20px;margin:0}ul.acts li{margin-bottom:8px}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
 .seg button[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
 .themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.theme{display:flex;align-items:center;gap:10px;text-align:left;background:var(--bg);color:var(--ink);border:2px solid var(--line);padding:10px 12px}
+.theme{display:flex;align-items:center;gap:10px;text-align:left;background:var(--tint,var(--bg));color:var(--ink);border:2px solid var(--tline,var(--line));padding:10px 12px}
 .theme[aria-pressed=true]{border-color:var(--accent)}
 .theme .dots{display:flex;flex:none}
 .theme .dots i{width:22px;height:22px;border-radius:50%;border:2px solid var(--card)}
@@ -190,7 +190,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.chip{background:transparent;color:var(--ink);border:1.5px solid var(--line);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
+.chip{background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line));padding:8px 14px;border-radius:999px;font-weight:600;font-size:.92rem}
 .chip[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
 #pickedList:empty{display:none}
 #pickedList{background:var(--bg);border-radius:12px;padding:12px 14px}
@@ -283,6 +283,40 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   .sheet-grip{display:none}
 }
 @media (prefers-reduced-motion:reduce){#sheet,.sheet-panel{transition:none}}
+
+.phd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}.phd h2{margin:0}
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.plist section{margin:0}
+.acard,.asr{background:var(--card);border-radius:14px;padding:22px;cursor:pointer;border:2px solid transparent}
+.acard:hover,.asr:hover,.acard:focus-visible,.asr:focus-visible{border-color:var(--accent);outline:none}
+.an{font-weight:800;font-size:1.1rem;margin-bottom:10px}
+.tbig{font-size:clamp(1.5rem,5.5vw,2.2rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--atext)}
+.tsmall{font-size:1.1rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--mute);margin-top:4px}
+.ast{margin-top:12px}
+.dtop{display:flex;justify-content:space-between;gap:10px;margin-bottom:14px}
+#detailBar h2{font-size:1.5rem;margin:0 0 12px}
+.subtabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.subtabs button{background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line));border-radius:999px;padding:8px 16px}
+.subtabs button[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.trw{margin-bottom:16px}.trh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.trh h2{margin:0}
+.pill{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--bg);color:var(--mute);white-space:nowrap}
+.pill.ok{background:var(--accent);color:var(--on)}.pill.sl{background:var(--slip);color:var(--onslip)}
+.asr{margin-bottom:16px}.asr .tiles{margin:12px 0}
+.mrw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.mrw:last-of-type{border-bottom:0}
+.mn{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis}.mb{display:flex;gap:6px;flex:none}
+button.sm{padding:6px 12px;font-size:.85rem}
+.fld{display:flex;flex-direction:column;gap:6px;margin:14px 0 0;color:var(--mute);font-size:.9rem}
+input[type=text],input[type=datetime-local]{font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@supports (color:color-mix(in srgb,red,blue)){
+  :root{--tint:color-mix(in srgb,var(--accent) 16%,var(--card));--tline:color-mix(in srgb,var(--accent) 38%,var(--line))}
+  :root[data-theme=dark]{--tint:color-mix(in srgb,var(--accent) 12%,#000);--tline:color-mix(in srgb,var(--accent) 34%,var(--line))}
+}
+.back{flex:none;width:42px;height:42px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line))}
+.back svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.phead>div{flex:1;min-width:0}
+.dl{display:flex;align-items:center;gap:12px;min-width:0}
+#detailBar .dl h2{margin:0;font-size:1.5rem;overflow:hidden;text-overflow:ellipsis}
+.dtop{align-items:center}
 </style>
 </head>
 <body>
@@ -297,12 +331,41 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     <button class="panic-btn" id="panic">I need help now</button>
   </header>
   <nav class="tabs" aria-label="Sections">
-    <button type="button" data-tab="tracker" aria-pressed="true">Tracker</button>
-    <button type="button" data-tab="achievements" aria-pressed="false">Awards</button>
+    <button type="button" data-tab="progress" aria-pressed="true">Progress</button>
+    <button type="button" data-tab="today" aria-pressed="false">Today</button>
     <button type="button" data-tab="stats" aria-pressed="false">Stats</button>
     <button type="button" data-tab="settings" aria-pressed="false">Settings</button>
   </nav>
-  <div id="view-tracker">
+  <div id="view-progress">
+    <div class="phd"><h2>Your addictions</h2><button id="pAdd" type="button">Add an addiction</button></div>
+    <div class="plist" id="progList"></div>
+  </div>
+  <div id="detailBar" hidden>
+    <div class="dtop"><div class="dl"><button class="back" id="dBack" type="button" aria-label="Back to all addictions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="dName"></h2></div><button class="ghost" id="dEdit" type="button">Edit</button></div>
+    <div class="subtabs" id="subtabs">
+      <button type="button" data-sub="tracker" aria-pressed="true">Overview</button>
+      <button type="button" data-sub="stats" aria-pressed="false">Stats</button>
+      <button type="button" data-sub="achievements" aria-pressed="false">Awards</button>
+    </div>
+  </div>
+  <div id="view-today" hidden>
+    <section><h2 id="todayDate">Today</h2><p class="lbl" id="todaySub" style="margin:0"></p></section>
+    <div id="todayList"></div>
+  </div>
+  <div id="view-allstats" hidden>
+    <section id="asEmpty" hidden><h2>No stats yet</h2><p class="lbl" style="margin:0">Add an addiction and the stats for all of them will show up here.</p></section>
+    <div id="asMain">
+      <section><h2>All together</h2><div class="tiles" id="asTiles"></div></section>
+      <div class="phd"><h2>By addiction</h2></div>
+      <div id="asList"></div>
+    </div>
+  </div>
+  <div id="view-tracker" hidden>
+  <section>
+    <div class="tbig" id="tcBig" data-live="big" data-i="0"></div>
+    <div class="tsmall" id="tcSmall" data-live="small" data-i="0"></div>
+    <div class="lbl" id="tcSince" style="margin-top:10px"></div>
+  </section>
   <div class="remind" id="planCard" hidden></div>
   <div class="remind" id="remBanner" hidden><b>Daily check-in</b><p>You haven't logged today yet. How did it go?</p></div>
   <div class="layout">
@@ -382,7 +445,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   </div>
   <section style="margin-top:20px">
     <h2>Why I'm doing this</h2>
-    <p class="lbl" style="margin-bottom:8px">What are you working on? This sets the suggested reasons and tips in the help panel.</p>
+    <p class="lbl" style="margin-bottom:8px">What kind of habit is this? This sets the suggested reasons and tips in the help panel.</p>
     <div class="chips" id="focusChips" role="group" aria-label="What you're quitting" style="margin-bottom:8px"></div>
     <p class="note" id="focusNote" hidden style="margin:0 0 14px"></p>
     <p class="lbl" style="margin:14px 0 8px">Pick the reasons that fit you. They'll pop up when you tap "I need help now".</p>
@@ -465,6 +528,12 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   <div id="view-settings" class="set layout" hidden>
     <div class="col">
     <section>
+      <h2>Your addictions</h2>
+      <p class="lbl">Add, rename, reorder or remove what you're tracking.</p>
+      <div id="manageList"></div>
+      <div class="row" style="margin-top:12px"><button class="ghost" id="mAdd" type="button">Add an addiction</button></div>
+    </section>
+    <section>
       <h2>Appearance</h2>
       <p class="lbl">Light or dark mode</p>
       <div class="seg" id="modeSeg">
@@ -485,22 +554,26 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     <section>
       <h2>Daily reminder</h2>
       <p class="lbl">A nudge at the same time every day to check in.</p>
-      <div class="seg" id="remSeg">
-        <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
-        <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+      <div class="seg" style="align-items:center">
+        <span id="remSeg" style="display:contents">
+          <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+          <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+        </span>
+        <button class="ghost" id="remTest" type="button" style="margin-left:6px">Send a test</button>
       </div>
       <div class="row range" style="margin-top:14px"><label>Time<input type="time" id="remTime"></label></div>
-      <div class="foot" style="margin-top:14px"><button class="ghost" id="remTest" type="button">Send a test</button></div>
       <p class="lbl" id="remNote" style="margin:12px 0 0"></p>
     </section>
     <section>
       <h2>Celebrations</h2>
       <p class="lbl">A short celebration when you reach a streak milestone.</p>
-      <div class="seg" id="celeSeg">
-        <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
-        <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+      <div class="seg" style="align-items:center">
+        <span id="celeSeg" style="display:contents">
+          <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+          <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+        </span>
+        <button class="ghost" id="celePrev" type="button" style="margin-left:6px">Preview</button>
       </div>
-      <div class="foot" style="margin-top:14px"><button class="ghost" id="celePrev" type="button">Preview</button></div>
     </section>
     <section>
       <h2>Move to a new phone</h2>
@@ -556,7 +629,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
     </section>
     <section>
       <h2>Share your progress</h2>
-      <p class="lbl">Make a read-only snapshot for someone you trust, like an accountability partner. It shows your streaks and which days were clean or slipped. It never includes your reasons, triggers or notes.</p>
+      <p class="lbl">Make a read-only snapshot for someone you trust, like an accountability partner. It shows your streaks and which days were clean or slipped. It never includes your reasons, triggers or notes, but it does show the name of each addiction you track.</p>
       <div class="foot">
         <button class="ghost" id="shLink" type="button">Share link</button>
         <button class="ghost" id="shQR" type="button">Show QR code</button>
@@ -567,8 +640,8 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   </div>
 </main>
 <nav class="bnav" aria-label="Main">
-  <button type="button" data-tab="tracker" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span>Tracker</span></button>
-  <button type="button" data-tab="achievements" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg><span>Awards</span></button>
+  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/></svg><span>Progress</span></button>
+  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span>Today</span></button>
   <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg></span><span>Help</span></button>
   <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"/></svg><span>Stats</span></button>
   <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
@@ -601,11 +674,11 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 <div id="overlay" role="dialog" aria-modal="true" aria-label="Urge support">
   <div class="pw">
     <div class="phead">
+      <button class="back" id="closeX" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div>
         <h1>This will pass.</h1>
         <p class="sub">An urge peaks and fades, usually within 10-15 minutes. You don't have to fight it forever, just through this window.</p>
       </div>
-      <button class="ghost" id="closeX" type="button">Close</button>
     </div>
     <div class="remind" id="remind" hidden></div>
     <section id="rateBox">
@@ -689,8 +762,8 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 <div id="xover" role="dialog" aria-modal="true" aria-labelledby="xTitle">
   <div class="pw">
     <div class="phead">
+      <button class="back" id="xClose" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div><h1 id="xTitle"></h1><p class="sub" id="xSub"></p></div>
-      <button class="ghost" id="xClose" type="button">Close</button>
     </div>
     <div id="xBody"></div>
   </div>
@@ -699,15 +772,28 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 <script>
 (function(){
   var KEY="reset-tracker-v1";
-  var state=freshState();
-  try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);if(p&&p.log)state=Object.assign(state,p);}}catch(e){}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+  var IK=["log","reasons","picked","focus","slips","urges","urgeLog","recovery","ach","helped","rode"];
+  var state=freshState(),ITEMS=[],CI=-1,legacy=false;
+  try{var raw=localStorage.getItem(KEY);if(raw){var p=JSON.parse(raw);
+    if(p&&Array.isArray(p.items)){var g0=Object.assign({},p);delete g0.items;delete g0.sel;state=Object.assign(state,g0);
+      ITEMS=p.items.filter(function(x){return x&&typeof x==="object"&&typeof x.id==="string";});
+      var ix=-1;ITEMS.forEach(function(x,j){if(x.id===p.sel)ix=j;});CI=ix>=0?ix:(ITEMS.length?0:-1);
+      if(CI>=0)IK.forEach(function(k){if(k in ITEMS[CI])state[k]=ITEMS[CI][k];});}
+    else if(p&&p.log){state=Object.assign(state,p);legacy=true;}
+  }}catch(e){}
+  function pushItem(){if(CI>=0)IK.forEach(function(k){ITEMS[CI][k]=state[k];});}
+  function save(){
+    if(legacy)return;
+    pushItem();
+    try{var o={};Object.keys(state).forEach(function(k){if(IK.indexOf(k)<0)o[k]=state[k];});o.items=ITEMS;o.sel=CI>=0?ITEMS[CI].id:"";o.v=4;localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
+  }
   var TRIG=[["stress","Stress"],["boredom","Boredom"],["fatigue","Fatigue"],["lonely","Loneliness"],["screen","Late at night"],["pressure","Peer pressure"],["lowmood","Low mood"]];
   var CTX=[["alone","Home alone"],["bedroom","Bedroom"],["inbed","In bed"],["out","Out with others"],["work","Work or school"]];
   var WHEN=[["morning","Morning"],["afternoon","Afternoon"],["evening","Evening"],["late","After 11 PM"]];
   function ids(a,list){var ok=list.map(function(x){return x[0];});return Array.isArray(a)?a.filter(function(x,i){return ok.indexOf(x)>=0&&a.indexOf(x)===i;}):[];}
   if(state.v!==3){if(state.accent==="teal")state.accent="sage";state.v=3;save();}
   normalize();
+  if(legacy){var it0=legacyItem(state,state.log);ITEMS=[it0];CI=0;legacy=false;save();}
   function $(id){return document.getElementById(id);}
   function pad(n){return n<10?"0"+n:""+n;}
   function key(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
@@ -1297,7 +1383,7 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
       (function(kk){c.onclick=function(){sel=kk;render();};})(k);
       cal.appendChild(c);
     }
-    $("reasons").value=state.reasons||"";renderChips();renderSurvey();renderUrges();renderWeek();renderRecover();renderPlanCard();refresh();
+    $("reasons").value=state.reasons||"";renderChips();renderSurvey();renderUrges();renderWeek();renderRecover();renderPlanCard();refresh();renderAll();
   }
 
   var dows=$("dows");["S","M","T","W","T","F","S"].forEach(function(l){var d=document.createElement("div");d.className="dow";d.textContent=l;dows.appendChild(d);});
@@ -1347,30 +1433,39 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
   $("reasons").oninput=function(e){state.reasons=e.target.value;save();afterEvent();};
 
   $("export").onclick=function(){
-    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify((function(){var o=JSON.parse(JSON.stringify(state));delete o.lock;return o;})())],{type:"application/json"}));a.download="reset-backup.json";a.click();
+    pushItem();var o=JSON.parse(JSON.stringify(state));IK.forEach(function(k){delete o[k];});delete o.lock;
+    o.items=JSON.parse(JSON.stringify(ITEMS));o.sel=CI>=0?ITEMS[CI].id:"";o.v=4;
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="unplugged-backup.json";a.click();
   };
   $("import").onclick=function(){$("file").click();};
   $("file").onchange=function(e){
     var f=e.target.files[0];if(!f)return;var r=new FileReader();
-    r.onload=function(){try{var p=JSON.parse(r.result);if(p&&p.log){announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();save();render();applyTheme();announce=true;toast("Backup imported.");}}catch(x){toast("That file couldn't be read.");}};
-    r.readAsText(f);
+    r.onload=function(){try{
+      var p=JSON.parse(r.result),g=Object.assign({},p);
+      if(!p||typeof p!=="object")throw new Error("bad");
+      delete g.lock;delete g.items;delete g.sel;IK.forEach(function(k){delete g[k];});
+      if(Array.isArray(p.items)){adopt(g,p.items);toast("Backup imported.");}
+      else if(p.log){adopt(g,[legacyItem(p,p.log)]);toast("Backup imported.");}
+      else toast("That file couldn't be read.");
+    }catch(x){toast("That file couldn't be read.");}};
+    r.readAsText(f);e.target.value="";
   };
-  $("reset").onclick=function(){if(confirm("Erase all your data? This can't be undone.")){state=freshState();save();render();applyTheme();}};
+  $("reset").onclick=function(){if(confirm("Erase all your data? This can't be undone.")){ITEMS=[];CI=-1;state=freshState();detail=false;tab="progress";save();render();showView();applyTheme();}};
   /* Themes: one main color each. Everything else is black or white depending on the mode. */
   var THEMES={
     sage:{name:"Sage",c:"#7DA487"},
-    ocean:{name:"Ocean",c:"#6AA6D6"},
-    lavender:{name:"Lavender",c:"#A596DA"},
-    rose:{name:"Rose",c:"#D98A9B"},
-    peach:{name:"Peach",c:"#EE9F7F"},
-    sand:{name:"Sand",c:"#D2AE62"},
-    teal:{name:"Teal",c:"#58B3AE"},
-    stone:{name:"Stone",c:"#9AA09C"},
+    sky:{name:"Sky",c:"#7DB3DE"},
+    lavender:{name:"Lavender",c:"#A99BE0"},
+    blush:{name:"Blush",c:"#E597A8"},
+    peach:{name:"Peach",c:"#F2A07A"},
+    butter:{name:"Butter",c:"#E2BE5C"},
+    mint:{name:"Mint",c:"#6CC2A8"},
+    oat:{name:"Oat",c:"#C4AD8A"},
     mono:{name:"Monochrome",c:"#121413",cd:"#f3f4f2"}
   };
-  var ORDER=["sage","ocean","lavender","rose","peach","sand","teal","stone","mono","custom"];
+  var ORDER=["sage","sky","lavender","blush","peach","butter","mint","oat","mono","custom"];
   var BASE={
-    light:{bg:"#f4f4f2",card:"#ffffff",ink:"#121413",mute:"#6b706d",line:"#e3e4e1",onslip:"#ffffff"},
+    light:{bg:"#f2f6f1",card:"#ffffff",ink:"#17201a",mute:"#65706a",line:"#dde6da",onslip:"#ffffff"},
     dark:{bg:"#0c0d0c",card:"#171918",ink:"#f3f4f2",mute:"#9ca09d",line:"#2b2d2c",onslip:"#0c0d0c"}
   };
 
@@ -1679,10 +1774,11 @@ var QR=(function(){
   function canLink(){if(/^https?:$/.test(location.protocol))return true;toast("Open Unplugged from its web address to make a link.");return false;}
   function buildLink(kind,obj){return pack(obj).then(function(p){return baseUrl()+"#"+kind+"="+p;});}
   function transferObj(){
-    var o=JSON.parse(JSON.stringify(state)),pl=packLog(state.log);
-    delete o.log;delete o.lock;o.ls=pl.s;o.ll=pl.l;o.k="t";o.pv=1;return o;
+    pushItem();var o=JSON.parse(JSON.stringify(state));IK.forEach(function(k){delete o[k];});delete o.lock;
+    o.items=ITEMS.map(function(it){var c=JSON.parse(JSON.stringify(it)),pl=packLog(it.log);delete c.log;c.ls=pl.s;c.ll=pl.l;return c;});
+    o.sel=CI>=0?ITEMS[CI].id:"";o.k="t";o.pv=2;return o;
   }
-  function shareObj(){var pl=packLog(state.log);return{k:"s",pv:1,t:nowKey(),ls:pl.s,ll:pl.l,u:totalUrges()};}
+  function shareObj(){return{k:"s",pv:2,t:nowKey(),a:ITEMS.slice(0,12).map(function(it){var pl=packLog(it.log);return{n:it.name.slice(0,40),ls:pl.s,ll:pl.l,u:sumU(it)};})};}
   function copyText(t){
     function fb(){window.prompt("Copy this link:",t);}
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast("Link copied.");},fb);else fb();
@@ -1743,13 +1839,14 @@ var QR=(function(){
     state.v=3;
   }
   function applyTransfer(o){
-    var p={log:unpackLog(o.ls,o.ll)};
-    ["reasons","mode","accent","custom","picked","focus","breathMode","timerMin","breathVib","breathSnd","celebrate","remind","slips","urges","urgeLog","recovery","ach","helped","rode","themed"].forEach(function(k){if(k in o)p[k]=o[k];});
-    announce=false;var _lk=state.lock;state=Object.assign(freshState(),p);if(_lk)state.lock=_lk;normalize();cleanImported();save();render();applyTheme();announce=true;
-    closeX();toast("Imported. Welcome to your new device.");
+    var g={},its;
+    ["mode","accent","custom","breathMode","timerMin","breathVib","breathSnd","celebrate","remind","themed"].forEach(function(k){if(k in o)g[k]=JSON.parse(JSON.stringify(o[k]));});
+    if(Array.isArray(o.items))its=o.items.slice(0,50).map(function(c){var it=Object.assign({},c);it.log=unpackLog(c.ls,c.ll);delete it.ls;delete it.ll;return it;});
+    else its=[legacyItem(o,unpackLog(o.ls,o.ll))];
+    adopt(g,its);closeX();toast("Imported. Welcome to your new device.");
   }
   function offerImport(o){
-    var S=summ(unpackLog(o.ls,o.ll),nowKey()),have=Object.keys(state.log).length;
+    var S=o.items?(function(){var t={logged:0,clean:0,best:0};o.items.forEach(function(x){var q=summ(unpackLog(x.ls,x.ll),nowKey());t.logged+=q.logged;t.clean+=q.clean;if(q.best>t.best)t.best=q.best;});return t;})():summ(unpackLog(o.ls,o.ll),nowKey()),have=ITEMS.reduce(function(n,x){return n+Object.keys(x.log||{}).length;},0);
     openX("Import from another device","This link holds a backup. Importing replaces what is on this device.",function(b){
       b.appendChild(tilesEl([[S.logged,"days logged"],[S.clean,"clean days"],[S.best,"best streak"]]));
       if(have)b.appendChild(noteEl("This device already has "+have+" logged day"+(have>1?"s":"")+". They will be replaced. Back up this device first if you're not sure."));
@@ -1760,7 +1857,18 @@ var QR=(function(){
       b.appendChild(r);
     });
   }
+  function showSharedMulti(o){
+    var asOf=/^\d{4}-\d{2}-\d{2}$/.test(o.t||"")?o.t:nowKey(),pretty=parse(asOf).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+    openX("Shared progress","A read-only snapshot as of "+pretty+". It doesn't change anything on your device.",function(b){
+      o.a.slice(0,12).forEach(function(x){
+        var S=summ(unpackLog(x.ls,x.ll),asOf),h=document.createElement("h2");h.textContent=String(x.n||"").slice(0,40);b.appendChild(h);
+        b.appendChild(tilesEl([[S.cur,"day streak"],[S.best,"best streak"],[S.clean,"clean days"],[S.logged?Math.round(S.clean/S.logged*100)+"%":"-","clean rate"]]));
+      });
+      
+    });
+  }
   function showShared(o){
+    if(Array.isArray(o.a))return showSharedMulti(o);
     var asOf=/^\d{4}-\d{2}-\d{2}$/.test(o.t||"")?o.t:nowKey(),log=unpackLog(o.ls,o.ll),S=summ(log,asOf),i;
     var pretty=parse(asOf).toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
     openX("Shared progress","A read-only snapshot as of "+pretty+". It doesn't change anything on your device.",function(b){
@@ -1787,7 +1895,7 @@ var QR=(function(){
       var lg=document.createElement("div");lg.className="legend";
       lg.innerHTML='<span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--slip)"></i>Slipped</span><span><i style="background:var(--line)"></i>Not logged</span>';
       b.appendChild(lg);
-      var r=xrow();r.appendChild(btn("Close","clean",closeX));b.appendChild(r);
+      
     });
   }
   function handleHash(){
@@ -1800,7 +1908,7 @@ var QR=(function(){
       else throw new Error("bad");
     }).catch(function(){
       openX("That link didn't work","It may be cut off, or made by a different version of the app. Ask for a fresh link.",function(b){
-        var r=xrow();r.appendChild(btn("Close","clean",closeX));b.appendChild(r);
+        
       });
     });
   }
@@ -2062,9 +2170,200 @@ var QR=(function(){
   document.querySelectorAll("#lockAfter button").forEach(function(b){b.onclick=function(){if(!lockOn())return;state.lock.a=+b.dataset.a;save();renderLock();};});
   renderLock();
   if(lockOn())showLock();else hideLock();
+
+  /* ---------- Addictions: several habits, each tracked on its own ---------- */
+  var tab="progress",detail=false,sub="tracker";
+  var ALLV=["view-progress","detailBar","view-tracker","view-stats","view-achievements","view-today","view-allstats","view-settings"];
+  function tk(){return key(new Date());}
+  function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+  function freshItem(name,type,start){return{id:"a"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36),name:name||"",start:start||Date.now(),since:start||Date.now(),focus:type||"general",log:{},reasons:"",picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0};}
+  function legacyItem(o,log){
+    var NM={general:"My habit",porn:"Porn",nicotine:"Smoking / vaping",alcohol:"Alcohol",gambling:"Gambling",social:"Social media",gaming:"Gaming"},f=typeof o.focus==="string"&&NM[o.focus]?o.focus:"general",ks=Object.keys(log||{}).sort();
+    var st=ks.length?new Date(+ks[0].slice(0,4),+ks[0].slice(5,7)-1,+ks[0].slice(8,10)).getTime():Date.now();
+    var it=freshItem(NM[f],f,st);it.log=log||{};
+    ["reasons","picked","slips","urges","urgeLog","recovery","ach","helped","rode"].forEach(function(k){if(o[k]!==undefined)it[k]=o[k];});
+    return it;
+  }
+  function dayStart(ms){var d=new Date(ms);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
+  function fillClean(it,fromMs){var d=new Date(dayStart(fromMs)),end=dayStart(Date.now()),n=0;while(d.getTime()<end&&n<3660){var k=key(d);if(!it.log[k])it.log[k]="clean";d.setDate(d.getDate()+1);n++;}}
+  function recomputeSince(it){
+    var L=null,now=Date.now(),s=+it.start>0?+it.start:now;
+    Object.keys(it.log||{}).forEach(function(k){if(it.log[k]==="slip"&&(!L||k>L))L=k;});
+    if(L){var base;
+      if(L===tk()){if(!it.resetAt||key(new Date(it.resetAt))!==L)it.resetAt=now;base=it.resetAt;}
+      else{var d=parse(L);d.setDate(d.getDate()+1);base=d.getTime();}
+      s=Math.max(s,Math.min(base,now));}
+    it.since=s;
+  }
+  function elapsed(since){
+    var n=new Date(),a=new Date(Math.min(since,Date.now()));
+    var y=n.getFullYear()-a.getFullYear(),m=n.getMonth()-a.getMonth(),d=n.getDate()-a.getDate(),h=n.getHours()-a.getHours(),mi=n.getMinutes()-a.getMinutes(),s=n.getSeconds()-a.getSeconds();
+    if(s<0){s+=60;mi--;}if(mi<0){mi+=60;h--;}if(h<0){h+=24;d--;}
+    if(d<0){d+=new Date(n.getFullYear(),n.getMonth(),0).getDate();m--;}if(m<0){m+=12;y--;}
+    return{y:y,m:m,d:d,h:h,mi:mi,s:s,days:Math.floor((Date.now()-a.getTime())/86400000)};
+  }
+  function bigText(e){var p=[];if(e.y)p.push(e.y+(e.y>1?" years":" year"));if(e.m)p.push(e.m+(e.m>1?" months":" month"));p.push(e.d+(e.d===1?" day":" days"));return p.join(" ");}
+  function tick(){document.querySelectorAll("[data-live]").forEach(function(el){var it=ITEMS[+el.dataset.i];if(!it)return;var e=elapsed(it.since);el.textContent=el.dataset.live==="big"?bigText(e):pad(e.h)+":"+pad(e.mi)+":"+pad(e.s);});}
+  function sumU(it){var n=0;Object.keys(it.urges||{}).forEach(function(k){n+=+it.urges[k]||0;});return n;}
+  function statusOf(it){var v=it.log[tk()];return v==="clean"?"Clean today":v==="slip"?"Slipped today":"Not logged today";}
+  function peek(i,fn){pushItem();var it=ITEMS[i],l=state.log,u=state.urges;state.log=it.log;state.urges=it.urges;try{return fn();}finally{state.log=l;state.urges=u;}}
+  function scrollTop(){var mn=document.querySelector("main");if(mn)mn.scrollTop=0;window.scrollTo(0,0);}
+
+  function pullItem(){IK.forEach(function(k){state[k]=ITEMS[CI][k];});normalize();setPresets();buildFocus();buildChips();sel=tk();view=new Date();view.setDate(1);}
+  function selectItem(i){if(i===CI||i<0||i>=ITEMS.length)return;pushItem();CI=i;pullItem();var w=announce;announce=false;render();announce=w;}
+  function openDetail(i,s2){selectItem(i);detail=true;tab="progress";sub=s2||"tracker";renderAll();showView(true);scrollTop();}
+  function adopt(g,its){
+    announce=false;var lk=state.lock;state=Object.assign(freshState(),g);if(lk)state.lock=lk;
+    ITEMS=its.map(function(c){var it=Object.assign(freshItem("","general",Date.now()),c);if(typeof it.id!=="string"||!it.id)it.id=freshItem().id;it.name=String(it.name||"My habit").slice(0,40);it.start=+it.start>0?+it.start:Date.now();return it;});
+    CI=ITEMS.length?0:-1;if(CI>=0)IK.forEach(function(k){state[k]=ITEMS[CI][k];});
+    normalize();cleanImported();ITEMS.forEach(recomputeSince);detail=false;tab="progress";save();render();showView();applyTheme();announce=true;
+  }
+
+  function renderProgress(){
+    var box=$("progList");box.innerHTML="";
+    if(!ITEMS.length){var s0=mk("section");s0.appendChild(mk("h2",null,"Start with one"));s0.appendChild(mk("p","lbl","Add something you want to stop. You can add as many as you like and each one is tracked on its own."));box.appendChild(s0);}
+    ITEMS.forEach(function(it,i){
+      var c=mk("div","acard");c.tabIndex=0;c.setAttribute("role","button");c.setAttribute("aria-label",it.name+", open");
+      c.appendChild(mk("div","an",it.name));
+      var b=mk("div","tbig");b.dataset.live="big";b.dataset.i=i;c.appendChild(b);
+      var t=mk("div","tsmall");t.dataset.live="small";t.dataset.i=i;c.appendChild(t);
+      c.appendChild(mk("div","lbl ast",statusOf(it)));
+      c.onclick=function(){openDetail(i);};
+      c.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openDetail(i);}};
+      box.appendChild(c);
+    });
+  }
+  function todayAct(i,what){
+    selectItem(i);sel=tk();
+    if(what==="clean")$("btnClean").click();
+    else if(what==="slip"){if(!confirm("Log a slip for "+ITEMS[i].name+"? This resets its timer."))return;$("btnSlip").click();}
+    else $("btnUrge").click();
+  }
+  function renderToday(){
+    var box=$("todayList");box.innerHTML="";
+    var done=ITEMS.filter(function(it){return it.log[tk()];}).length;
+    $("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+    $("todaySub").textContent=ITEMS.length?done+" of "+ITEMS.length+" checked in today.":"Add an addiction to start checking in.";
+    ITEMS.forEach(function(it,i){
+      var s0=mk("section","trw"),h=mk("div","trh"),v=it.log[tk()];
+      h.appendChild(mk("h2",null,it.name));h.appendChild(mk("span","pill"+(v==="clean"?" ok":v==="slip"?" sl":""),statusOf(it)));s0.appendChild(h);
+      var b=mk("div","tsmall");b.dataset.live="big";b.dataset.i=i;s0.appendChild(b);
+      var r=mk("div","row");r.style.marginTop="14px";
+      r.appendChild(btn("I stayed clean","clean",function(){todayAct(i,"clean");}));
+      r.appendChild(btn("I slipped","slip",function(){todayAct(i,"slip");}));
+      var u=(it.urges&&it.urges[tk()])||0;
+      r.appendChild(btn("Rode out an urge"+(u?" ("+u+")":""),"ghost",function(){todayAct(i,"urge");}));
+      s0.appendChild(r);box.appendChild(s0);
+    });
+  }
+  function renderAllStats(){
+    var box=$("asList"),t=$("asTiles");box.innerHTML="";t.innerHTML="";
+    $("asEmpty").hidden=ITEMS.length>0;$("asMain").hidden=!ITEMS.length;
+    if(!ITEMS.length)return;
+    var tc=0,ts=0,tu=0,best=0,run=0;
+    ITEMS.forEach(function(it,i){
+      var A=peek(i,analyze),days=elapsed(it.since).days,rate=A.logged?Math.round(A.clean/A.logged*100):null;
+      tc+=A.clean;ts+=A.slip;tu+=sumU(it);if(A.best>best)best=A.best;if(days>run)run=days;
+      var c=mk("div","asr");c.tabIndex=0;c.setAttribute("role","button");c.setAttribute("aria-label",it.name+", open stats");
+      c.appendChild(mk("div","an",it.name));
+      c.appendChild(tilesEl([[days,"days since last slip"],[A.best,"best streak"],[rate===null?"-":rate+"%","clean rate"],[sumU(it),"urges ridden out"]]));
+      var bar=mk("div","bar"),fill=document.createElement("i");fill.style.width=(rate||0)+"%";bar.appendChild(fill);c.appendChild(bar);
+      c.onclick=function(){openDetail(i,"stats");};
+      c.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openDetail(i,"stats");}};
+      box.appendChild(c);
+    });
+    var all=tc+ts;
+    var tl=tilesEl([[ITEMS.length,"addictions"],[tc,"clean days"],[ts,"slipped days"],[all?Math.round(tc/all*100)+"%":"-","clean rate"],[best,"best streak"],[run,"longest run now (days)"],[tu,"urges ridden out"]]);
+    t.innerHTML="";while(tl.firstChild)t.appendChild(tl.firstChild);
+  }
+  function renderDetail(){
+    if(CI<0)return;var it=ITEMS[CI];
+    $("dName").textContent=it.name;$("tcBig").dataset.i=CI;$("tcSmall").dataset.i=CI;
+    $("tcSince").textContent="Since "+new Date(it.since).toLocaleString(undefined,{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});
+  }
+  function moveItem(i,d){
+    var j=i+d;if(j<0||j>=ITEMS.length)return;pushItem();var id=CI>=0?ITEMS[CI].id:null;
+    var t=ITEMS[i];ITEMS[i]=ITEMS[j];ITEMS[j]=t;ITEMS.forEach(function(x,n){if(x.id===id)CI=n;});save();renderAll();
+  }
+  function renderManage(){
+    var box=$("manageList");box.innerHTML="";
+    if(!ITEMS.length)box.appendChild(mk("p","lbl","Nothing added yet."));
+    ITEMS.forEach(function(it,i){
+      var r=mk("div","mrw"),g=mk("span","mb"),up=btn("Up","ghost sm",function(){moveItem(i,-1);}),dn=btn("Down","ghost sm",function(){moveItem(i,1);});
+      up.disabled=i===0;dn.disabled=i===ITEMS.length-1;
+      r.appendChild(mk("span","mn",it.name));g.appendChild(up);g.appendChild(dn);g.appendChild(btn("Edit","ghost sm",function(){openForm(i);}));r.appendChild(g);box.appendChild(r);
+    });
+  }
+  function renderAll(){
+    var ch=false;ITEMS.forEach(function(it){var r=it.resetAt;recomputeSince(it);if(it.resetAt!==r)ch=true;});if(ch)save();
+    renderProgress();renderToday();renderAllStats();renderDetail();renderManage();tick();
+  }
+  function showView(anim){
+    var on;
+    if(tab==="progress")on=(detail&&CI>=0)?["detailBar","view-"+sub]:["view-progress"];
+    else on={today:["view-today"],stats:["view-allstats"],settings:["view-settings"]}[tab]||["view-progress"];
+    ALLV.forEach(function(id){$(id).hidden=on.indexOf(id)<0;});
+    document.querySelectorAll("[data-tab]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.tab===tab);});
+    document.querySelectorAll("#subtabs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.sub===sub);});
+    if(anim){var v=$(on[on.length-1]);v.classList.remove("fade");void v.offsetWidth;v.classList.add("fade");}
+    if(on.indexOf("view-stats")>=0){var hw=$("heatwrap");hw.scrollLeft=hw.scrollWidth;}
+  }
+  function toLocalInput(ms){var d=new Date(ms);return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());}
+  function removeItem(i){
+    pushItem();var id=ITEMS[i].id,curId=CI>=0?ITEMS[CI].id:null;ITEMS.splice(i,1);
+    if(!ITEMS.length){CI=-1;Object.assign(state,{log:{},reasons:"",picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,focus:"general"});detail=false;}
+    else{var n=0;ITEMS.forEach(function(x,j){if(x.id===curId)n=j;});if(curId===id)n=Math.min(i,ITEMS.length-1);CI=n;pullItem();}
+    save();var w=announce;announce=false;render();announce=w;if(!ITEMS.length||curId===id)detail=false;showView();
+  }
+  function openForm(i){
+    var edit=i!=null&&i>=0,it=edit?ITEMS[i]:null,type=edit?(it.focus||"general"):"general";
+    openX(edit?"Edit addiction":"Add an addiction",edit?"":"Pick one or name your own. Each one is tracked on its own.",function(b){
+      var nm=document.createElement("input");nm.type="text";nm.maxLength=40;nm.value=edit?it.name:"";nm.id="fName";
+      if(!edit){
+        var chips=mk("div","chips");
+        FOCUS.forEach(function(f){
+          var c=mk("button","chip",f.id==="general"?"Something else":f.name);c.type="button";c.setAttribute("aria-pressed",f.id===type);
+          c.onclick=function(){type=f.id;Array.prototype.forEach.call(chips.children,function(x){x.setAttribute("aria-pressed",x===c);});nm.value=f.id==="general"?"":f.name;nm.focus();};
+          chips.appendChild(c);
+        });
+        b.appendChild(chips);
+      }
+      var l1=mk("label","fld","Name");l1.appendChild(nm);b.appendChild(l1);
+      var dt=document.createElement("input");dt.type="datetime-local";dt.value=toLocalInput(edit?it.start:Date.now());dt.max=toLocalInput(Date.now());
+      var l2=mk("label","fld","Sober since (date and time)");l2.appendChild(dt);b.appendChild(l2);
+      b.appendChild(mk("p","lbl","Starting in the past counts the days since then as clean. You can fix any day later.")).style.marginTop="10px";
+      var r=xrow();
+      r.appendChild(btn(edit?"Save":"Add","clean",function(){
+        var name=nm.value.trim().slice(0,40),ms=new Date(dt.value).getTime();
+        if(!name){toast("Give it a name.");return;}
+        if(!(ms>0)||ms>Date.now()+60000){toast("Pick a start that isn't in the future.");return;}
+        if(edit){var old=+it.start;it.name=name;it.start=ms;if(ms<old)fillClean(it,ms);recomputeSince(it);save();closeX();renderAll();toast("Saved.");}
+        else{var n=freshItem(name,type,ms);fillClean(n,ms);recomputeSince(n);pushItem();ITEMS.push(n);closeX();openDetail(ITEMS.length-1);save();toast("Added "+name+".");}
+      }));
+      if(edit)r.appendChild(btn("Remove","ghost",function(){if(confirm("Remove "+it.name+" and everything tracked for it? This can't be undone.")){closeX();removeItem(i);}}));
+      r.appendChild(btn("Cancel","ghost",closeX));b.appendChild(r);
+      setTimeout(function(){nm.focus();},30);
+    });
+  }
+  /* the help button asks which addiction the urge is about */
+  var panicGo=$("panic").onclick;
+  $("panic").onclick=function(){
+    if(ITEMS.length<2){panicGo();return;}
+    openX("Which one is this urge about?","Pick one and you'll see its reasons and tips.",function(b){
+      ITEMS.forEach(function(it,i){var r=xrow();r.appendChild(btn(it.name,i===CI?"clean":"ghost",function(){closeX();selectItem(i);panicGo();}));b.appendChild(r);});
+    });
+  };
+  function bootItems(){
+    $("pAdd").onclick=function(){openForm();};$("mAdd").onclick=function(){openForm();};
+    $("dBack").onclick=function(){detail=false;showView(true);scrollTop();};
+    $("dEdit").onclick=function(){openForm(CI);};
+    document.querySelectorAll("#subtabs button").forEach(function(b){b.onclick=function(){sub=b.dataset.sub;showView(true);scrollTop();};});
+    document.querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function(){var t=b.dataset.tab;if(t==="progress"&&tab==="progress"&&detail)detail=false;tab=t;showView(true);scrollTop();};});
+    setInterval(tick,1000);
+  }
   checkReminder();
 
-  render();announce=true;
+  bootItems();render();showView();announce=true;
   handleHash();window.addEventListener("hashchange",handleHash);
 })();
 </script>
