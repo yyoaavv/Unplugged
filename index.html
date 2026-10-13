@@ -326,7 +326,26 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
 .grip svg{width:20px;height:20px;fill:currentColor}
 .acard.drag{box-shadow:0 14px 34px rgba(0,0,0,.28);transform:scale(1.02);opacity:.93;border-color:var(--accent);z-index:2;user-select:none}
 .acard.drag .grip{cursor:grabbing}
-:root[data-theme=dark] button.slip:not(.d){background:#000;color:var(--ink);border:1.5px solid var(--tline,var(--line))}
+
+/* native feel: no blue tap flash, no accidental text selection on controls */
+*{-webkit-tap-highlight-color:transparent}
+button,.bnav,.tabs,.subtabs,.acard,.asr,.theme,.chip{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+button{touch-action:manipulation}
+button:not(:disabled):active{opacity:.72}
+/* "I slipped" looks like the other secondary buttons in light and dark mode */
+button.slip:not(.d){background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line))}
+/* icon buttons */
+button.ib{width:44px;height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;flex:none}
+button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.urge-line button.ib{width:40px;height:40px;padding:0}
+/* settings: each card keeps its own height instead of stretching to the other column */
+.set.layout>.col>section:last-child{flex:0 0 auto}
+/* PIN status line takes no room while it is empty */
+#pinMsg{margin:0;min-height:0}
+#pinMsg:not(:empty){margin:12px 0 0}
+/* help page */
+#view-help .phead{margin-bottom:20px}
 </style>
 </head>
 <body>
@@ -352,7 +371,7 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     <div class="plist" id="progList"></div>
   </div>
   <div id="detailBar" hidden>
-    <div class="dtop"><div class="dl"><button class="back" id="dBack" type="button" aria-label="Back to all addictions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="dName"></h2></div><button class="ghost" id="dEdit" type="button">Edit</button></div>
+    <div class="dtop"><div class="dl"><button class="back" id="dBack" type="button" aria-label="Back to all addictions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="dName"></h2></div><button class="ghost ib" id="dEdit" type="button" aria-label="Edit" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 3.6l2 2-9.3 9.3-2.4-2.4z"/><path d="M8.6 12.6c-2.3-.2-4.1 1.5-4.1 3.6 0 1.1-.6 2-1.7 2.5 3.1 1.1 6.9.6 8-2 .6-1.4.3-2.6-.6-3.5"/></svg></button></div>
     <div class="subtabs" id="subtabs">
       <button type="button" data-sub="tracker" aria-pressed="true">Overview</button>
       <button type="button" data-sub="stats" aria-pressed="false">Stats</button>
@@ -415,7 +434,7 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     </div>
     <div class="urge-line">
       <span id="urgeMsg" class="lbl" role="status"></span>
-      <button class="ghost" id="btnUrgeUndo" type="button" style="visibility:hidden">Undo last</button>
+      <button class="ghost ib" id="btnUrgeUndo" type="button" style="visibility:hidden" aria-label="Undo last" title="Undo last"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
     </div>
   </section>
 
@@ -429,9 +448,9 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
   <div class="col">
   <section>
     <div class="cal-head">
-      <button class="ghost" id="prev" aria-label="Previous month">&lt;</button>
+      <button class="ghost ib" id="prev" type="button" aria-label="Previous month" title="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <h2 id="monthLabel" style="margin:0"></h2>
-      <button class="ghost" id="next" aria-label="Next month">&gt;</button>
+      <button class="ghost ib" id="next" type="button" aria-label="Next month" title="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
     <div class="grid" id="dows"></div>
     <div class="grid" id="cal" style="margin-top:6px"></div>
@@ -590,8 +609,8 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
       <h2>Move to a new phone</h2>
       <p class="lbl">Move your log, reasons and settings to another device. Show the QR code, scan it with the new phone's camera, open the link, then tap Import.</p>
       <div class="foot">
-        <button class="ghost" id="mvQR" type="button">Show QR code</button>
-        <button class="ghost" id="mvLink" type="button">Copy link</button>
+        <button class="ghost ib" id="mvQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"/></svg></button>
+        <button class="ghost ib" id="mvLink" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></button>
       </div>
       <p class="lbl" style="margin:12px 0 0">Anyone with this link or code can read your whole log. Keep it private.</p>
     </section>
@@ -611,7 +630,7 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
         <label id="pinNew2W">Repeat new PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew2"></label>
         <div class="foot"><button class="clean" id="pinSave" type="button">Save</button><button class="ghost" id="pinCancel" type="button">Cancel</button></div>
       </div>
-      <p class="lbl" id="pinMsg" role="status" style="margin:12px 0 0;min-height:1.5em"></p>
+      <p class="lbl" id="pinMsg" role="status"></p>
       <div id="lockAfterBox" hidden>
         <p class="lbl" style="margin-top:8px">Lock the app</p>
         <div class="seg" id="lockAfter">
@@ -642,48 +661,14 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
       <h2>Share your progress</h2>
       <p class="lbl">Make a read-only snapshot for someone you trust, like an accountability partner. It shows your streaks and which days were clean or slipped. It never includes your reasons, triggers or notes, but it does show the name of each addiction you track.</p>
       <div class="foot">
-        <button class="ghost" id="shLink" type="button">Share link</button>
-        <button class="ghost" id="shQR" type="button">Show QR code</button>
+        <button class="ghost ib" id="shLink" type="button" aria-label="Share link" title="Share link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 13.3l7.4 4.4M15.7 6.3l-7.4 4.4"/></svg></button>
+        <button class="ghost ib" id="shQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"/></svg></button>
       </div>
       <p class="lbl" style="margin:12px 0 0">It's a snapshot, not live. Share a new link to update it.</p>
     </section>
     </div>
   </div>
-</main>
-<nav class="bnav" aria-label="Main">
-  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/></svg><span>Progress</span></button>
-  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span>Today</span></button>
-  <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg></span><span>Help</span></button>
-  <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"/></svg><span>Stats</span></button>
-  <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
-</nav>
-
-<div id="toast" role="status" aria-live="polite"></div>
-
-<div id="lock" role="dialog" aria-modal="true" aria-label="Unplugged is locked">
-  <div class="lockbox">
-    <h1>Unplugged</h1>
-    <p class="sub" style="margin:6px 0 20px">Enter your PIN to open.</p>
-    <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">
-    <button id="lockGo" class="clean" type="button">Unlock</button>
-    <p class="lbl" id="lockMsg" role="alert" style="min-height:1.5em;margin:0 0 8px"></p>
-    <button id="lockForgot" class="ghost" type="button">Forgot PIN?</button>
-  </div>
-</div>
-
-<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden>
-  <canvas id="confetti" aria-hidden="true"></canvas>
-  <div class="cele-card">
-    <div class="cele-num" id="celeNum">7</div>
-    <div class="lbl" id="celeUnit">days in a row</div>
-    <h2 id="celeTitle">One week</h2>
-    <p id="celeMsg"></p>
-    <button id="celeOk" class="clean" type="button">Thanks</button>
-  </div>
-</div>
-
-<div id="overlay" role="dialog" aria-modal="true" aria-label="Urge support">
-  <div class="pw">
+  <div id="view-help" hidden>
     <div class="phead">
       <button class="back" id="closeX" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div>
@@ -739,8 +724,39 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     </section>
     <div class="row" id="rodeRow" style="margin-top:20px">
       <button id="btnRode" class="clean" type="button">I rode it out</button>
-      <button id="closePanic" class="ghost" type="button">I'm okay, back to the tracker</button>
+      <button id="closePanic" class="ghost" type="button">I'm okay, go back</button>
     </div>
+  </div>
+</main>
+<nav class="bnav" aria-label="Main">
+  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/></svg><span>Progress</span></button>
+  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span>Today</span></button>
+  <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg></span><span>Help</span></button>
+  <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"/></svg><span>Stats</span></button>
+  <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
+</nav>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="lock" role="dialog" aria-modal="true" aria-label="Unplugged is locked">
+  <div class="lockbox">
+    <h1>Unplugged</h1>
+    <p class="sub" style="margin:6px 0 20px">Enter your PIN to open.</p>
+    <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">
+    <button id="lockGo" class="clean" type="button">Unlock</button>
+    <p class="lbl" id="lockMsg" role="alert" style="min-height:1.5em;margin:0 0 8px"></p>
+    <button id="lockForgot" class="ghost" type="button">Forgot PIN?</button>
+  </div>
+</div>
+
+<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="cele-card">
+    <div class="cele-num" id="celeNum">7</div>
+    <div class="lbl" id="celeUnit">days in a row</div>
+    <h2 id="celeTitle">One week</h2>
+    <p id="celeMsg"></p>
+    <button id="celeOk" class="clean" type="button">Thanks</button>
   </div>
 </div>
 
@@ -1625,10 +1641,12 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     bt.onclick=function(){state.breathMode=m.id;save();breathe();};
     $("breathModes").appendChild(bt);
   });
+  var helpPrev=null,helpActive=false;
   $("panic").onclick=function(){
-    state.helped=(state.helped||0)+1;save();var wasA=announce;announce=false;afterEvent();announce=wasA;
-    fillReasons();fillTips();resetRate();
-    $("overlay").classList.add("open");breathe();$("closePanic").focus({preventScroll:true});$("overlay").scrollTop=0;
+    var first=!helpActive;
+    if(first){state.helped=(state.helped||0)+1;save();var wasA=announce;announce=false;afterEvent();announce=wasA;}
+    fillReasons();fillTips();
+    if(first){resetRate();helpPrev={tab:tab,detail:detail,ci:CI};tab="help";showView(true);scrollTop();breathe();}
   };
   function stopTimer(){clearInterval(tInt);tInt=null;left=tSecs();$("timer").textContent=fmt(left);$("rodeHint").hidden=true;}
   $("tStart").onclick=function(){
@@ -1637,14 +1655,18 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     tInt=setInterval(function(){left--;$("timer").textContent=fmt(left);if(left<=0){clearInterval(tInt);tInt=null;$("timer").textContent="Done";$("rodeHint").hidden=false;try{doneCue();}catch(e){}left=tSecs();state.rode=(state.rode||0)+1;save();afterEvent();}},1000);
   };
   $("tStop").onclick=stopTimer;
-  function closePanic(){$("overlay").classList.remove("open");breathStop();stopTimer();resetRate();(getComputedStyle($("panic")).display==="none"?$("navPanic"):$("panic")).focus();}
+  function closePanic(){
+    var p=helpPrev||{tab:"progress",detail:false,ci:-1};
+    tab=p.tab;detail=!!p.detail&&CI===p.ci;
+    showView(true);scrollTop();
+    try{(getComputedStyle($("panic")).display==="none"?$("navPanic"):$("panic")).focus({preventScroll:true});}catch(e){}
+  }
   $("navPanic").onclick=function(){$("panic").click();};
   $("closePanic").onclick=closePanic;$("closeX").onclick=closePanic;
-  $("overlay").addEventListener("click",function(e){if(e.target===$("overlay"))closePanic();});
   document.addEventListener("keydown",function(e){
     if(e.key!=="Escape")return;
     if($("xover").classList.contains("open"))closeX();
-    else if($("overlay").classList.contains("open"))closePanic();
+    else if(helpActive)closePanic();
     else if($("sheet").classList.contains("open"))closeSheet();
   });
   $("xover").addEventListener("click",function(e){if(e.target===$("xover"))closeX();});
@@ -2184,7 +2206,7 @@ var QR=(function(){
 
   /* ---------- Addictions: several habits, each tracked on its own ---------- */
   var tab="progress",detail=false,sub="tracker";
-  var ALLV=["view-progress","detailBar","view-tracker","view-stats","view-achievements","view-today","view-allstats","view-settings"];
+  var ALLV=["view-progress","detailBar","view-tracker","view-stats","view-achievements","view-today","view-allstats","view-settings","view-help"];
   function tk(){return key(new Date());}
   function mk(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
   function freshItem(name,type,start){return{id:"a"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36),name:name||"",start:start||Date.now(),since:start||Date.now(),focus:type||"general",log:{},reasons:"",picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0};}
@@ -2334,7 +2356,7 @@ var QR=(function(){
     if(!ITEMS.length)box.appendChild(mk("p","lbl","Nothing added yet."));
     ITEMS.forEach(function(it,i){
       var r=mk("div","mrw"),g=mk("span","mb");
-      r.appendChild(mk("span","mn",it.name));g.appendChild(btn("Edit","ghost sm",function(){openForm(i);}));r.appendChild(g);box.appendChild(r);
+      r.appendChild(mk("span","mn",it.name));var eb=btn("","ghost ib",function(){openForm(i);});eb.setAttribute("aria-label","Edit "+it.name);eb.title="Edit";eb.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 3.6l2 2-9.3 9.3-2.4-2.4z"/><path d="M8.6 12.6c-2.3-.2-4.1 1.5-4.1 3.6 0 1.1-.6 2-1.7 2.5 3.1 1.1 6.9.6 8-2 .6-1.4.3-2.6-.6-3.5"/></svg>';g.appendChild(eb);r.appendChild(g);box.appendChild(r);
     });
   }
   function renderAll(){
@@ -2344,7 +2366,10 @@ var QR=(function(){
   function showView(anim){
     var on;
     if(tab==="progress")on=(detail&&CI>=0)?["detailBar","view-"+sub]:["view-progress"];
-    else on={today:["view-today"],stats:["view-allstats"],settings:["view-settings"]}[tab]||["view-progress"];
+    else on={today:["view-today"],stats:["view-allstats"],settings:["view-settings"],help:["view-help"]}[tab]||["view-progress"];
+    var wasHelp=helpActive;helpActive=(tab==="help");
+    if(wasHelp&&!helpActive){breathStop();stopTimer();resetRate();}
+    $("navPanic").setAttribute("aria-pressed",helpActive);
     ALLV.forEach(function(id){$(id).hidden=on.indexOf(id)<0;});
     document.querySelectorAll("[data-tab]").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.tab===tab);});
     document.querySelectorAll("#subtabs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.sub===sub);});
