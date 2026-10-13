@@ -2359,7 +2359,7 @@ var QR=(function(){
     var t=ITEMS[i];ITEMS[i]=ITEMS[j];ITEMS[j]=t;ITEMS.forEach(function(x,n){if(x.id===id)CI=n;});save();renderAll();
   }
   function renderManage(){
-    var box=$("manageList");box.innerHTML="";
+    var box=$("manageList");if(!box)return;box.innerHTML="";
     if(!ITEMS.length)box.appendChild(mk("p","lbl","Nothing added yet."));
     ITEMS.forEach(function(it,i){
       var r=mk("div","mrw"),g=mk("span","mb");

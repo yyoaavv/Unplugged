@@ -1,6 +1,6 @@
 /* Unplugged service worker: caches the app so it works fully offline.
    Bump CACHE when you ship a new version so old files get cleaned up. */
-var CACHE = "unplugged-v20";
+var CACHE = "unplugged-v21";
 var CORE = ["./", "index.html", "manifest.json", "assets/images/favicon.svg", "assets/images/icon.svg", "assets/images/icon-maskable.svg", "assets/images/apple-touch-icon.png"];
 var FONT_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com"];
 
