@@ -21,12 +21,12 @@
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);overflow-y:scroll}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-main{max-width:720px;margin:0 auto;padding:32px 24px 60px}
+main{max-width:1180px;margin:0 auto;padding:32px 24px 60px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:stretch}
 .layout>.col{display:flex;flex-direction:column;min-width:0}
 .layout>.col>section:last-child{flex:1 1 auto}
-@media (max-width:820px){.layout{grid-template-columns:1fr}}
+@media (min-width:900px){.layout{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
 h1{font-size:2rem;font-weight:800;margin:0;letter-spacing:-.02em}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
 .logo{width:44px;height:auto;flex:none;fill:var(--logo,var(--accent))}
@@ -317,6 +317,16 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
 .dl{display:flex;align-items:center;gap:12px;min-width:0}
 #detailBar .dl h2{margin:0;font-size:1.5rem;overflow:hidden;text-overflow:ellipsis}
 .dtop{align-items:center}
+.plist{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+#todayList,#asList{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;align-items:start}
+#todayList .trw,#asList .asr{margin-bottom:0}
+.acard{position:relative}
+.grip{position:absolute;top:12px;right:12px;width:36px;height:36px;padding:0;border-radius:10px;background:transparent;color:var(--mute);border:0;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
+.grip:hover,.grip:focus-visible{background:var(--tint,transparent);color:var(--ink)}
+.grip svg{width:20px;height:20px;fill:currentColor}
+.acard.drag{box-shadow:0 14px 34px rgba(0,0,0,.28);transform:scale(1.02);opacity:.93;border-color:var(--accent);z-index:2;user-select:none}
+.acard.drag .grip{cursor:grabbing}
+:root[data-theme=dark] button.slip:not(.d){background:#000;color:var(--ink);border:1.5px solid var(--tline,var(--line))}
 </style>
 </head>
 <body>
@@ -338,6 +348,7 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
   </nav>
   <div id="view-progress">
     <div class="phd"><h2>Your addictions</h2><button id="pAdd" type="button">Add an addiction</button></div>
+    <p class="lbl" id="dragHint" hidden style="margin:-6px 0 16px">Drag the handle on a card to change the order.</p>
     <div class="plist" id="progList"></div>
   </div>
   <div id="detailBar" hidden>
@@ -529,7 +540,7 @@ input[type=text]:focus-visible,input[type=datetime-local]:focus-visible{outline:
     <div class="col">
     <section>
       <h2>Your addictions</h2>
-      <p class="lbl">Add, rename, reorder or remove what you're tracking.</p>
+      <p class="lbl">Add, rename or remove what you're tracking. To change the order, drag the cards on the Progress tab.</p>
       <div id="manageList"></div>
       <div class="row" style="margin-top:12px"><button class="ghost" id="mAdd" type="button">Add an addiction</button></div>
     </section>
@@ -2219,15 +2230,48 @@ var QR=(function(){
     normalize();cleanImported();ITEMS.forEach(recomputeSince);detail=false;tab="progress";save();render();showView();applyTheme();announce=true;
   }
 
+  function startDrag(e,card,h){
+    if(ITEMS.length<2||(e.button!==undefined&&e.button!==0))return;
+    e.preventDefault();var box=$("progList");
+    try{h.setPointerCapture(e.pointerId);}catch(x){}
+    card.classList.add("drag");
+    function move(ev){
+      var els=document.elementsFromPoint(ev.clientX,ev.clientY),over=null;
+      for(var k=0;k<els.length;k++){var c=els[k].closest&&els[k].closest(".acard");if(c&&c!==card&&c.parentNode===box){over=c;break;}}
+      if(!over)return;
+      /* move the neighbour, not the dragged card, so the pointer capture on the handle survives */
+      if(card.compareDocumentPosition(over)&Node.DOCUMENT_POSITION_FOLLOWING)box.insertBefore(over,card);else box.insertBefore(over,card.nextSibling);
+    }
+    function up(){
+      h.removeEventListener("pointermove",move);h.removeEventListener("pointerup",up);h.removeEventListener("pointercancel",up);
+      try{h.releasePointerCapture(e.pointerId);}catch(x){}
+      card.classList.remove("drag");
+      var ids=Array.prototype.map.call(box.querySelectorAll(".acard"),function(c){return c.dataset.id;});
+      pushItem();var curId=CI>=0?ITEMS[CI].id:null;
+      ITEMS.sort(function(a,b){return ids.indexOf(a.id)-ids.indexOf(b.id);});
+      ITEMS.forEach(function(x,n){if(x.id===curId)CI=n;});
+      save();renderAll();
+    }
+    h.addEventListener("pointermove",move);h.addEventListener("pointerup",up);h.addEventListener("pointercancel",up);
+  }
   function renderProgress(){
-    var box=$("progList");box.innerHTML="";
+    var box=$("progList");box.innerHTML="";$("dragHint").hidden=ITEMS.length<2;
     if(!ITEMS.length){var s0=mk("section");s0.appendChild(mk("h2",null,"Start with one"));s0.appendChild(mk("p","lbl","Add something you want to stop. You can add as many as you like and each one is tracked on its own."));box.appendChild(s0);}
     ITEMS.forEach(function(it,i){
       var c=mk("div","acard");c.tabIndex=0;c.setAttribute("role","button");c.setAttribute("aria-label",it.name+", open");
+      c.dataset.id=it.id;
       c.appendChild(mk("div","an",it.name));
       var b=mk("div","tbig");b.dataset.live="big";b.dataset.i=i;c.appendChild(b);
       var t=mk("div","tsmall");t.dataset.live="small";t.dataset.i=i;c.appendChild(t);
       c.appendChild(mk("div","lbl ast",statusOf(it)));
+      if(ITEMS.length>1){
+        var gr=mk("button","grip");gr.type="button";gr.setAttribute("aria-label","Reorder "+it.name+". Drag it, or use the arrow keys.");
+        gr.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
+        gr.onclick=function(e){e.stopPropagation();};
+        gr.onkeydown=function(e){e.stopPropagation();var d=(e.key==="ArrowUp"||e.key==="ArrowLeft")?-1:(e.key==="ArrowDown"||e.key==="ArrowRight")?1:0;if(d){e.preventDefault();var id=it.id;moveItem(i,d);var nb=document.querySelector('.acard[data-id="'+id+'"] .grip');if(nb)nb.focus();}};
+        gr.onpointerdown=function(e){startDrag(e,c,gr);};
+        c.appendChild(gr);
+      }
       c.onclick=function(){openDetail(i);};
       c.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();openDetail(i);}};
       box.appendChild(c);
@@ -2289,9 +2333,8 @@ var QR=(function(){
     var box=$("manageList");box.innerHTML="";
     if(!ITEMS.length)box.appendChild(mk("p","lbl","Nothing added yet."));
     ITEMS.forEach(function(it,i){
-      var r=mk("div","mrw"),g=mk("span","mb"),up=btn("Up","ghost sm",function(){moveItem(i,-1);}),dn=btn("Down","ghost sm",function(){moveItem(i,1);});
-      up.disabled=i===0;dn.disabled=i===ITEMS.length-1;
-      r.appendChild(mk("span","mn",it.name));g.appendChild(up);g.appendChild(dn);g.appendChild(btn("Edit","ghost sm",function(){openForm(i);}));r.appendChild(g);box.appendChild(r);
+      var r=mk("div","mrw"),g=mk("span","mb");
+      r.appendChild(mk("span","mn",it.name));g.appendChild(btn("Edit","ghost sm",function(){openForm(i);}));r.appendChild(g);box.appendChild(r);
     });
   }
   function renderAll(){
