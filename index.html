@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unplugged</title>
@@ -13,7 +12,7 @@
 <meta name="apple-mobile-web-app-title" content="Unplugged">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&amp;display=swap" rel="stylesheet">
 <script>try{var _s=JSON.parse(localStorage.getItem("reset-tracker-v1"));if(_s&&_s.lock&&_s.lock.h)document.documentElement.classList.add("locked");}catch(e){}</script>
 <style>
 :root{--bg:#f4f4f2;--card:#ffffff;--ink:#121413;--mute:#6b706d;--accent:#7DA487;--atext:#4a7a59;--logo:#7DA487;--clean:#7DA487;--slip:#121413;--onslip:#ffffff;--line:#e3e4e1;--panic:#c2412d;--on:#111111}
@@ -347,6 +346,17 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 #pinMsg:not(:empty){margin:12px 0 0}
 /* help page */
 #view-help .phead{margin-bottom:20px}
+
+button.ic{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+button.ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tabs button{display:inline-flex;align-items:center;gap:7px}
+.tabs button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wd .ss{background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box}
+.heat i.slip{background:var(--tint,var(--bg));box-shadow:inset 0 0 0 1.5px var(--tline,var(--line));opacity:1}
+.ast-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+.ast-row .ast{margin-top:0}
+button.qclean{width:34px;height:34px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none}
+button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -354,51 +364,51 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   <header class="top">
     <div>
       <div class="brand">
-        <svg class="logo" viewBox="16 7 32 36" aria-hidden="true"><defs><mask id="eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff"/><circle cx="25.5" cy="26.5" r="3" fill="#000"/><circle cx="38.5" cy="26.5" r="3" fill="#000"/></mask></defs><g mask="url(#eyes)"><rect x="23" y="9" width="4" height="10" rx="2"/><rect x="37" y="9" width="4" height="10" rx="2"/><rect x="18" y="19" width="28" height="15" rx="5"/><rect x="29" y="34" width="6" height="7" rx="2"/></g></svg>
+        <svg class="logo" viewBox="16 7 32 36" aria-hidden="true"><defs><mask id="eyes" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff"></rect><circle cx="25.5" cy="26.5" r="3" fill="#000"></circle><circle cx="38.5" cy="26.5" r="3" fill="#000"></circle></mask></defs><g mask="url(#eyes)"><rect x="23" y="9" width="4" height="10" rx="2"></rect><rect x="37" y="9" width="4" height="10" rx="2"></rect><rect x="18" y="19" width="28" height="15" rx="5"></rect><rect x="29" y="34" width="6" height="7" rx="2"></rect></g></svg>
         <h1 id="siteName">Unplugged</h1>
       </div>
     </div>
-    <button class="panic-btn" id="panic">I need help now</button>
+    <button class="panic-btn ic" id="panic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5"></circle><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"></path></svg><span>I need help now</span></button>
   </header>
   <nav class="tabs" aria-label="Sections">
-    <button type="button" data-tab="progress" aria-pressed="true">Progress</button>
-    <button type="button" data-tab="today" aria-pressed="false">Today</button>
-    <button type="button" data-tab="stats" aria-pressed="false">Stats</button>
-    <button type="button" data-tab="settings" aria-pressed="false">Settings</button>
+    <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 3h6"></path></svg><span>Progress</span></button>
+    <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"></path></svg><span>Today</span></button>
+    <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"></path></svg><span>Stats</span></button>
+    <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path><circle cx="16" cy="7" r="2"></circle><circle cx="8" cy="17" r="2"></circle></svg><span>Settings</span></button>
   </nav>
   <div id="view-progress">
-    <div class="phd"><h2>Your addictions</h2><button id="pAdd" type="button">Add an addiction</button></div>
-    <p class="lbl" id="dragHint" hidden style="margin:-6px 0 16px">Drag the handle on a card to change the order.</p>
+    <div class="phd"><h2>Your addictions</h2><button id="pAdd" type="button" class="ib" aria-label="Add an addiction" title="Add an addiction"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></div>
+    <p class="lbl" id="dragHint" hidden="" style="margin:-6px 0 16px">Drag the handle on a card to change the order.</p>
     <div class="plist" id="progList"></div>
   </div>
-  <div id="detailBar" hidden>
-    <div class="dtop"><div class="dl"><button class="back" id="dBack" type="button" aria-label="Back to all addictions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><h2 id="dName"></h2></div><button class="ghost ib" id="dEdit" type="button" aria-label="Edit" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 3.6l2 2-9.3 9.3-2.4-2.4z"/><path d="M8.6 12.6c-2.3-.2-4.1 1.5-4.1 3.6 0 1.1-.6 2-1.7 2.5 3.1 1.1 6.9.6 8-2 .6-1.4.3-2.6-.6-3.5"/></svg></button></div>
+  <div id="detailBar" hidden="">
+    <div class="dtop"><div class="dl"><button class="back" id="dBack" type="button" aria-label="Back to all addictions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button><h2 id="dName"></h2></div><button class="ghost ib" id="dEdit" type="button" aria-label="Edit" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 3.6l2 2-9.3 9.3-2.4-2.4z"></path><path d="M8.6 12.6c-2.3-.2-4.1 1.5-4.1 3.6 0 1.1-.6 2-1.7 2.5 3.1 1.1 6.9.6 8-2 .6-1.4.3-2.6-.6-3.5"></path></svg></button></div>
     <div class="subtabs" id="subtabs">
       <button type="button" data-sub="tracker" aria-pressed="true">Overview</button>
       <button type="button" data-sub="stats" aria-pressed="false">Stats</button>
       <button type="button" data-sub="achievements" aria-pressed="false">Awards</button>
     </div>
   </div>
-  <div id="view-today" hidden>
+  <div id="view-today" hidden="">
     <section><h2 id="todayDate">Today</h2><p class="lbl" id="todaySub" style="margin:0"></p></section>
     <div id="todayList"></div>
   </div>
-  <div id="view-allstats" hidden>
-    <section id="asEmpty" hidden><h2>No stats yet</h2><p class="lbl" style="margin:0">Add an addiction and the stats for all of them will show up here.</p></section>
+  <div id="view-allstats" hidden="">
+    <section id="asEmpty" hidden=""><h2>No stats yet</h2><p class="lbl" style="margin:0">Add an addiction and the stats for all of them will show up here.</p></section>
     <div id="asMain">
       <section><h2>All together</h2><div class="tiles" id="asTiles"></div></section>
       <div class="phd"><h2>By addiction</h2></div>
       <div id="asList"></div>
     </div>
   </div>
-  <div id="view-tracker" hidden>
+  <div id="view-tracker" hidden="">
   <section>
     <div class="tbig" id="tcBig" data-live="big" data-i="0"></div>
     <div class="tsmall" id="tcSmall" data-live="small" data-i="0"></div>
     <div class="lbl" id="tcSince" style="margin-top:10px"></div>
   </section>
-  <div class="remind" id="planCard" hidden></div>
-  <div class="remind" id="remBanner" hidden><b>Daily check-in</b><p>You haven't logged today yet. How did it go?</p></div>
+  <div class="remind" id="planCard" hidden=""></div>
+  <div class="remind" id="remBanner" hidden=""><b>Daily check-in</b><p>You haven't logged today yet. How did it go?</p></div>
   <div class="layout">
   <div class="col">
 
@@ -417,12 +427,12 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   <section>
     <h2 id="logTitle">Today</h2>
     <div class="today" id="todayLabel"></div>
-    <div class="row">
-      <button class="clean" id="btnClean">I stayed clean</button>
-      <button class="slip" id="btnSlip">I slipped</button>
-      <button class="ghost" id="btnClear">Clear this day</button>
-      <button class="ghost" id="btnDetails" style="visibility:hidden">Details</button>
-      <button class="ghost" id="btnToday" hidden>Back to today</button>
+    <div class="row" style="align-items: center;">
+      <button class="clean ic" id="btnClean"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span>I stayed clean</span></button>
+      <button class="slip ic" id="btnSlip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg><span>I slipped</span></button>
+      <button class="ghost ib" id="btnClear" aria-label="Clear this day" title="Clear this day"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
+      <button class="ghost ib" id="btnDetails" style="visibility:hidden" aria-label="Slip details" title="Slip details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></button>
+      <button class="ghost ib" id="btnToday" hidden="" aria-label="Back to today" title="Back to today"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path><circle cx="12" cy="15" r="2" fill="currentColor"></circle></svg></button>
     </div>
     <p class="lbl" style="margin:12px 0 0">Tip: pick any past day on the calendar to fix or fill in your log.</p>
   </section>
@@ -431,11 +441,11 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
     <h2>Urges</h2>
     <p class="lbl">Felt an urge and didn't act on it? Log the win.</p>
     <div class="row">
-      <button class="clean" id="btnUrge" type="button">I rode out an urge</button>
+      <button class="clean ic" id="btnUrge" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg><span>I rode out an urge</span></button>
     </div>
     <div class="urge-line">
       <span id="urgeMsg" class="lbl" role="status"></span>
-      <button class="ghost ib" id="btnUrgeUndo" type="button" style="visibility:hidden" aria-label="Undo last" title="Undo last"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+      <button class="ghost ib" id="btnUrgeUndo" type="button" style="visibility:hidden" aria-label="Undo last" title="Undo last"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"></path></svg></button>
     </div>
   </section>
 
@@ -449,28 +459,28 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   <div class="col">
   <section>
     <div class="cal-head">
-      <button class="ghost ib" id="prev" type="button" aria-label="Previous month" title="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="ghost ib" id="prev" type="button" aria-label="Previous month" title="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
       <h2 id="monthLabel" style="margin:0"></h2>
-      <button class="ghost ib" id="next" type="button" aria-label="Next month" title="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <button class="ghost ib" id="next" type="button" aria-label="Next month" title="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
     </div>
     <div class="grid" id="dows"></div>
     <div class="grid" id="cal" style="margin-top:6px"></div>
     <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box"></i>Slipped</span></div>
-  </section>
-
-  <section>
+  <div style="margin-top: 14px; display: flex; justify-content: flex-end;"><button class="ghost sm ic" id="btnRangeToggle" type="button" onclick="var b=document.getElementById('rangeBox');b.hidden=!b.hidden;"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18M7 15h10"></path></svg><span>Log a range of days</span></button></div><div id="rangeBox" hidden="" style="margin-top: 14px; padding-top: 14px; border-top: 1.5px solid var(--line);">
     <h2>Log a range of days</h2>
     <p class="lbl">Fill in many days at once, like a week you forgot to log.</p>
     <div class="row range">
       <label>From<input type="date" id="rFrom"></label>
       <label>To<input type="date" id="rTo"></label>
     </div>
-    <div class="row" style="margin-top:14px">
-      <button class="clean" id="rClean">Mark all clean</button>
-      <button class="slip" id="rSlip">Mark all slipped</button>
-      <button class="ghost" id="rClear">Clear range</button>
+    <div class="row" style="margin-top: 14px; align-items: center;">
+      <button class="clean ic" id="rClean"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span>Mark all clean</span></button>
+      <button class="slip ic" id="rSlip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg><span>Mark all slipped</span></button>
+      <button class="ghost ib" id="rClear" aria-label="Clear range" title="Clear range"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
     </div>
-  </section>
+  </div></section>
+
+  
 
   </div>
   </div>
@@ -478,7 +488,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
     <h2>Why I'm doing this</h2>
     <p class="lbl" style="margin-bottom:8px">What kind of habit is this? This sets the suggested reasons and tips in the help panel.</p>
     <div class="chips" id="focusChips" role="group" aria-label="What you're quitting" style="margin-bottom:8px"></div>
-    <p class="note" id="focusNote" hidden style="margin:0 0 14px"></p>
+    <p class="note" id="focusNote" hidden="" style="margin:0 0 14px"></p>
     <p class="lbl" style="margin:14px 0 8px">Pick the reasons that fit you. They'll pop up when you tap "I need help now".</p>
     <div class="chips" id="reasonChips" role="group" aria-label="Built-in reasons"></div>
     <div id="pickedList"></div>
@@ -488,7 +498,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 
   </div>
 
-  <div id="view-achievements" hidden>
+  <div id="view-achievements" hidden="">
     <section>
       <div class="streak"><div><div class="big" id="achCount">0</div><div class="lbl" id="achOf"></div></div></div>
       <div class="bar" style="margin-top:16px"><i id="achBar"></i></div>
@@ -503,7 +513,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
     </section>
   </div>
 
-  <div id="view-stats" hidden>
+  <div id="view-stats" hidden="">
     <section>
       <h2>Overview</h2>
       <div class="tiles" id="tiles"></div>
@@ -521,7 +531,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
           <h2>By weekday</h2>
           <div class="wk" id="wk"></div>
           <p class="lbl" id="wkNote" style="margin:14px 0 0"></p>
-          <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--slip)"></i>Slipped</span></div>
+          <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box"></i>Slipped</span></div>
         </section>
       </div>
       <div class="col">
@@ -552,11 +562,11 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
     <section style="margin-top:20px">
       <h2>Your <span class="dsk">year</span><span class="mob">last 6 months</span></h2>
       <div class="heatwrap" id="heatwrap"><div class="hm" id="hm"></div><div class="heat" id="heat"></div></div>
-      <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--slip)"></i>Slipped</span><span><i style="background:var(--line)"></i>Not logged</span></div>
+      <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box"></i>Slipped</span><span><i style="background:var(--line)"></i>Not logged</span></div>
     </section>
   </div>
 
-  <div id="view-settings" class="set layout" hidden>
+  <div id="view-settings" class="set layout" hidden="">
     <div class="col">
     <section>
       <h2>Appearance</h2>
@@ -568,7 +578,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
       </div>
       <p class="lbl" style="margin-top:20px">Theme: <strong id="themeName"></strong></p>
       <div class="themes" id="accSeg" role="group" aria-label="Themes"></div>
-      <div id="customBox" hidden style="margin-top:18px">
+      <div id="customBox" hidden="" style="margin-top:18px">
         <p class="lbl">Pick your own color. If it is too light or too dark to read, it is nudged slightly.</p>
         <div class="row range">
           <label>Main color<input type="color" id="cAcc"></label>
@@ -584,7 +594,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
           <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
           <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
         </span>
-        <button class="ghost" id="remTest" type="button" style="margin-left:6px">Send a test</button>
+        <button class="ghost ib" id="remTest" type="button" style="margin-left:6px" aria-label="Send a test" title="Send a test"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button>
       </div>
       <div class="row range" style="margin-top:14px"><label>Time<input type="time" id="remTime"></label></div>
       <p class="lbl" id="remNote" style="margin:12px 0 0"></p>
@@ -597,15 +607,15 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
           <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
           <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
         </span>
-        <button class="ghost" id="celePrev" type="button" style="margin-left:6px">Preview</button>
+        <button class="ghost ib" id="celePrev" type="button" style="margin-left:6px" aria-label="Preview celebration" title="Preview celebration"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
       </div>
     </section>
     <section>
       <h2>Move to a new phone</h2>
       <p class="lbl">Move your log, reasons and settings to another device. Show the QR code, scan it with the new phone's camera, open the link, then tap Import.</p>
       <div class="foot">
-        <button class="ghost ib" id="mvQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"/></svg></button>
-        <button class="ghost ib" id="mvLink" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg></button>
+        <button class="ghost ib" id="mvQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"></path></svg></button>
+        <button class="ghost ib" id="mvLink" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg></button>
       </div>
       <p class="lbl" style="margin:12px 0 0">Anyone with this link or code can read your whole log. Keep it private.</p>
     </section>
@@ -616,17 +626,17 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
       <p class="lbl" id="lockStatus">Protect Unplugged with a PIN. It asks for the PIN every time you open the app.</p>
       <div class="foot" id="lockBtns">
         <button class="ghost" id="lockSet" type="button">Set a PIN</button>
-        <button class="ghost" id="lockChange" type="button" hidden>Change PIN</button>
-        <button class="ghost" id="lockOff" type="button" hidden>Turn off</button>
+        <button class="ghost" id="lockChange" type="button" hidden="">Change PIN</button>
+        <button class="ghost" id="lockOff" type="button" hidden="">Turn off</button>
       </div>
-      <div id="pinForm" hidden>
+      <div id="pinForm" hidden="">
         <label id="pinCurW">Current PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinCur"></label>
         <label id="pinNewW">New PIN (4 to 8 digits)<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew"></label>
         <label id="pinNew2W">Repeat new PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew2"></label>
         <div class="foot"><button class="clean" id="pinSave" type="button">Save</button><button class="ghost" id="pinCancel" type="button">Cancel</button></div>
       </div>
       <p class="lbl" id="pinMsg" role="status"></p>
-      <div id="lockAfterBox" hidden>
+      <div id="lockAfterBox" hidden="">
         <p class="lbl" style="margin-top:8px">Lock the app</p>
         <div class="seg" id="lockAfter">
           <button type="button" class="ghost" data-a="0" aria-pressed="false">Right away</button>
@@ -640,38 +650,38 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
       <h2>Your data</h2>
       <p class="lbl">Your log lives only in this browser. Export a backup before clearing your browser data or switching devices.</p>
       <div class="foot">
-        <button class="ghost" id="export">Export backup</button>
-        <button class="ghost" id="import">Import backup</button>
-        <button class="ghost" id="reset">Erase everything</button>
+        <button class="ghost ib" id="export" aria-label="Export backup" title="Export backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+        <button class="ghost ib" id="import" aria-label="Import backup" title="Import backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></button>
+        <button class="ghost ib" id="reset" aria-label="Erase everything" title="Erase everything"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
       </div>
-      <input type="file" id="file" accept="application/json" hidden>
+      <input type="file" id="file" accept="application/json" hidden="">
     </section>
     <section id="installBox">
       <h2>Install the app</h2>
       <p class="lbl">Add Unplugged to your home screen for a full-screen app with no browser bar. It works offline too.</p>
-      <div class="foot"><button class="ghost" id="install" type="button" hidden>Install Unplugged</button></div>
+      <div class="foot"><button class="ghost" id="install" type="button" hidden="">Install Unplugged</button></div>
       <p class="lbl" id="installHint" style="margin:0"></p>
     </section>
     <section>
       <h2>Share your progress</h2>
       <p class="lbl">Make a read-only snapshot for someone you trust, like an accountability partner. It shows your streaks and which days were clean or slipped. It never includes your reasons, triggers or notes, but it does show the name of each addiction you track.</p>
       <div class="foot">
-        <button class="ghost ib" id="shLink" type="button" aria-label="Share link" title="Share link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 13.3l7.4 4.4M15.7 6.3l-7.4 4.4"/></svg></button>
-        <button class="ghost ib" id="shQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"/></svg></button>
+        <button class="ghost ib" id="shLink" type="button" aria-label="Share link" title="Share link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"></circle><circle cx="6" cy="12" r="2.6"></circle><circle cx="18" cy="19" r="2.6"></circle><path d="M8.3 13.3l7.4 4.4M15.7 6.3l-7.4 4.4"></path></svg></button>
+        <button class="ghost ib" id="shQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"></path></svg></button>
       </div>
       <p class="lbl" style="margin:12px 0 0">It's a snapshot, not live. Share a new link to update it.</p>
     </section>
     </div>
   </div>
-  <div id="view-help" hidden>
+  <div id="view-help" hidden="">
     <div class="phead">
-      <button class="back" id="closeX" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="back" id="closeX" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
       <div>
         <h1>This will pass.</h1>
         <p class="sub">An urge peaks and fades, usually within 10-15 minutes. You don't have to fight it forever, just through this window.</p>
       </div>
     </div>
-    <div class="remind" id="remind" hidden></div>
+    <div class="remind" id="remind" hidden=""></div>
     <section id="rateBox">
       <h2>How strong is the urge right now?</h2>
       <p class="lbl" style="margin:0 0 10px">Optional. 1 is faint, 10 is overwhelming.</p>
@@ -682,8 +692,8 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
         <h2>Breathe</h2>
         <div class="chips bmodes" id="breathModes" role="group" aria-label="Breathing style"></div>
         <div class="chips bmodes" id="breathFx" role="group" aria-label="Breathing feedback" style="margin-bottom:0">
-          <button type="button" class="chip" id="fxVib" aria-pressed="false">Vibrate</button>
-          <button type="button" class="chip" id="fxSnd" aria-pressed="false">Sound</button>
+          <button type="button" class="chip ic" id="fxVib" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M2 8v8M22 8v8"></path></svg><span>Vibrate</span></button>
+          <button type="button" class="chip ic" id="fxSnd" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg><span>Sound</span></button>
         </div>
         <div class="mid">
           <div class="breath" id="breath">Breathe in</div>
@@ -696,10 +706,10 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
           <div class="timer" id="timer">10:00</div>
           <div class="row" style="justify-content:center;margin-top:10px">
             <button id="tStart">Start 10 minutes</button>
-            <button class="ghost" id="tStop">Stop</button>
+            <button class="ghost ib" id="tStop" aria-label="Reset timer" title="Reset timer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
           </div>
           <div class="tlen" id="tlenBox"><span class="chips" id="timerLen" role="group" aria-label="Timer length" style="margin:0;justify-content:center"></span><label>Custom <input type="number" id="tCustom" min="1" max="120" inputmode="numeric" aria-label="Custom minutes"> min</label></div>
-          <p class="lbl" id="rodeHint" hidden style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
+          <p class="lbl" id="rodeHint" hidden="" style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
         </div>
       </section>
       <section class="wide">
@@ -711,7 +721,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
         <div class="reasons-box" id="myReasons"></div>
       </section>
     </div>
-    <section id="afterBox" hidden style="margin-top:20px">
+    <section id="afterBox" hidden="" style="margin-top:20px">
       <h2>Nice. How strong is the urge now?</h2>
       <p class="lbl" style="margin:0 0 10px">Optional. This is how the app shows you that urges fade.</p>
       <div class="chips rate" id="rateAfter" role="group" aria-label="Urge strength after riding it out"></div>
@@ -724,11 +734,11 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   </div>
 </main>
 <nav class="bnav" aria-label="Main">
-  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 3h6"/></svg><span>Progress</span></button>
-  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg><span>Today</span></button>
-  <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg></span><span>Help</span></button>
-  <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"/></svg><span>Stats</span></button>
-  <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span>Settings</span></button>
+  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 3h6"></path></svg><span>Progress</span></button>
+  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"></path></svg><span>Today</span></button>
+  <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5"></circle><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"></path></svg></span><span>Help</span></button>
+  <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"></path></svg><span>Stats</span></button>
+  <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path><circle cx="16" cy="7" r="2"></circle><circle cx="8" cy="17" r="2"></circle></svg><span>Settings</span></button>
 </nav>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -744,7 +754,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   </div>
 </div>
 
-<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden>
+<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden="">
   <canvas id="confetti" aria-hidden="true"></canvas>
   <div class="cele-card">
     <div class="cele-num" id="celeNum">7</div>
@@ -758,7 +768,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 <div id="sheet" role="dialog" aria-modal="true" aria-label="Slip follow-up">
   <div class="sheet-panel" id="sheetPanel" tabindex="-1">
     <div class="sheet-grip" aria-hidden="true"></div>
-    <div class="survey" id="survey" hidden>
+    <div class="survey" id="survey" hidden="">
       <h3>What was going on?</h3>
       <p class="lbl" style="margin:0">Optional. Tap anything that fits, it saves as you go.</p>
       <p class="sg">Trigger</p>
@@ -769,7 +779,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
       <div class="chips" id="svWhen" role="group" aria-label="Time of day"></div>
       <div class="foot"><button type="button" class="clean" id="svDone">Done</button></div>
     </div>
-    <div class="survey" id="recover" hidden>
+    <div class="survey" id="recover" hidden="">
       <h3>Be kind to yourself</h3>
       <p class="lbl" id="recMsg" style="margin:0"></p>
       <p class="sg">What will I do differently next time? (optional)</p>
@@ -784,7 +794,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 <div id="xover" role="dialog" aria-modal="true" aria-labelledby="xTitle">
   <div class="pw">
     <div class="phead">
-      <button class="back" id="xClose" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="back" id="xClose" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
       <div><h1 id="xTitle"></h1><p class="sub" id="xSub"></p></div>
     </div>
     <div id="xBody"></div>
@@ -2280,7 +2290,7 @@ var QR=(function(){
       c.appendChild(mk("div","an",it.name));
       var b=mk("div","tbig");b.dataset.live="big";b.dataset.i=i;c.appendChild(b);
       var t=mk("div","tsmall");t.dataset.live="small";t.dataset.i=i;c.appendChild(t);
-      c.appendChild(mk("div","lbl ast",statusOf(it)));
+      var ar=mk("div","ast-row");ar.appendChild(mk("div","lbl ast",statusOf(it)));if(!it.log[tk()]){var qc=mk("button","clean qclean");qc.type="button";qc.title="Mark clean today";qc.setAttribute("aria-label","Mark "+it.name+" clean today");qc.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';qc.onclick=function(e){e.stopPropagation();todayAct(i,"clean");};ar.appendChild(qc);}c.appendChild(ar);
       if(ITEMS.length>1){
         var gr=mk("button","grip");gr.type="button";gr.setAttribute("aria-label","Reorder "+it.name+". Drag it, or use the arrow keys.");
         gr.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
@@ -2347,7 +2357,7 @@ var QR=(function(){
     var t=ITEMS[i];ITEMS[i]=ITEMS[j];ITEMS[j]=t;ITEMS.forEach(function(x,n){if(x.id===id)CI=n;});save();renderAll();
   }
   function renderManage(){
-    var box=$("manageList");box.innerHTML="";
+    var box=$("manageList");if(!box)return;box.innerHTML="";
     if(!ITEMS.length)box.appendChild(mk("p","lbl","Nothing added yet."));
     ITEMS.forEach(function(it,i){
       var r=mk("div","mrw"),g=mk("span","mb");
@@ -2430,5 +2440,6 @@ var QR=(function(){
   handleHash();window.addEventListener("hashchange",handleHash);
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
