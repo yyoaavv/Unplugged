@@ -51,9 +51,9 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outl
 .d{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;background:var(--bg);color:var(--mute);padding:0;border:0;font-weight:400}
 button.d:not(:disabled):hover{filter:brightness(.93)}
 .d:disabled{opacity:.35;cursor:default}
-.d.sel{box-shadow:0 0 0 3px var(--ink)}
 div.d{background:transparent}
-.d.clean{background:var(--clean);color:var(--on)}.d.slip{background:var(--slip);color:var(--onslip)}
+.d.clean{background:var(--clean);color:var(--on)}.d.slip{background:var(--tint,var(--bg));color:var(--ink);border:1.5px solid var(--tline,var(--line))}
+.d.sel{box-shadow:0 0 0 2.5px var(--accent)}.d.clean.sel{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
 .d.now{font-weight:800;text-decoration:underline}
 .legend{display:flex;gap:16px;margin-top:12px;font-size:.85rem;color:var(--mute)}
 .legend i{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:6px;vertical-align:-1px}
@@ -166,9 +166,10 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 .w7{display:flex;flex-direction:column;gap:6px;align-items:stretch;padding:0;background:transparent;border:0;color:var(--mute);font-weight:400;font-size:.8rem;text-align:center;border-radius:10px;cursor:pointer}
 .w7 b{height:46px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:600;color:var(--mute)}
 .w7.ok b{background:var(--clean);color:var(--on)}
-.w7.sl b{background:var(--slip);color:var(--onslip)}
-.w7.now b{box-shadow:0 0 0 2px var(--ink)}
-.w7.sel b{box-shadow:0 0 0 3px var(--teal)}
+.w7.sl b{background:var(--tint,var(--bg));color:var(--ink);border:1.5px solid var(--tline,var(--line))}
+.w7.now b{font-weight:800;text-decoration:underline}
+.w7.sel b{box-shadow:0 0 0 2.5px var(--accent)}
+.w7.ok.sel b{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent)}
 .w7:disabled{cursor:default}
 .srow{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;align-items:center;margin-bottom:14px}
 .srow:last-child{margin-bottom:0}
@@ -340,7 +341,7 @@ button.ib{width:44px;height:44px;padding:0;display:inline-flex;align-items:cente
 button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .urge-line button.ib{width:40px;height:40px;padding:0}
 /* settings: each card keeps its own height instead of stretching to the other column */
-.set.layout>.col>section:last-child{flex:0 0 auto}
+.set.layout>.col{display:flex;flex-direction:column}.set.layout>.col>section:last-child{flex:1 1 auto}
 /* PIN status line takes no room while it is empty */
 #pinMsg{margin:0;min-height:0}
 #pinMsg:not(:empty){margin:12px 0 0}
@@ -454,7 +455,7 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
     </div>
     <div class="grid" id="dows"></div>
     <div class="grid" id="cal" style="margin-top:6px"></div>
-    <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--slip)"></i>Slipped</span></div>
+    <div class="legend"><span><i style="background:var(--clean)"></i>Clean</span><span><i style="background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box"></i>Slipped</span></div>
   </section>
 
   <section>
@@ -557,12 +558,6 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 
   <div id="view-settings" class="set layout" hidden>
     <div class="col">
-    <section>
-      <h2>Your addictions</h2>
-      <p class="lbl">Add, rename or remove what you're tracking. To change the order, drag the cards on the Progress tab.</p>
-      <div id="manageList"></div>
-      <div class="row" style="margin-top:12px"><button class="ghost" id="mAdd" type="button">Add an addiction</button></div>
-    </section>
     <section>
       <h2>Appearance</h2>
       <p class="lbl">Light or dark mode</p>
@@ -1300,11 +1295,11 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
   ];
   var TIPS_BASE=["Stand up and leave the room you're in.","Go outside or take a walk around the block.","Do 20 pushups or squats.","Take a shower or wash your face.","Message or call a friend. Say hi, you don't have to explain.","Put your phone in another room."];
   var FOCUS=[
-    {id:"general",name:"Anything",tips:TIPS_BASE,extra:[]},
-    {id:"porn",name:"Porn",tips:TIPS_BASE.concat(["Leave your bedroom and sit somewhere other people are."]),extra:[
+    {id:"general",name:"Anything",tips:TIPS_BASE,note:"Changing a habit takes practice. Focus on one day at a time, and use the help button whenever an urge hits.",extra:[]},
+    {id:"porn",name:"Porn",tips:TIPS_BASE.concat(["Leave your bedroom and sit somewhere other people are."]),note:"Blocking triggers and keeping devices out of the bedroom at night makes the first few weeks much easier.",extra:[
       {id:"respect",name:"Respect for others",msg:"I want to see people as people, not as images. Respect starts with what I choose to feed my mind."},
       {id:"intimacy",name:"Real intimacy",msg:"I want real closeness with someone, not a substitute that leaves me emptier."}]},
-    {id:"nicotine",name:"Smoking / vaping",tips:["Drink a glass of cold water slowly. A craving passes in a few minutes.","Brush your teeth or chew gum.","Step outside, but away from where you usually smoke or vape.","Do 20 pushups or squats to burn off the restless energy.","Message or call a friend. You don't have to explain.","Put your pack or vape out of reach, or throw it away."],extra:[
+    {id:"nicotine",name:"Smoking / vaping",tips:["Drink a glass of cold water slowly. A craving passes in a few minutes.","Brush your teeth or chew gum.","Step outside, but away from where you usually smoke or vape.","Do 20 pushups or squats to burn off the restless energy.","Message or call a friend. You don't have to explain.","Put your pack or vape out of reach, or throw it away."],note:"Nicotine cravings peak within the first few days and each wave usually lasts only 3 to 5 minutes.",extra:[
       {id:"n_lungs",name:"My lungs",msg:"Every breath gets easier. I'm giving my body time to heal."},
       {id:"n_money",name:"My money",msg:"That money adds up fast. I'd rather spend it on something I actually enjoy."},
       {id:"n_craving",name:"Cravings pass",msg:"A craving lasts a few minutes. I've outlasted harder ones."},
@@ -1321,12 +1316,12 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
       {id:"g_chase",name:"No chasing",msg:"The next bet won't fix the last one. The odds don't care how I feel."},
       {id:"g_trust",name:"Trust",msg:"I'm rebuilding trust with the people I care about, one day at a time."},
       {id:"g_stress",name:"Less stress",msg:"I want a life without the constant stress of owing, hiding and hoping."}]},
-    {id:"social",name:"Social media",tips:["Put your phone in another room, or hand it to someone.","Log out of the app, or turn on a screen time limit.","Stand up, stretch and get some fresh air.","Pick up a book, a pen or an instrument for ten minutes.","Message or call someone instead of scrolling.","Take a shower or wash your face."],extra:[
+    {id:"social",name:"Social media",tips:["Put your phone in another room, or hand it to someone.","Log out of the app, or turn on a screen time limit.","Stand up, stretch and get some fresh air.","Pick up a book, a pen or an instrument for ten minutes.","Message or call someone instead of scrolling.","Take a shower or wash your face."],note:"Turning off notifications or moving the apps off your home screen stops your thumb from opening them on autopilot.",extra:[
       {id:"s_hours",name:"Getting my hours back",msg:"Those hours add up to days. I want them back for things I care about."},
       {id:"s_focus",name:"My attention",msg:"I want to be able to focus deeply again."},
       {id:"s_compare",name:"Less comparison",msg:"Scrolling makes me compare and feel worse. I'd rather feel okay about my own life."},
       {id:"s_real",name:"Real life",msg:"The best moments are in front of me, not on a screen."}]},
-    {id:"gaming",name:"Gaming",tips:["Turn off the console or PC and walk away from the screen.","Go outside or take a walk around the block.","Do 20 pushups or squats.","Message or call a friend. In person is even better.","Start one small real-world task: tidy a shelf or make a snack.","Put your controller or phone in another room."],extra:[
+    {id:"gaming",name:"Gaming",tips:["Turn off the console or PC and walk away from the screen.","Go outside or take a walk around the block.","Do 20 pushups or squats.","Message or call a friend. In person is even better.","Start one small real-world task: tidy a shelf or make a snack.","Put your controller or phone in another room."],note:"Unplugging the console or uninstalling the game adds just enough friction to stop you from starting a match without thinking.",extra:[
       {id:"gm_goals",name:"Real-life goals",msg:"I have things I want to build outside the game. Today counts toward them."},
       {id:"gm_people",name:"Time with people",msg:"I'd rather be with people I care about than one more match."},
       {id:"gm_sleep",name:"Sleep and energy",msg:"One more round costs me tomorrow. I want to feel rested and sharp."},
@@ -2361,7 +2356,7 @@ var QR=(function(){
   }
   function renderAll(){
     var ch=false;ITEMS.forEach(function(it){var r=it.resetAt;recomputeSince(it);if(it.resetAt!==r)ch=true;});if(ch)save();
-    renderProgress();renderToday();renderAllStats();renderDetail();renderManage();tick();
+    renderProgress();renderToday();renderAllStats();renderDetail();tick();
   }
   function showView(anim){
     var on;
@@ -2422,7 +2417,7 @@ var QR=(function(){
     });
   };
   function bootItems(){
-    $("pAdd").onclick=function(){openForm();};$("mAdd").onclick=function(){openForm();};
+    $("pAdd").onclick=function(){openForm();};
     $("dBack").onclick=function(){detail=false;showView(true);scrollTop();};
     $("dEdit").onclick=function(){openForm(CI);};
     document.querySelectorAll("#subtabs button").forEach(function(b){b.onclick=function(){sub=b.dataset.sub;showView(true);scrollTop();};});
