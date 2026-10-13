@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unplugged</title>
 <meta name="theme-color" content="#f4f4f2">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+<link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2038,7 +2038,7 @@ var QR=(function(){
       if(!("Notification" in window)||Notification.permission!=="granted")return;
       var fb=function(){try{new Notification(t,{body:b});}catch(e){}};
       if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){
-        navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.showNotification)r.showNotification(t,{body:b,icon:"favicon.svg",tag:"unplugged-remind"});else fb();}).catch(fb);
+        navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.showNotification)r.showNotification(t,{body:b,icon:"assets/images/favicon.svg",tag:"unplugged-remind"});else fb();}).catch(fb);
       }else fb();
     }catch(e){}
   }
