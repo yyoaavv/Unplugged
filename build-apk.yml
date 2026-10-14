@@ -1,0 +1,253 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Install dependencies & sync Capacitor Android
+        run: |
+          npm install
+          mkdir -p www
+          cp index.html manifest.json sw.js www/ 2>/dev/null || true
+          cp -r assets www/ 2>/dev/null || true
+          if [ ! -d "android" ]; then
+            npx cap add android
+          else
+            npx cap sync android
+          fi
+
+      - name: Generate 18 Theme Icons & Patch Android Native Files
+        run: |
+          python3 - << 'EOF'
+          import os, re, math, zlib, struct, glob
+
+          THEMES = {
+              "sage": {"c": "#7DA487"}, "sky": {"c": "#7DB3DE"}, "lavender": {"c": "#A99BE0"},
+              "blush": {"c": "#E597A8"}, "peach": {"c": "#F2A07A"}, "butter": {"c": "#E2BE5C"},
+              "mint": {"c": "#6CC2A8"}, "oat": {"c": "#C4AD8A"}, "mono": {"c": "#121413", "cd": "#f3f4f2"}
+          }
+          BASE = {
+              "light": {"bg": "#f2f6f1", "card": "#ffffff"},
+              "dark": {"bg": "#0c0d0c", "card": "#171918"}
+          }
+
+          def hex2hsl(hx):
+              n = int(hx[1:], 16)
+              r, g, b = ((n >> 16) & 255) / 255.0, ((n >> 8) & 255) / 255.0, (n & 255) / 255.0
+              mx, mn = max(r, g, b), min(r, g, b)
+              d = mx - mn; h = s = 0.0; l = (mx + mn) / 2.0
+              if d != 0:
+                  s = d / (2.0 - mx - mn) if l > 0.5 else d / (mx + mn)
+                  if mx == r: h = (g - b) / d + (6.0 if g < b else 0.0)
+                  elif mx == g: h = (b - r) / d + 2.0
+                  else: h = (r - g) / d + 4.0
+                  h *= 60.0
+              return [h, s * 100.0, l * 100.0]
+
+          def hsl2hex(h, s, l):
+              s /= 100.0; l /= 100.0; a = s * min(l, 1.0 - l)
+              def f(n):
+                  k = (n + h / 30.0) % 12.0
+                  return f"{round(255 * (l - a * max(-1.0, min(k - 3.0, 9.0 - k, 1.0)))):02x}"
+              return f"#{f(0)}{f(8)}{f(4)}"
+
+          def lum(hx):
+              n = int(hx[1:], 16)
+              w = [0.2126, 0.7152, 0.0722]
+              vals = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+              return sum(weight * ((v/255.0)/12.92 if (v/255.0)<=0.03928 else (((v/255.0)+0.055)/1.055)**2.4) for v, weight in zip(vals, w))
+
+          def ratio(a, b):
+              x, y = lum(a), lum(b)
+              return (max(x, y) + 0.05) / (min(x, y) + 0.05)
+
+          def fit(hx, against, min_r, direction):
+              x = hex2hsl(hx); l = x[2]; out = hx
+              while ratio(out, against) < min_r and (l < 96 if direction > 0 else l > 4):
+                  l += direction * 2; out = hsl2hex(x[0], x[1], l)
+              return out
+
+          def legible(hx, card, min_card):
+              x = hex2hsl(hx)
+              def ok(v): return max(ratio(v, "#ffffff"), ratio(v, "#111111")) >= 4.5 and ratio(v, card) >= min_card
+              if ok(hx): return hx
+              for i in range(1, 49):
+                  for d in (-1, 1):
+                      l = x[2] + d * i * 2
+                      if 2 <= l <= 98:
+                          c = hsl2hex(x[0], x[1], l)
+                          if ok(c): return c
+              return hx
+
+          def get_theme_colors(k):
+              t = THEMES[k]; c = t["c"]; cd = t.get("cd", c)
+              L, D = BASE["light"], BASE["dark"]
+              lf = legible(fit(c, L["card"], 1.9, -1), L["card"], 1.9)
+              ll = fit(lf, L["bg"], 2.4, -1)
+              df = legible(fit(cd, D["card"], 4.5, 1), D["card"], 4.5)
+              return {"light": (L["card"], ll), "dark": (D["card"], df)}
+
+          def sd_rounded_box(px, py, x, y, w, h, r):
+              dx = abs(px - (x + w * 0.5)) - (w * 0.5 - r)
+              dy = abs(py - (y + h * 0.5)) - (h * 0.5 - r)
+              return math.hypot(max(dx, 0.0), max(dy, 0.0)) + min(max(dx, dy), 0.0) - r
+
+          def sd_circle(px, py, cx, cy, r):
+              return math.hypot(px - cx, py - cy) - r
+
+          def clamp(v): return 0.0 if v < 0.0 else (1.0 if v > 1.0 else v)
+
+          def write_png(filename, size, raw_rows):
+              def chunk(t, d):
+                  return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+              with open(filename, "wb") as f:
+                  f.write(b"\x89PNG\r\n\x1a\n")
+                  f.write(chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)))
+                  f.write(chunk(b"IDAT", zlib.compress(b"".join(raw_rows), 9)))
+                  f.write(chunk(b"IEND", b""))
+
+          def tx(x): return 256.0 + 12.0 * (x - 32.0)
+          def ty(y): return 256.0 + 12.0 * (y - 25.0)
+          def ts(s): return 12.0 * s
+          p1, p2 = (tx(23), ty(9.05), ts(4), ts(10), ts(2)), (tx(37), ty(9.05), ts(4), ts(10), ts(2))
+          body, stem = (tx(18), ty(19), ts(28), ts(15), ts(5)), (tx(29), ty(33.95), ts(6), ts(7), ts(2))
+          eye1, eye2 = (tx(25.5), ty(26.5), ts(3)), (tx(38.5), ty(26.5), ts(3))
+
+          grid = []
+          for y in range(512):
+              py = y + 0.5; row = []
+              for x in range(512):
+                  px = x + 0.5
+                  a_bg = clamp(0.5 - sd_rounded_box(px, py, 0, 0, 512, 512, 113))
+                  if a_bg == 0.0: row.append((0.0, 0.0)); continue
+                  d_plug = min(sd_rounded_box(px, py, *p1), sd_rounded_box(px, py, *p2), sd_rounded_box(px, py, *body), sd_rounded_box(px, py, *stem))
+                  a_plug = clamp(0.5 - d_plug)
+                  fg_mix = a_plug * (1.0 - clamp(0.5 - min(sd_circle(px, py, *eye1), sd_circle(px, py, *eye2)))) if a_plug > 0 else 0.0
+                  row.append((a_bg, fg_mix))
+              grid.append(row)
+
+          res_dir = "android/app/src/main/res/mipmap-xxxhdpi"
+          os.makedirs(res_dir, exist_ok=True)
+
+          aliases = []
+          for theme in THEMES:
+              for mode, (bg_hx, fg_hx) in get_theme_colors(theme).items():
+                  res_name = f"ic_launcher_{theme}_{mode}"
+                  alias_name = f"Icon_{theme}_{mode}"
+                  aliases.append((alias_name, res_name, theme == "sage" and mode == "light"))
+                  bg_rgb = (int(bg_hx[1:3],16), int(bg_hx[3:5],16), int(bg_hx[5:7],16))
+                  fg_rgb = (int(fg_hx[1:3],16), int(fg_hx[3:5],16), int(fg_hx[5:7],16))
+                  rows = []
+                  for r_data in grid:
+                      ba = bytearray([0])
+                      for a_bg, fg_m in r_data:
+                          if a_bg == 0.0: ba.extend((0,0,0,0))
+                          else:
+                              inv = 1.0 - fg_m
+                              ba.extend((int(round(bg_rgb[0]*inv + fg_rgb[0]*fg_m)), int(round(bg_rgb[1]*inv + fg_rgb[1]*fg_m)), int(round(bg_rgb[2]*inv + fg_rgb[2]*fg_m)), int(round(a_bg*255))))
+                      rows.append(bytes(ba))
+                  write_png(os.path.join(res_dir, f"{res_name}.png"), 512, rows)
+
+          manifest_path = "android/app/src/main/AndroidManifest.xml"
+          with open(manifest_path, "r", encoding="utf-8") as f:
+              manifest = f.read()
+
+          manifest = re.sub(r'<category\s+android:name="android\.intent\.category\.LAUNCHER"\s*/>', '', manifest)
+          alias_xml = "\n".join([
+              f'''        <activity-alias
+                  android:name=".{a_name}"
+                  android:enabled="{"true" if is_def else "false"}"
+                  android:exported="true"
+                  android:icon="@mipmap/{r_name}"
+                  android:roundIcon="@mipmap/{r_name}"
+                  android:label="@string/app_name"
+                  android:targetActivity=".MainActivity">
+                  <intent-filter>
+                      <action android:name="android.intent.action.MAIN" />
+                      <category android:name="android.intent.category.LAUNCHER" />
+                  </intent-filter>
+              </activity-alias>''' for a_name, r_name, is_def in aliases
+          ])
+          manifest = manifest.replace("</activity>", "</activity>\n" + alias_xml, 1)
+          with open(manifest_path, "w", encoding="utf-8") as f:
+              f.write(manifest)
+
+          main_files = glob.glob("android/app/src/main/java/**/MainActivity.java", recursive=True)
+          if main_files:
+              with open(main_files[0], "r", encoding="utf-8") as f:
+                  java_code = f.read()
+              pkg_match = re.search(r'package\s+([\w\.]+);', java_code)
+              pkg = pkg_match.group(1) if pkg_match else "com.unplugged.app"
+              alias_list_str = ", ".join([f'"{a[0]}"' for a in aliases])
+              new_java = f'''package {pkg};
+
+          import android.content.ComponentName;
+          import android.content.pm.PackageManager;
+          import android.os.Bundle;
+          import android.webkit.JavascriptInterface;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {{
+              private static final String[] ALIASES = {{ {alias_list_str} }};
+
+              @Override
+              public void onCreate(Bundle savedInstanceState) {{
+                  super.onCreate(savedInstanceState);
+                  this.bridge.getWebView().addJavascriptInterface(new IconBridge(), "AndroidIcon");
+              }}
+
+              public class IconBridge {{
+                  @JavascriptInterface
+                  public void setIcon(String targetAlias) {{
+                      PackageManager pm = getPackageManager();
+                      String pkg = getPackageName();
+                      for (String alias : ALIASES) {{
+                          ComponentName cn = new ComponentName(pkg, pkg + "." + alias);
+                          int state = alias.equals(targetAlias)
+                                  ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                                  : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+                          if (pm.getComponentEnabledSetting(cn) != state) {{
+                              pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+                          }}
+                      }}
+                  }}
+              }}
+          }}
+          '''
+              with open(main_files[0], "w", encoding="utf-8") as f:
+                  f.write(new_java)
+          EOF
+
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+
+      - name: Copy APK to assets/apk/Unplugged.apk
+        run: |
+          mkdir -p assets/apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk assets/apk/Unplugged.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unplugged-APK
+          path: assets/apk/Unplugged.apk
