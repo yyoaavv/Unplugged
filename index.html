@@ -588,17 +588,210 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
         </div>
         <div class="row" style="margin-top:14px"><button class="ghost" id="cReset" type="button">Reset custom color</button></div>
       </div>
-      <div id="appIconWrap" style="margin-top:20px;padding-top:18px;border-top:1.5px solid var(--line)">
-        <p class="lbl">Use app icon based on theme</p>
-        <div class="seg" id="iconAutoSeg">
-          <button type="button" class="ghost" data-auto="1" aria-pressed="true">Yes</button>
-          <button type="button" class="ghost" data-auto="0" aria-pressed="false">No</button>
-        </div>
-        <div id="iconPickBox" hidden="" style="margin-top:14px">
-          <p class="lbl" style="margin-bottom:10px">Choose your app icon:</p>
-          <div class="themes" id="iconSeg" role="group" aria-label="App Icons"></div>
+    </section>
+    <section>
+      <h2>Daily reminder</h2>
+      <p class="lbl">A nudge at the same time every day to check in.</p>
+      <div class="seg" style="align-items:center">
+        <span id="remSeg" style="display:contents">
+          <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+          <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+        </span>
+        <button class="ghost ib" id="remTest" type="button" style="margin-left:6px" aria-label="Send a test" title="Send a test"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button>
+      </div>
+      <div class="row range" style="margin-top:14px"><label>Time<input type="time" id="remTime"></label></div>
+      <p class="lbl" id="remNote" style="margin:12px 0 0"></p>
+    </section>
+    <section>
+      <h2>Celebrations</h2>
+      <p class="lbl">A short celebration when you reach a streak milestone.</p>
+      <div class="seg" style="align-items:center">
+        <span id="celeSeg" style="display:contents">
+          <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
+          <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
+        </span>
+        <button class="ghost ib" id="celePrev" type="button" style="margin-left:6px" aria-label="Preview celebration" title="Preview celebration"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"></path><path d="M4 3h.01"></path><path d="M22 8h.01"></path><path d="M15 2h.01"></path><path d="M22 20h.01"></path><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"></path><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11-.11.7-.72 1.22-1.43 1.22H17"></path><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"></path><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"></path></svg></button>
+      </div>
+    </section>
+    <section>
+      <h2>Move to a new phone</h2>
+      <p class="lbl">Move your log, reasons and settings to another device. Show the QR code, scan it with the new phone's camera, open the link, then tap Import.</p>
+      <div class="foot">
+        <button class="ghost ib" id="mvQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"></path></svg></button>
+        <button class="ghost ib" id="mvLink" type="button" aria-label="Copy link" title="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"></path><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"></path></svg></button>
+      </div>
+      <p class="lbl" style="margin:12px 0 0">Anyone with this link or code can read your whole log. Keep it private.</p>
+    </section>
+    </div>
+    <div class="col">
+    <section>
+      <h2>App lock</h2>
+      <p class="lbl" id="lockStatus">Protect Unplugged with a PIN. It asks for the PIN every time you open the app.</p>
+      <div class="foot" id="lockBtns">
+        <button class="ghost" id="lockSet" type="button">Set a PIN</button>
+        <button class="ghost" id="lockChange" type="button" hidden="">Change PIN</button>
+        <button class="ghost" id="lockOff" type="button" hidden="">Turn off</button>
+      </div>
+      <div id="pinForm" hidden="">
+        <label id="pinCurW">Current PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinCur"></label>
+        <label id="pinNewW">New PIN (4 to 8 digits)<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew"></label>
+        <label id="pinNew2W">Repeat new PIN<input type="password" inputmode="numeric" autocomplete="off" maxlength="8" id="pinNew2"></label>
+        <div class="foot"><button class="clean" id="pinSave" type="button">Save</button><button class="ghost" id="pinCancel" type="button">Cancel</button></div>
+      </div>
+      <p class="lbl" id="pinMsg" role="status"></p>
+      <div id="lockAfterBox" hidden="">
+        <p class="lbl" style="margin-top:8px">Lock the app</p>
+        <div class="seg" id="lockAfter">
+          <button type="button" class="ghost" data-a="0" aria-pressed="false">Right away</button>
+          <button type="button" class="ghost" data-a="60" aria-pressed="false">After 1 minute</button>
+          <button type="button" class="ghost" data-a="300" aria-pressed="false">After 5 minutes</button>
         </div>
       </div>
+      <p class="lbl" style="margin:12px 0 0">This is a privacy screen to keep casual snoopers out. Your log isn't encrypted. If you forget your PIN, the only way back in is to erase everything.</p>
+    </section>
+    <section>
+      <h2>Your data</h2>
+      <p class="lbl">Your log lives only in this browser. Export a backup before clearing your browser data or switching devices.</p>
+      <div class="foot">
+        <button class="ghost ib" id="export" aria-label="Export backup" title="Export backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+        <button class="ghost ib" id="import" aria-label="Import backup" title="Import backup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></button>
+        <button class="ghost ib" id="reset" aria-label="Erase everything" title="Erase everything"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
+      </div>
+      <input type="file" id="file" accept="application/json" hidden="">
+    </section>
+    <section id="installBox">
+      <h2>Install the app</h2>
+      <p class="lbl">Add Unplugged to your home screen for a full-screen app with no browser bar. It works offline too.</p>
+      <div class="foot"><button class="ghost" id="install" type="button" hidden="">Install Unplugged</button></div>
+      <p class="lbl" id="installHint" style="margin:0"></p>
+    </section>
+    <section>
+      <h2>Share your progress</h2>
+      <p class="lbl">Make a read-only snapshot for someone you trust, like an accountability partner. It shows your streaks and which days were clean or slipped. It never includes your reasons, triggers or notes, but it does show the name of each addiction you track.</p>
+      <div class="foot">
+        <button class="ghost ib" id="shLink" type="button" aria-label="Share link" title="Share link"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.6"></circle><circle cx="6" cy="12" r="2.6"></circle><circle cx="18" cy="19" r="2.6"></circle><path d="M8.3 13.3l7.4 4.4M15.7 6.3l-7.4 4.4"></path></svg></button>
+        <button class="ghost ib" id="shQR" type="button" aria-label="Show QR code" title="Show QR code"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M14 14h2.5v2.5H14zM19 14h2M14 19.5h2.5M18.5 18.5H21V21h-2.5z"></path></svg></button>
+      </div>
+      <p class="lbl" style="margin:12px 0 0">It's a snapshot, not live. Share a new link to update it.</p>
+    </section>
+    </div>
+  </div>
+  <div id="view-help" hidden="">
+    <div class="phead">
+      <button class="back" id="closeX" type="button" aria-label="Back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <div>
+        <h1>This will pass.</h1>
+        <p class="sub">An urge peaks and fades, usually within 10-15 minutes. You don't have to fight it forever, just through this window.</p>
+      </div>
+    </div>
+    <div class="remind" id="remind" hidden=""></div>
+    <section id="rateBox">
+      <h2>How strong is the urge right now?</h2>
+      <p class="lbl" style="margin:0 0 10px">Optional. 1 is faint, 10 is overwhelming.</p>
+      <div class="chips rate" id="rateBefore" role="group" aria-label="Urge strength right now" style="margin-bottom:0"></div>
+    </section>
+    <div class="pgrid">
+      <section>
+        <h2>Breathe</h2>
+        <div class="chips bmodes" id="breathModes" role="group" aria-label="Breathing style"></div>
+        <div class="chips bmodes" id="breathFx" role="group" aria-label="Breathing feedback" style="margin-bottom:0">
+          <button type="button" class="chip ic" id="fxVib" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M2 8v8M22 8v8"></path></svg><span>Vibrate</span></button>
+          <button type="button" class="chip ic" id="fxSnd" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg><span>Sound</span></button>
+        </div>
+        <div class="mid">
+          <div class="breath" id="breath">Breathe in</div>
+          <p class="lbl" id="breathDesc" style="text-align:center;margin:0">In for 4, out for 4. Repeat.</p>
+        </div>
+      </section>
+      <section>
+        <h2>Ride it out</h2>
+        <div class="mid">
+          <div class="timer" id="timer">10:00</div>
+          <div class="row" style="justify-content:center;margin-top:10px">
+            <button id="tStart">Start 10 minutes</button>
+            <button class="ghost ib" id="tStop" aria-label="Reset timer" title="Reset timer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+          </div>
+          <div class="tlen" id="tlenBox"><span class="chips" id="timerLen" role="group" aria-label="Timer length" style="margin:0;justify-content:center"></span><label>Custom <input type="number" id="tCustom" min="1" max="120" inputmode="numeric" aria-label="Custom minutes"> min</label></div>
+          <p class="lbl" id="rodeHint" hidden="" style="text-align:center;margin:12px 0 0">You made it through. Tap "I rode it out" below to log the win.</p>
+        </div>
+      </section>
+      <section class="wide">
+        <h2>Change the scene now</h2>
+        <ul class="acts" id="actsList"></ul>
+      </section>
+      <section class="wide">
+        <h2>Your reasons</h2>
+        <div class="reasons-box" id="myReasons"></div>
+      </section>
+    </div>
+    <section id="afterBox" hidden="" style="margin-top:20px">
+      <h2>Nice. How strong is the urge now?</h2>
+      <p class="lbl" style="margin:0 0 10px">Optional. This is how the app shows you that urges fade.</p>
+      <div class="chips rate" id="rateAfter" role="group" aria-label="Urge strength after riding it out"></div>
+      <button class="ghost" id="rateSkip" type="button">Skip</button>
+    </section>
+    <div class="row" id="rodeRow" style="margin-top:20px">
+      <button id="btnRode" class="clean" type="button">I rode it out</button>
+      <button id="closePanic" class="ghost" type="button">I'm okay, go back</button>
+    </div>
+  </div>
+</main>
+<nav class="bnav" aria-label="Main">
+  <button type="button" data-tab="progress" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2M9 3h6"></path></svg><span>Progress</span></button>
+  <button type="button" data-tab="today" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"></path></svg><span>Today</span></button>
+  <button type="button" class="help" id="navPanic" aria-label="I need help now"><span class="hb"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="3.5"></circle><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"></path></svg></span><span>Help</span></button>
+  <button type="button" data-tab="stats" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V11M12 21V4M19 21v-7"></path></svg><span>Stats</span></button>
+  <button type="button" data-tab="settings" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path><circle cx="16" cy="7" r="2"></circle><circle cx="8" cy="17" r="2"></circle></svg><span>Settings</span></button>
+</nav>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="lock" role="dialog" aria-modal="true" aria-label="Unplugged is locked">
+  <div class="lockbox">
+    <h1>Unplugged</h1>
+    <p class="sub" style="margin:6px 0 20px">Enter your PIN to open.</p>
+    <input id="lockPin" type="password" inputmode="numeric" autocomplete="off" maxlength="8" aria-label="PIN">
+    <button id="lockGo" class="clean" type="button">Unlock</button>
+    <p class="lbl" id="lockMsg" role="alert" style="min-height:1.5em;margin:0 0 8px"></p>
+    <button id="lockForgot" class="ghost" type="button">Forgot PIN?</button>
+  </div>
+</div>
+
+<div id="cele" role="dialog" aria-modal="true" aria-label="Milestone reached" hidden="">
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="cele-card">
+    <div class="cele-num" id="celeNum">7</div>
+    <div class="lbl" id="celeUnit">days in a row</div>
+    <h2 id="celeTitle">One week</h2>
+    <p id="celeMsg"></p>
+    <button id="celeOk" class="clean" type="button">Thanks</button>
+  </div>
+</div>
+
+<div id="sheet" role="dialog" aria-modal="true" aria-label="Slip follow-up">
+  <div class="sheet-panel" id="sheetPanel" tabindex="-1">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="survey" id="survey" hidden="">
+      <h3>What was going on?</h3>
+      <p class="lbl" style="margin:0">Optional. Tap anything that fits, it saves as you go.</p>
+      <p class="sg">Trigger</p>
+      <div class="chips" id="svTrig" role="group" aria-label="Triggers"></div>
+      <p class="sg">Where</p>
+      <div class="chips" id="svCtx" role="group" aria-label="Location or context"></div>
+      <p class="sg">When</p>
+      <div class="chips" id="svWhen" role="group" aria-label="Time of day"></div>
+      <div class="foot"><button type="button" class="clean" id="svDone">Done</button></div>
+    </div>
+    <div class="survey" id="recover" hidden="">
+      <h3>Be kind to yourself</h3>
+      <p class="lbl" id="recMsg" style="margin:0"></p>
+      <p class="sg">What will I do differently next time? (optional)</p>
+      <textarea id="recDo" maxlength="200" style="min-height:64px" aria-label="What I will do differently next time"></textarea>
+      <p class="sg">My plan for tomorrow (optional)</p>
+      <textarea id="recPlan" maxlength="200" style="min-height:64px" aria-label="My plan for tomorrow"></textarea>
+      <div class="foot"><button type="button" class="clean" id="recSave">Save</button><button type="button" class="ghost" id="recSkip">Skip</button></div>
+    </div>
+  </div>
 </div>
 
 <div id="xover" role="dialog" aria-modal="true" aria-labelledby="xTitle">
@@ -660,10 +853,10 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
 
   /* ---------- Analysis, achievements, stats ---------- */
   var announce=false,toastT=null;
-  function freshState(){return{log:{},reasons:"",mode:"system",accent:"sage",custom:{accent:"#7DA487"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,iconAuto:true,appIcon:"sage_light",v:3};}
+  function freshState(){return{log:{},reasons:"",mode:"system",accent:"sage",custom:{accent:"#7DA487"},picked:[],slips:{},urges:{},urgeLog:[],recovery:{},ach:{},helped:0,rode:0,themed:false,v:3};}
   function normalize(){
     var tm=Math.floor(+state.timerMin);state.timerMin=(tm>=1&&tm<=120)?tm:10;
-    state.breathVib=!!state.breathVib;state.breathSnd=!!state.breathSnd;state.celebrate=state.celebrate!==false;state.iconAuto=state.iconAuto!==false;if(typeof state.appIcon!=="string"||!/^[a-z]+_(light|dark)$/.test(state.appIcon))state.appIcon="sage_light";
+    state.breathVib=!!state.breathVib;state.breathSnd=!!state.breathSnd;state.celebrate=state.celebrate!==false;
     if(!state.remind||typeof state.remind!=="object")state.remind={on:false,t:"20:00"};
     state.remind={on:!!state.remind.on,t:/^([01]\d|2[0-3]):[0-5]\d$/.test(state.remind.t||"")?state.remind.t:"20:00"};
     if(typeof state.remLast!=="string")state.remLast="";
@@ -1376,42 +1569,6 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
       b.setAttribute("aria-pressed",b.dataset.acc===state.accent);
     });
   }
-  if(typeof renderIconPick==="function")renderIconPick(dark);
-  }
-  var ICON_KEYS=["sage","sky","lavender","blush","peach","butter","mint","oat","mono"];
-  function syncAndroidIcon(dark){
-    var key=state.iconAuto!==false?((state.accent==="custom"||!THEMES[state.accent])?"sage":state.accent)+" "+(dark?"dark":"light"):(state.appIcon||"sage_light").replace("_"," ");
-    var parts=key.split(" "),alias="Icon_"+parts[0]+"_"+parts[1];
-    if(window.AndroidIcon&&typeof window.AndroidIcon.setIcon==="function"){
-      try{window.AndroidIcon.setIcon(alias);}catch(e){}
-    }
-  }
-  function renderIconPick(dark){
-    var auto=state.iconAuto!==false;
-    document.querySelectorAll("#iconAutoSeg button").forEach(function(b){
-      b.setAttribute("aria-pressed",(b.dataset.auto==="1")===auto);
-    });
-    var box=$("iconPickBox");
-    if(box)box.hidden=auto;
-    document.querySelectorAll("#iconSeg button").forEach(function(b){
-      b.setAttribute("aria-pressed",b.dataset.ic===(state.appIcon||"sage_light"));
-    });
-    syncAndroidIcon(dark);
-  }
-  ICON_KEYS.forEach(function(k){
-    ["light","dark"].forEach(function(m){
-      var id=k+"_"+m,t=getTheme(k),p=m==="dark"?t.dark:t.light,bg=p.card,fg=p.logo;
-      var b=document.createElement("button");b.type="button";b.className="theme";b.dataset.ic=id;
-      var svg='<svg viewBox="0 0 512 512" style="width:28px;height:28px;border-radius:6px;flex:none;border:1.5px solid var(--line)"><rect width="512" height="512" rx="113" fill="'+bg+'"/><g transform="translate(256 256) scale(12) translate(-32 -25)" fill="'+fg+'"><rect x="23" y="9.05" width="4" height="10" rx="2"/><rect x="37" y="9.05" width="4" height="10" rx="2"/><rect x="18" y="19" width="28" height="15" rx="5"/><rect x="29" y="33.95" width="6" height="7" rx="2"/><circle cx="25.5" cy="26.5" r="3" fill="'+bg+'"/><circle cx="38.5" cy="26.5" r="3" fill="'+bg+'"/></g></svg>';
-      b.innerHTML=svg+'<span class="nm"></span>';
-      b.querySelector(".nm").textContent=THEMES[k].name+" ("+(m==="dark"?"Dark":"Light")+")";
-      b.onclick=function(){state.appIcon=id;state.iconAuto=false;save();applyTheme();};
-      if($("iconSeg"))$("iconSeg").appendChild(b);
-    });
-  });
-  document.querySelectorAll("#iconAutoSeg button").forEach(function(b){
-    b.onclick=function(){state.iconAuto=b.dataset.auto==="1";save();applyTheme();};
-  });
   ORDER.forEach(function(k){
     var b=document.createElement("button");b.type="button";b.className="theme";b.dataset.acc=k;
     b.innerHTML='<span class="dots"></span><span class="nm"></span>';
@@ -1724,7 +1881,7 @@ var QR=(function(){
   }
   function applyTransfer(o){
     var g={},its;
-    ["mode","accent","custom","breathMode","timerMin","breathVib","breathSnd","celebrate","remind","themed","iconAuto","appIcon"].forEach(function(k){if(k in o)g[k]=JSON.parse(JSON.stringify(o[k]));});
+    ["mode","accent","custom","breathMode","timerMin","breathVib","breathSnd","celebrate","remind","themed"].forEach(function(k){if(k in o)g[k]=JSON.parse(JSON.stringify(o[k]));});
     if(Array.isArray(o.items))its=o.items.slice(0,50).map(function(c){var it=Object.assign({},c);it.log=unpackLog(c.ls,c.ll);delete it.ls;delete it.ll;return it;});
     else its=[legacyItem(o,unpackLog(o.ls,o.ll))];
     adopt(g,its);closeX();toast("Imported. Welcome to your new device.");
