@@ -37,7 +37,7 @@ section{background:var(--card);border-radius:14px;padding:22px;margin-bottom:20p
 .streak{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap}
 .big{font-size:4.5rem;font-weight:800;line-height:.9;letter-spacing:-.04em;color:var(--atext)}
 .lbl{color:var(--mute);font-size:.95rem}
-.row{display:flex;gap:10px;flex-wrap:wrap}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
 button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;color:var(--on);background:var(--accent)}
 button.clean{background:var(--clean)}button.slip{background:var(--slip);color:var(--onslip)}
 button.ghost{background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line))}
@@ -85,11 +85,11 @@ textarea{width:100%;min-height:96px;font:inherit;padding:12px;border-radius:12px
 .timer{font-size:2.6rem;font-weight:800;text-align:center;letter-spacing:-.02em}
 ul.acts{padding-left:20px;margin:0}ul.acts li{margin-bottom:8px}
 .reasons-box{background:transparent;border-radius:14px;padding:0;white-space:pre-wrap;min-height:48px}
-.foot{display:flex;gap:10px;flex-wrap:wrap}
+.foot{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
 .tabs{display:flex;gap:6px;margin-bottom:22px;border-bottom:1.5px solid var(--line)}
 .tabs button{background:transparent;color:var(--mute);border-radius:10px 10px 0 0;padding:10px 18px;border-bottom:3px solid transparent}
 .tabs button[aria-pressed=true]{color:var(--ink);border-bottom-color:var(--accent)}
-.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
 .seg button[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
 .themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .theme{display:flex;align-items:center;gap:10px;text-align:left;background:var(--tint,var(--bg));color:var(--ink);border:2px solid var(--tline,var(--line));padding:10px 12px}
@@ -249,7 +249,7 @@ input[type=color]:focus-visible{outline:3px solid var(--accent);outline-offset:2
 @media (max-width:600px){.trow{grid-template-columns:minmax(80px,120px) minmax(0,1fr) 56px}}
 .rate .chip{min-width:44px;padding:8px 0;text-align:center}
 canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px;image-rendering:pixelated;background:#fff;border-radius:10px}
-.xrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.xrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center;align-items:center}
 .note{background:var(--card);border-left:5px solid var(--accent);border-radius:10px;padding:10px 14px;margin:14px 0 0;font-size:.92rem}
 #xover .pw{max-width:640px}
 #xover .tiles{margin-bottom:16px}
@@ -298,8 +298,8 @@ canvas.qr{display:block;width:100%;max-width:360px;height:auto;margin:0 auto 4px
 .subtabs button{background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line));border-radius:999px;padding:8px 16px}
 .subtabs button[aria-pressed=true]{background:var(--accent);color:var(--on);border-color:var(--accent)}
 .trw{margin-bottom:16px}.trh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.trh h2{margin:0}
-.pill{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--bg);color:var(--mute);white-space:nowrap}
-.pill.ok{background:var(--accent);color:var(--on)}.pill.sl{background:var(--slip);color:var(--onslip)}
+.pill{font-size:.8rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--bg);color:var(--mute);white-space:nowrap;border:1.5px solid transparent}
+.pill.ok{background:var(--accent);color:var(--on)}.pill.sl{background:var(--tint,var(--bg));color:var(--ink);border-color:var(--tline,var(--line))}
 .asr{margin-bottom:16px}.asr .tiles{margin:12px 0}
 .mrw{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.mrw:last-of-type{border-bottom:0}
 .mn{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis}.mb{display:flex;gap:6px;flex:none}
@@ -431,7 +431,7 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
       <button class="clean ic" id="btnClean"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span>I stayed clean</span></button>
       <button class="slip ic" id="btnSlip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg><span>I slipped</span></button>
       <button class="ghost ib" id="btnClear" aria-label="Clear this day" title="Clear this day"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
-      <button class="ghost ib" id="btnDetails" style="visibility:hidden" aria-label="Slip details" title="Slip details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></button>
+      <button class="ghost ib" id="btnDetails" hidden aria-label="Slip details" title="Slip details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></button>
       <button class="ghost ib" id="btnToday" hidden="" aria-label="Back to today" title="Back to today"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path><circle cx="12" cy="15" r="2" fill="currentColor"></circle></svg></button>
     </div>
     <p class="lbl" style="margin:12px 0 0">Tip: pick any past day on the calendar to fix or fill in your log.</p>
@@ -573,8 +573,8 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
       <p class="lbl">Light or dark mode</p>
       <div class="seg" id="modeSeg">
         <button type="button" class="ghost" data-mode="system" aria-pressed="false">Match my device</button>
-        <button type="button" class="ghost" data-mode="light" aria-pressed="false">Light</button>
-        <button type="button" class="ghost" data-mode="dark" aria-pressed="false">Dark</button>
+        <button type="button" class="ghost ib" data-mode="light" aria-pressed="false" aria-label="Light mode" title="Light mode"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg></button>
+        <button type="button" class="ghost ib" data-mode="dark" aria-pressed="false" aria-label="Dark mode" title="Dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button>
       </div>
       <p class="lbl" style="margin-top:20px">Theme: <strong id="themeName"></strong></p>
       <div class="themes" id="accSeg" role="group" aria-label="Themes"></div>
@@ -607,7 +607,7 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
           <button type="button" class="ghost" data-on="1" aria-pressed="false">On</button>
           <button type="button" class="ghost" data-on="0" aria-pressed="false">Off</button>
         </span>
-        <button class="ghost ib" id="celePrev" type="button" style="margin-left:6px" aria-label="Preview celebration" title="Preview celebration"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
+        <button class="ghost ib" id="celePrev" type="button" style="margin-left:6px" aria-label="Preview celebration" title="Preview celebration"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"></path><path d="M4 3h.01"></path><path d="M22 8h.01"></path><path d="M15 2h.01"></path><path d="M22 20h.01"></path><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"></path><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11-.11.7-.72 1.22-1.43 1.22H17"></path><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"></path><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"></path></svg></button>
       </div>
     </section>
     <section>
@@ -1218,7 +1218,7 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
   function renderSurvey(){
     var isSlip=state.log[sel]==="slip",open=surveyKey===sel&&isSlip,det=$("btnDetails");
     $("survey").hidden=!open;
-    det.style.visibility=isSlip?"visible":"hidden";
+    det.hidden=!isSlip;
     updateSheet();
     if(!open)return;
     var r=state.slips[sel]||{t:[],c:[],w:""};
@@ -2310,6 +2310,7 @@ var QR=(function(){
     else if(what==="slip"){if(!confirm("Log a slip for "+ITEMS[i].name+"? This resets its timer."))return;$("btnSlip").click();}
     else $("btnUrge").click();
   }
+  function icBtn(label,cls,fn,paths){var b=document.createElement("button");b.type="button";b.className=cls+" ic";b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+paths+'</svg><span></span>';b.lastChild.textContent=label;b.onclick=fn;return b;}
   function renderToday(){
     var box=$("todayList");box.innerHTML="";
     var done=ITEMS.filter(function(it){return it.log[tk()];}).length;
@@ -2320,10 +2321,10 @@ var QR=(function(){
       h.appendChild(mk("h2",null,it.name));h.appendChild(mk("span","pill"+(v==="clean"?" ok":v==="slip"?" sl":""),statusOf(it)));s0.appendChild(h);
       var b=mk("div","tsmall");b.dataset.live="big";b.dataset.i=i;s0.appendChild(b);
       var r=mk("div","row");r.style.marginTop="14px";
-      r.appendChild(btn("I stayed clean","clean",function(){todayAct(i,"clean");}));
-      r.appendChild(btn("I slipped","slip",function(){todayAct(i,"slip");}));
+      r.appendChild(icBtn("I stayed clean","clean",function(){todayAct(i,"clean");},'<path d="M20 6L9 17l-5-5"></path>'));
+      r.appendChild(icBtn("I slipped","slip",function(){todayAct(i,"slip");},'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path>'));
       var u=(it.urges&&it.urges[tk()])||0;
-      r.appendChild(btn("Rode out an urge"+(u?" ("+u+")":""),"ghost",function(){todayAct(i,"urge");}));
+      r.appendChild(icBtn("Rode out an urge"+(u?" ("+u+")":""),"ghost",function(){todayAct(i,"urge");},'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path>'));
       s0.appendChild(r);box.appendChild(s0);
     });
   }
