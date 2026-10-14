@@ -333,6 +333,7 @@ button,.bnav,.tabs,.subtabs,.acard,.asr,.theme,.chip{-webkit-user-select:none;us
 input,textarea{-webkit-user-select:text;user-select:text}
 button{touch-action:manipulation}
 button:not(:disabled):active{opacity:.72}
+button.ib:disabled{opacity:.38;cursor:not-allowed}
 /* "I slipped" looks like the other secondary buttons in light and dark mode */
 button.slip:not(.d){background:var(--tint,transparent);color:var(--ink);border:1.5px solid var(--tline,var(--line))}
 /* icon buttons */
@@ -430,9 +431,11 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
     <div class="row" style="align-items: center;">
       <button class="clean ic" id="btnClean"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg><span>I stayed clean</span></button>
       <button class="slip ic" id="btnSlip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg><span>I slipped</span></button>
+    </div>
+    <div class="row" style="margin-top:10px">
       <button class="ghost ib" id="btnClear" aria-label="Clear this day" title="Clear this day"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg></button>
-      <button class="ghost ib" id="btnDetails" hidden aria-label="Slip details" title="Slip details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></button>
-      <button class="ghost ib" id="btnToday" hidden="" aria-label="Back to today" title="Back to today"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path><circle cx="12" cy="15" r="2" fill="currentColor"></circle></svg></button>
+      <button class="ghost ib" id="btnDetails" disabled aria-label="Slip details" title="Slip details"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg></button>
+      <button class="ghost ib" id="btnToday" disabled aria-label="Back to today" title="Back to today"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"></rect><path d="M8 3v4M16 3v4M3 10h18"></path><circle cx="12" cy="15" r="2" fill="currentColor"></circle></svg></button>
     </div>
     <p class="lbl" style="margin:12px 0 0">Tip: pick any past day on the calendar to fix or fill in your log.</p>
   </section>
@@ -1218,7 +1221,7 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
   function renderSurvey(){
     var isSlip=state.log[sel]==="slip",open=surveyKey===sel&&isSlip,det=$("btnDetails");
     $("survey").hidden=!open;
-    det.hidden=!isSlip;
+    det.disabled=!isSlip;
     updateSheet();
     if(!open)return;
     var r=state.slips[sel]||{t:[],c:[],w:""};
@@ -1400,7 +1403,7 @@ button.qclean svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-wi
     $("cur").textContent=s.cur;$("best").textContent=s.best;$("total").textContent=s.total;
     var st=state.log[sel];
     $("logTitle").textContent=sel===todayKey?"Today":"Editing a past day";
-    $("btnToday").hidden=sel===todayKey;
+    $("btnToday").disabled=sel===todayKey;$("btnClear").disabled=!state.log[sel];
     $("todayLabel").textContent=parse(sel).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"})+(st?" - logged as "+(st==="clean"?"clean":"slipped"):" - not logged yet");
     $("monthLabel").textContent=view.toLocaleDateString(undefined,{month:"long",year:"numeric"});
     var cal=$("cal");cal.innerHTML="";
