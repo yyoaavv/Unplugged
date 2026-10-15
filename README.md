@@ -8,14 +8,14 @@ A private, offline-first tracker for breaking habits. Track as many addictions a
 
 The app has four tabs (a bottom bar on phones, with the help button in the middle):
 
-- **Progress:** a card for each addiction showing a live timer (years, months, days, then hours, minutes and seconds). Tap a card to open that addiction's own page with its Overview, Stats and Awards. Drag the handle on a card to change the order.
+- **Progress:** a card for each addiction showing a live timer (years, months, days, then hours, minutes and seconds). Tap a card to open that addiction's own page with its Overview, Stats and Awards. Drag the handle on a card to change the order. Use the **+** button to add an addiction, and the edit button on an addiction's page to rename it, change its start date or remove it.
 - **Today:** a quick summary of today across everything, with clean, slipped and urge buttons for each addiction.
 - **Stats:** combined totals across all your addictions, plus a card for each one. Tap a card to see its own detailed stats.
-- **Settings:** appearance, reminders, backup, app lock, sharing and managing your addictions.
+- **Settings:** appearance, daily reminder, celebrations, moving to a new phone, app lock, backup, installing the app and sharing your progress.
 
 ## Features
 
-- **Several addictions, tracked separately:** choose from porn, smoking or vaping, alcohol, gambling, social media or gaming, or name your own. Each one has its own start date and time, daily log, urges, slip journal, reasons, stats and awards.
+- **Several addictions, tracked separately:** choose from porn, smoking or vaping, alcohol, gambling, social media or gaming, or name your own. Each one has its own start date and time, daily log, urges, slip journal, reasons, stats and awards. Rename, re-date or remove any of them at any time.
 - **Live sober timer:** each addiction counts the time since its start, like I Am Sober. Logging a slip resets that addiction's timer to that moment, and its best streak is kept. Starting in the past counts those days as clean, and you can fix any day later.
 - **Daily check-in:** log each day as clean or slipped, fix past days from the calendar, or fill in a whole range at once.
 - **Slip journal:** when you log a slip, an optional 2-second survey asks about the trigger (Stress, Boredom, Fatigue, Loneliness, Late at night, Peer pressure, Low mood), where you were, and when. Skip it any time, or add details later.
@@ -27,7 +27,7 @@ The app has four tabs (a bottom bar on phones, with the help button in the middl
 - **Breathing styles:** Calm, Box, 4-7-8, Long exhale and Double inhale, with an optional soft vibration and sound for each breath.
 - **Your own timer:** pick 5, 10, 15 or 20 minutes, or any length from 1 to 120.
 - **Your reasons:** pick built-in reasons for each addiction or write your own; one is shown back to you when an urge hits.
-- **Streaks and awards:** current and best streak, milestones from day one to a full year, and extra badges for each addiction, with a short celebration at each streak milestone.
+- **Streaks and awards:** current and best streak, milestones from day one to a full year, and extra badges for each addiction, with a short celebration at each streak milestone (you can turn celebrations off in Settings).
 - **Stats:** for each addiction, the last 30 days, weekday breakdown, six-month trend, longest streaks and a year heatmap. The Stats tab also shows everything combined.
 - **Daily reminder:** pick a time and get a nudge to check in. In the browser it shows while the app is open; the Android app can remind you in the background. It checks whichever addiction you opened last.
 - **App lock:** protect the app with a 4 to 8 digit PIN, locking right away or after 1 or 5 minutes. It's a privacy screen, not encryption.
@@ -70,20 +70,26 @@ then visit `http://localhost:8000`.
 | `index.html` | The whole app |
 | `manifest.json` | PWA name, colors and icons |
 | `sw.js` | Service worker for offline use |
-| `favicon.svg` | Browser tab icon (adapts to light and dark mode) |
-| `icon.svg`, `icon-maskable.svg` | App icons (SVG) used when installing the app |
-| `apple-touch-icon.png` | iPhone and iPad home screen icon (iOS needs PNG) |
+| `assets/images/favicon.svg` | Browser tab icon |
+| `assets/images/icon.svg`, `assets/images/icon-maskable.svg` | App icons (SVG) used when installing the app from the browser |
+| `assets/images/apple-touch-icon.png` | iPhone and iPad home screen icon (iOS needs PNG) |
+| `assets/images/icon-only.png`, `icon-foreground.png`, `icon-background.png` | Source images for the Android app icon (1024 x 1024) |
+| `assets/apk/Unplugged.apk` | A ready-built copy of the Android app |
 | `package.json`, `capacitor.config.json` | Settings for building the Android app |
-| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions (also makes the app icons from your robot icon) |
+| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions |
+
+All the icons use the same colors: the robot in sage `#7DA487` on a soft `#f2f6f1` background.
 
 ## Build the Android app (APK)
 
 The repository includes a GitHub Actions workflow that builds an APK for you, with no tools to install.
 
-1. Push the files to GitHub (including `.github/workflows/build-apk.yml`, `package.json` and `capacitor.config.json`).
+1. Push the files to GitHub (including `.github/workflows/build-apk.yml`, `package.json`, `capacitor.config.json` and the icon images in `assets/images/`).
 2. Open the **Actions** tab. **Build Android APK** runs on every push, or press **Run workflow**. It takes about 5 minutes.
 3. Open the finished run and download **Unplugged-APK** at the bottom. Unzip it to get `app-debug.apk`.
 4. Send the APK to your phone, open it, and allow installing from unknown sources.
+
+The Android launcher icon is built from `icon-only.png`, `icon-foreground.png` and `icon-background.png` in `assets/images/`. To change the app icon, replace those three files and push.
 
 `app-debug.apk` is for your own devices. Publishing on Google Play needs a signed release build. Change `appId` in `capacitor.config.json` before publishing.
 
