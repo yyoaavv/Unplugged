@@ -16,13 +16,13 @@ jobs:
     env:
       HAS_KEY: ${{ secrets.KEYSTORE_BASE64 != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -74,11 +74,13 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
-          ./gradlew assembleRelease \
+          # retry once: Maven downloads sometimes fail for a moment on GitHub's runners
+          build(){ ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file="$RUNNER_TEMP/release.keystore" \
             -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
             -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD" "$@"; }
+          build || { sleep 30; build --refresh-dependencies; }
           rm -f "$RUNNER_TEMP/release.keystore"
           cp app/build/outputs/apk/release/app-release.apk ../Unplugged.apk
 
@@ -89,7 +91,7 @@ jobs:
         working-directory: android
         run: |
           echo "::warning::No signing key in the repo secrets. This debug APK can't update an existing install. See 'Signing key' in the README."
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug || { sleep 30; ./gradlew assembleDebug --refresh-dependencies; }
           cp app/build/outputs/apk/debug/app-debug.apk ../Unplugged.apk
 
       - name: Upload APK
