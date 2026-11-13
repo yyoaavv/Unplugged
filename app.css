@@ -339,6 +339,13 @@ button.ib svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:
 
 button.ic{display:inline-flex;align-items:center;justify-content:center;gap:8px}
 button.ic svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* Today tab: timer on the left, three icon buttons on the right */
+.tline{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:6px}
+.tact{display:flex;gap:10px;margin-left:auto}
+button.tib{width:52px;height:52px;padding:0;border-radius:14px;position:relative}
+button.tib svg{width:23px;height:23px}
+button.tib span{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--accent);color:var(--on);font-size:.72rem;line-height:20px;font-weight:700}
+button.tib span:empty{display:none}
 .tabs button{display:inline-flex;align-items:center;gap:7px}
 .tabs button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .wd .ss{background:var(--tint,var(--bg));border:1.5px solid var(--tline,var(--line));box-sizing:border-box}

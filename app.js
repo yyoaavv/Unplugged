@@ -1539,13 +1539,13 @@ var QR=(function(){
     ITEMS.forEach(function(it,i){
       var s0=mk("section","trw"),h=mk("div","trh"),v=it.log[tk()];
       h.appendChild(mk("h2",null,it.name));h.appendChild(mk("span","pill"+(v==="clean"?" ok":v==="slip"?" sl":""),statusOf(it)));s0.appendChild(h);
-      var b=mk("div","tsmall");b.dataset.live="big";b.dataset.i=i;s0.appendChild(b);
-      var r=mk("div","row");r.style.marginTop="14px";
-      r.appendChild(icBtn("I stayed clean","clean",function(){todayAct(i,"clean");},'<path d="M20 6L9 17l-5-5"></path>'));
-      r.appendChild(icBtn("I slipped","slip",function(){todayAct(i,"slip");},'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path>'));
-      var u=(it.urges&&it.urges[tk()])||0;
-      r.appendChild(icBtn("Rode out an urge"+(u?" ("+u+")":""),"ghost",function(){todayAct(i,"urge");},'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path>'));
-      s0.appendChild(r);box.appendChild(s0);
+      var line=mk("div","tline"),b=mk("div","tsmall");b.dataset.live="big";b.dataset.i=i;line.appendChild(b);
+      var r=mk("div","tact"),u=(it.urges&&it.urges[tk()])||0;
+      function ib(label,cls,fn,paths,badge){var x=icBtn(badge||"",cls+" tib",fn,paths);x.title=label;x.setAttribute("aria-label",label+" ("+it.name+")");return x;}
+      r.appendChild(ib("I stayed clean","clean",function(){todayAct(i,"clean");},'<path d="M20 6L9 17l-5-5"></path>'));
+      r.appendChild(ib("I slipped","slip",function(){todayAct(i,"slip");},'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path>'));
+      r.appendChild(ib("Rode out an urge"+(u?", "+u+" today":""),"ghost",function(){todayAct(i,"urge");},'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path>',u?String(u):""));
+      line.appendChild(r);s0.appendChild(line);box.appendChild(s0);
     });
   }
   function renderAllStats(){
