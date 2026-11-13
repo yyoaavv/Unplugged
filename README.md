@@ -4,6 +4,8 @@ A private, offline-first tracker for breaking habits. Track as many addictions a
 
 **Live app:** https://yyoaavv.github.io/Unplugged/
 
+**Android app:** [download the latest APK](https://github.com/yyoaavv/Unplugged/releases/latest/download/Unplugged.apk)
+
 ## How it works
 
 The app has four tabs (a bottom bar on phones, with the help button in the middle):
@@ -67,35 +69,58 @@ then visit `http://localhost:8000`.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | The whole app |
+| `index.html` | The page layout |
+| `app.css` | All the styles |
+| `app.js` | All the app logic |
 | `manifest.json` | PWA name, colors and icons |
 | `sw.js` | Service worker for offline use |
 | `assets/images/favicon.svg` | Browser tab icon |
 | `assets/images/icon.svg`, `assets/images/icon-maskable.svg` | App icons (SVG) used when installing the app from the browser |
 | `assets/images/apple-touch-icon.png` | iPhone and iPad home screen icon (iOS needs PNG) |
 | `assets/images/icon-only.png`, `icon-foreground.png`, `icon-background.png` | Source images for the Android app icon (1024 x 1024) |
-| `assets/apk/Unplugged.apk` | A ready-built copy of the Android app |
 | `package.json`, `capacitor.config.json` | Settings for building the Android app |
-| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions |
+| `.github/workflows/build-apk.yml` | Builds the APK in GitHub Actions and publishes it as a release |
+| `.gitignore` | Keeps build folders and signing keys out of git |
 
 All the icons use the same colors: the robot in sage `#7DA487` on a soft `#f2f6f1` background.
 
 ## Build the Android app (APK)
 
-The repository includes a GitHub Actions workflow that builds an APK for you, with no tools to install.
+The repository includes a GitHub Actions workflow that builds the APK for you, with no tools to install.
 
-1. Push the files to GitHub (including `.github/workflows/build-apk.yml`, `package.json`, `capacitor.config.json` and the icon images in `assets/images/`).
-2. Open the **Actions** tab. **Build Android APK** runs on every push, or press **Run workflow**. It takes about 5 minutes.
-3. Open the finished run and download **Unplugged-APK** at the bottom. Unzip it to get `app-debug.apk`.
-4. Send the APK to your phone, open it, and allow installing from unknown sources.
+1. Push to `main`. **Build Android APK** runs on every push (or press **Run workflow** in the **Actions** tab). It takes about 5 minutes.
+2. When a signing key is set up (below), the APK is published as the **latest release**, and the download link at the top of this README always points to it.
+3. Open the APK on your phone and allow installing from unknown sources.
+
+Every build gets a higher version number, so a new APK installs over the old one and keeps all your data.
 
 The Android launcher icon is built from `icon-only.png`, `icon-foreground.png` and `icon-background.png` in `assets/images/`. To change the app icon, replace those three files and push.
 
-`app-debug.apk` is for your own devices. Publishing on Google Play needs a signed release build. Change `appId` in `capacitor.config.json` before publishing.
+### Signing key
+
+Android only lets an APK update an installed app if both are signed with the same key. Without a fixed key, every build would need an uninstall first, and uninstalling erases the app's data. So the workflow signs with a key stored in the repository secrets.
+
+Set it up once:
+
+1. Make a key on any computer with Java (keep the file and passwords somewhere safe; if you lose them you can't ship updates):
+   ```
+   keytool -genkeypair -v -keystore unplugged.keystore -alias unplugged -keyalg RSA -keysize 2048 -validity 10000
+   base64 -w0 unplugged.keystore > keystore.txt
+   ```
+2. In the repository go to **Settings > Secrets and variables > Actions** and add four secrets:
+   - `KEYSTORE_BASE64`: the contents of `keystore.txt`
+   - `KEYSTORE_PASSWORD`: the keystore password
+   - `KEY_ALIAS`: `unplugged`
+   - `KEY_PASSWORD`: the key password (the same as the keystore password unless you chose a different one)
+3. Push or run the workflow again.
+
+Never commit the keystore. `.gitignore` blocks `*.keystore` and `*.jks` files. Without the secrets the workflow still builds a debug APK as a run artifact, but it isn't published and can't update an existing install.
+
+The app ID is `io.github.yyoaavv.unplugged`. It's a different app from earlier builds (`com.unplugged.app`), so move your data with **Settings > Move to a new phone** or **Export backup** before you switch.
 
 ## Updating
 
-After changing any file, bump the `CACHE` version at the top of `sw.js` (for example `unplugged-v16`) so installed copies pick up the new version and clean out the old cache. A push also builds a fresh APK.
+After changing any file, bump the `CACHE` version at the top of `sw.js` (for example `unplugged-v29`) so installed copies pick up the new version and clean out the old cache. A push also builds a fresh APK.
 
 ## Disclaimer
 

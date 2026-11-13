@@ -6,9 +6,15 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+# Needed to publish the APK as a GitHub Release
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      HAS_KEY: ${{ secrets.KEYSTORE_BASE64 != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -27,7 +33,7 @@ jobs:
       - name: Collect the web files
         run: |
           mkdir -p www/assets/images
-          cp index.html manifest.json www/
+          cp index.html app.css app.js manifest.json www/
           cp assets/images/favicon.svg assets/images/icon.svg assets/images/icon-maskable.svg assets/images/apple-touch-icon.png www/assets/images/
           # sw.js is left out on purpose: the app files are already inside the APK
 
@@ -51,12 +57,54 @@ jobs:
       - name: Sync web files into the app
         run: npx cap sync android
 
-      - name: Build debug APK
+      - name: Set the version (each build gets a higher number so updates install)
+        run: |
+          sed -i -E "s/versionCode [0-9]+/versionCode ${{ github.run_number }}/; s/versionName \"[^\"]*\"/versionName \"1.0.${{ github.run_number }}\"/" android/app/build.gradle
+          grep -E "versionCode|versionName" android/app/build.gradle
+
+      # With a signing key in the repo secrets, every build is signed with the SAME key,
+      # so a new APK installs over the old one and keeps the user's data.
+      - name: Build signed APK
+        if: env.HAS_KEY == 'true'
         working-directory: android
-        run: ./gradlew assembleDebug
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$RUNNER_TEMP/release.keystore" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+          rm -f "$RUNNER_TEMP/release.keystore"
+          cp app/build/outputs/apk/release/app-release.apk ../Unplugged.apk
+
+      # Without a key, fall back to a debug build. Its key changes every run,
+      # so it can't update an existing install. Add the secrets (see README).
+      - name: Build debug APK (no signing key set)
+        if: env.HAS_KEY != 'true'
+        working-directory: android
+        run: |
+          echo "::warning::No signing key in the repo secrets. This debug APK can't update an existing install. See 'Signing key' in the README."
+          ./gradlew assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../Unplugged.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Unplugged-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: Unplugged.apk
+
+      # Only signed builds are published, so the download link always gives an APK that updates cleanly.
+      - name: Publish as the latest release
+        if: env.HAS_KEY == 'true' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest Unplugged.apk --target "$GITHUB_SHA" --latest \
+            --title "Unplugged (build ${{ github.run_number }})" \
+            --notes "Android app, version 1.0.${{ github.run_number }}. Download Unplugged.apk below and open it on your phone."
